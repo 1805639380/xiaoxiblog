@@ -2,7 +2,7 @@
   <div class="home">
     <nuxt-layout name="default" :user="userData">
       <Banner :showWar="true">
-        <span class="typedString"></span>
+        <span ref="typedString" class="typedString"></span>
       </Banner>
       <nuxt-layout name="container" :user="userData">
         <template #containerLeftTop>
@@ -23,6 +23,8 @@ import Typed from 'typed.js';
 
 let artilceData = reactive<Array<articleType>>([])
 
+const typedString = ref<Element | null>(null)
+
 let options = {
   strings: ['<span>Hello World!</span>'],
   typeSpeed: 40,
@@ -33,9 +35,8 @@ let options = {
 };
 
 onMounted(() => {
+  let typed = new Typed(typedString.value, options);
 
-  let typed = new Typed('.typedString', options);
-  
 })
 
 
@@ -46,8 +47,6 @@ useHead({
 const [err, userData] = await useCatch(useUserState())
 
 let { data: article_res, refresh } = await selectArticle()
-
-await refresh()
 
 artilceData = toReactive(article_res.value?.data)
 

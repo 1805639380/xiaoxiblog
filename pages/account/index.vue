@@ -1,0 +1,185 @@
+<template>
+    <nuxt-layout name="default" :user="userState">
+        <Banner :height="'50vh'">账户</Banner>
+        <nuxt-layout name="account" :active="0" :title="'我的信息'">
+            <template #account-wrap>
+                <div class="user-setting-wrap">
+                    <el-form :model="userInfo" ref="form" label-width="100px">
+                        <el-form-item label="头像:" class="user-avatar">
+                            <label for="avatar" class="avatar">
+                                <el-avatar class="changeAvatar" :size="64" :src="userInfo.hdportrait"></el-avatar>
+                            </label>
+                            <input type="file" @change="updateAvatar" accept="image/*" name="" id="avatar" class="hide">
+                        </el-form-item>
+                        <el-form-item label="昵称:">
+                            <el-input v-model="userInfo.nickname" placeholder="你的昵称"></el-input>
+                        </el-form-item>
+                        <el-form-item label="我的签名:">
+                            <el-input v-model="userInfo.signature" :rows="5" resize="none" type="textarea"
+                                placeholder="设置您的签名- ( ゜- ゜)つロ"></el-input>
+                        </el-form-item>
+                        <el-form-item label="性别:">
+                            <el-radio-group v-model="userInfo.sex" size="default">
+                                <el-radio-button class="user-setting-radio" label="男"></el-radio-button>
+                                <el-radio-button class="user-setting-radio" label="女"></el-radio-button>
+                                <el-radio-button class="user-setting-radio" label="保密"></el-radio-button>
+                            </el-radio-group>
+                        </el-form-item>
+                        <el-form-item class="user-btn-wrap">
+                            <div class="padding-dom"></div>
+                            <div class="user-my-btn">
+                                <el-button type="primary" size="default" @click="updateHandler">保存</el-button>
+                            </div>
+                        </el-form-item>
+                    </el-form>
+                </div>
+            </template>
+        </nuxt-layout>
+
+    </nuxt-layout>
+</template>
+  
+<script setup lang='ts'>
+import { userStateType } from '@/types/user'
+import { ElMessage } from 'element-plus'
+
+useHead({
+    title: "我的信息"
+})
+
+const userInfo = reactive<userStateType>(<userStateType>{
+    uid: 0,
+    hdportrait: "https://img.zcool.cn/community/01c8415b10ec7aa801212d57334fdc.png@1280w_1l_2o_100sh.png",
+    nickname: "",
+    signature: "",
+    sex: "男"
+})
+
+let [err, userState] = await useCatch(useUserState())
+
+for (let key in userInfo) {
+    if (userState !== null && Object.keys(userState.value).includes(key)) {
+        userInfo[key] = userState.value[key]
+    }
+}
+
+// 更新头像
+function updateAvatar(event) {
+    let file = event.target.files[0]
+    let reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = (e) => {
+        if (typeof e.target.result === 'string') {
+            userInfo.hdportrait = e.target.result
+        }
+    }
+}
+
+async function updateHandler() {
+    try {
+        const formData: object = {}
+        // base64转bolb数据
+        let blob: Blob
+        if (!userInfo.hdportrait.startsWith('http') && userInfo.hdportrait !== '') {
+            blob = dataURLtoBlob(userInfo.hdportrait)
+        }
+        for (let item in userInfo) {
+            if (item === 'hdportrait' && (blob ?? "") !== "") {
+                formData[item] = blob
+            } else {
+                formData[item] = userInfo[item]
+            }
+        }
+
+        let { data } = await updateUserData(userInfo.uid, formData)
+        if (data.value.code == 0) {
+            // 调用vuex action中 方法 查询用户信息，存入vux
+            await useUserState()
+            ElMessage({
+                message: "修改成功！",
+                type: "success"
+            })
+        } else {
+            throw "修改失败"
+        }
+    } catch (e) {
+        ElMessage({
+            message: "修改失败，请稍后再试！",
+            type: "error"
+        })
+        console.log("更新失败,err" + e);
+    }
+}
+
+//将base64转换为blob
+function dataURLtoBlob(dataurl): Blob {
+    var arr = dataurl.split(','),
+        mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]),
+        n = bstr.length,
+        u8arr = new Uint8Array(n);
+    while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new Blob([u8arr], { type: mime });
+}
+
+</script>
+  
+<style scoped>
+.account-right .user-setting-wrap .user-setting-radio {
+    margin: 0 5px;
+}
+
+.account-right .user-setting-wrap .user-setting-radio :deep(.el-radio-button__inner) {
+    display: inline-block;
+    border: 1px solid #dcdfe6;
+    padding: 5px 10px;
+    border-radius: var(--el-border-radius-base) !important;
+    box-shadow: 0px 0 0 0 var(--el-radio-button-checked-border-color, var(--el-color-primary));
+}
+
+.user-btn-wrap .padding-dom {
+    height: 50px;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 50px;
+}
+
+.user-btn-wrap {
+    text-align: center;
+}
+
+/* .user-btn-wrap :deep(.el-form-item__content) {
+    margin-left: 0 !important;
+} */
+
+.user-avatar .avatar span {
+    position: relative;
+    cursor: pointer;
+}
+
+.user-avatar .avatar span:hover::after {
+    opacity: 1;
+}
+
+.user-avatar .avatar span::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    content: "修改头像";
+    width: 100%;
+    height: 64px;
+    font-size: 12px;
+    background-color: rgba(1, 1, 1, .5);
+    opacity: 0;
+    transition: opacity .5s;
+}
+
+.user-avatar #avatar {
+    position: absolute;
+    visibility: hidden;
+    opacity: 0;
+    z-index: -1;
+    pointer-events: none;
+}
+</style>

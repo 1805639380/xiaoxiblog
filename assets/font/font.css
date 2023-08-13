@@ -1,17 +1,20 @@
 @font-face {
-    font-family:GuDianMingChaoTi;
+    font-family: GuDianMingChaoTi;
     src: url('./GuDianMingChaoTi.ca48eef4.ttf'),
-    url('./GuDianMingChaoTi.ca48eef4.woff')
+        url('./GuDianMingChaoTi.ca48eef4.woff')
 }
+
 @font-face {
-    font-family:hanyidisheng;
+    font-family: hanyidisheng;
     src: url('./hanyidisheng.woff')
 }
+
 @font-face {
     font-family: xionghaizi;
     src: url(https://img.tukuppt.com/font_temp/184e753ae0bcd223fa8278eaba2b07a3.woff);
 }
+
 @font-face {
     font-family: tsxmm;
-    src: url(./天使小萌猫.ttf);
+    src: url(./tsxmm.ttf);
 }

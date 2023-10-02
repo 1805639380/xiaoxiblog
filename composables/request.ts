@@ -26,6 +26,7 @@ export const useRequest = <T>(options: RequestType, lazy: boolean = true) => {
 
   return useFetch<T>(`${baseURL}${options.url}`, {
     body: options.data,
+    credentials: "include",
     params: options.params,
     method: options.method || "GET",
     headers: options.headers,
@@ -37,29 +38,5 @@ export const useRequest = <T>(options: RequestType, lazy: boolean = true) => {
         type: "error",
       });
     },
-  });
-};
-
-export const useReqTs = <T>(options: RequestType, lazy: boolean = false) => {
-  const runtimeConfig = useRuntimeConfig();
-  const baseURL = runtimeConfig.public.requestBaseUrl;
-
-  if (!options.headers) {
-    options.headers = {};
-  }
-
-  const cookieToken = useCookie("token");
-
-  if (cookieToken && cookieToken.value) {
-    const TOKEN_TYPE: string = "Bearer";
-    options.headers["authorization"] = TOKEN_TYPE + " " + cookieToken.value;
-  }
-
-  return useFetch<T>(`${baseURL}${options.url}`, {
-    body: options.data,
-    params: options.params,
-    method: options.method,
-    headers: options.headers,
-    lazy,
   });
 };

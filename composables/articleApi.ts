@@ -10,7 +10,7 @@ export const updateArticle = <T>(
   id: string,
   data: { article_watch: number }
 ) => {
-  return useReqTs<T>({
+  return useRequest({
     url: API_PREFIX + "/update/" + id,
     data,
     method: "PATCH",
@@ -22,7 +22,7 @@ export const updateArticle = <T>(
  * @returns
  */
 export const getArticleTimeline = <T>() => {
-  return useReqTs<T>({
+  return useRequest<T>({
     url: API_PREFIX + "/timeline",
     method: "GET",
   });

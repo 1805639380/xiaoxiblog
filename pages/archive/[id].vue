@@ -1,11 +1,11 @@
 <template>
   <nuxt-layout name="default">
-    <Banner :height="'50vh'" :background="background">{{ article_data?.article_title }}</Banner>
+    <Banner :height="'50vh'" :background="background">{{ article_data?.title }}</Banner>
     <nuxt-layout name="container" :user="userData">
       <template #containerLeftMain>
         <div class="article_content">
           <div class="article_title">
-            <h1>{{ article_data?.article_title }}</h1>
+            <h1>{{ article_data?.title }}</h1>
           </div>
           <div class="article_info">
             <div class="publish_date">
@@ -18,23 +18,23 @@
               <el-icon>
                 <UserFilled />
               </el-icon>
-              <span>{{ article_data?.user.nickname }}</span>
+              <span>{{ article_data?.author_id }}</span>
             </div>
             <div class="article_watch">
               <el-icon>
                 <Cellphone />
               </el-icon>
-              <span>{{ article_data?.article_watch }}次阅读</span>
+              <span>{{ article_data?.watch_num }}次阅读</span>
             </div>
             <div class="comment_num">
               <el-icon>
                 <ChatLineSquare />
               </el-icon>
-              <span>{{ commentData.data.total }}条评论</span>
+              <span>{{ commentData?.data.total || 0 }}条评论</span>
             </div>
           </div>
           <div id="article" class="content">
-            <MdEditor v-model="article_data.article_content" previewOnly />
+            <MdEditor v-model="article_data.content" previewOnly />
           </div>
         </div>
         <ClientOnly>
@@ -55,10 +55,10 @@
 import MdEditor from 'md-editor-v3';
 import 'md-editor-v3/lib/style.css';
 import { toReactive } from '@vueuse/core';
-import articleType from '~~/types/article';
 import { Calendar, ChatLineSquare, Cellphone, UserFilled } from '@element-plus/icons'
 import emoji from '@/assets/emoji'
 import { CommentApi, ConfigApi, UToast, throttle } from 'undraw-ui'
+import { ArticleType } from '~/types/article';
 
 const background: string = 'https://img-baofun.zhhainiao.com/fs/71e6812c9fec3f987897c8763a7f385f.jpg'
 
@@ -73,22 +73,20 @@ const { data, refresh: refreshArticleData } = await getArticleDetail(id)
 
 let resData = data.value
 
-const article_data: articleType = toReactive(resData?.data)
+const article_data: ArticleType = toReactive(resData?.data.row)
 
-const [err, userData] = await useCatch(useUserState())
-
-// await updateArticle(id, { article_watch: article_data.article_watch + 1 })
+const userData = await (useUserState())
 
 // 获取评论区数据
-const { data: commentData, refresh: commentRefresh } = await selectComment({ article_id: article_data.article_id })
+const { data: commentData, refresh: commentRefresh } = await selectComment({ article_id: article_data.id })
 
-await refreshNuxtData()
+// await refreshNuxtData()
 
 const config = reactive<ConfigApi>({
   user: {
-    id: userData.value?.uid || 0,
-    username: userData.value?.nickname || '游客',
-    avatar: userData.value?.hdportrait || '',
+    id: userData.value?.id || 0,
+    username: userData.value?.name || '游客',
+    avatar: userData.value?.avatar || '',
     // 评论id数组 建议:存储方式用户uid和评论id组成关系,根据用户uid来获取对应点赞评论id,然后加入到数组中返回
     likeIds: []
   },
@@ -123,7 +121,7 @@ const submit = async ({ content, parentId, finish }) => {
   if (!parentId) {
     // 评论请求
     let { data } = await addComment({ comment_content: content, comment_uid: config.user.id as number, article_id: article_data.article_id })
-    if (data.value.status === 200) {
+    if (data.value?.status === 200) {
       setTimeout(async () => {
         finish(comment)
         config.comments.pop()
@@ -164,33 +162,33 @@ let userKeyMap = {
   nickname: 'username',
 }
 
-let commentResult = toRaw(commentData.value.data.data_result)
-// 替换comment key
-for (let item of commentResult) {
-  Object.keys(item).map(keys => {
-    let newKey = commentkeymap[keys]
+// let commentResult = toRaw(commentData.value.data.data_result)
+// // 替换comment key
+// for (let item of commentResult) {
+//   Object.keys(item).map(keys => {
+//     let newKey = commentkeymap[keys]
 
-    if (newKey) {
-      item[newKey] = item[keys]
-      item['likes'] = 0
-      delete item[keys]
-    }
-  })
-}
+//     if (newKey) {
+//       item[newKey] = item[keys]
+//       item['likes'] = 0
+//       delete item[keys]
+//     }
+//   })
+// }
 
-// 替换comment 中user key
-for (let item of commentResult) {
-  Object.keys(item.user).map(keys => {
-    let newKey = userKeyMap[keys]
+// // 替换comment 中user key
+// for (let item of commentResult) {
+//   Object.keys(item.user).map(keys => {
+//     let newKey = userKeyMap[keys]
 
-    if (newKey) {
-      item.user[newKey] = item.user[keys]
-      item.user['level'] = 6
-      item.user['homeLink'] = '/1'
-      delete item.user[keys]
-    }
-  })
-}
+//     if (newKey) {
+//       item.user[newKey] = item.user[keys]
+//       item.user['level'] = 6
+//       item.user['homeLink'] = '/1'
+//       delete item.user[keys]
+//     }
+//   })
+// }
 
 // config.comments = commentData.value.data.data_result
 

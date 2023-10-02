@@ -1,6 +1,12 @@
 <template>
-  <div class="head" ref="tabBar"
-    :class="{ stickTop: isStickTop, loginAndRegister: $route.path == '/login' || $route.path == '/register' }">
+  <div
+    class="head"
+    ref="tabBar"
+    :class="{
+      stickTop: isStickTop,
+      loginAndRegister: $route.path == '/login' || $route.path == '/register',
+    }"
+  >
     <div class="logo">
       <nuxt-link to="/">小析のBlog</nuxt-link>
     </div>
@@ -9,7 +15,10 @@
       <div class="closed hide" @click="closeMiniMenu">X</div>
       <slot></slot>
       <div class="menu" v-for="(item, index) in props.menus" :key="index">
-        <nuxt-link :to="item.path"><span class="iconfont" v-html="item.icon"></span>{{ item.title }}</nuxt-link>
+        <nuxt-link :to="item.path"
+          ><span class="iconfont" v-html="item.icon"></span
+          >{{ item.title }}</nuxt-link
+        >
       </div>
     </div>
     <div class="other">
@@ -19,15 +28,25 @@
       <div class="user">
         <nuxt-link to="/login" v-if="!userData">
           <client-only>
-            <el-tooltip content="您还未登录，点击登录" placement="bottom" effect="light">
-              <span class="iconfont" title="您还未登录，点击登录">&#xe640;</span>
+            <el-tooltip
+              content="您还未登录，点击登录"
+              placement="bottom"
+              effect="light"
+            >
+              <span class="iconfont" title="您还未登录，点击登录"
+                >&#xe640;</span
+              >
             </el-tooltip>
           </client-only>
         </nuxt-link>
         <nuxt-link to="/account" v-else title="点击进入用户管理页面">
           <client-only>
-            <el-tooltip content="点击进入用户管理页面" placement="bottom" effect="light">
-              <img :src="userData.hdportrait" alt="">
+            <el-tooltip
+              content="点击进入用户管理页面"
+              placement="bottom"
+              effect="light"
+            >
+              <img :src="userData.avatar" alt="" />
             </el-tooltip>
           </client-only>
         </nuxt-link>
@@ -37,37 +56,33 @@
 </template>
 
 <script setup lang="ts">
-import { userStateType } from '@/types/user'
+import { UserStateType } from "@/types/user";
 
-const emit = defineEmits(['toggleSearch'])
+const emit = defineEmits(["toggleSearch"]);
 
-let currentIndex = ref<number>(0)
-let isStickTop = ref<boolean>(false)
-let isShowMiniMenu = ref<boolean>(false)
+let currentIndex = ref<number>(0);
+let isStickTop = ref<boolean>(false);
+let isShowMiniMenu = ref<boolean>(false);
 
 interface tabProps {
-  menus: Array<{ path: string, icon: string, title: string }>,
-  user?: userStateType
+  menus: Array<{ path: string; icon: string; title: string }>;
+  user?: UserStateType;
 }
 
-const [err, userData] = await useCatch(useUserState())
+const userData = await useUserState();
 
-if (err) {
-  console.log('err', err)
-}
+const props = defineProps<tabProps>();
 
-const props = defineProps<tabProps>()
-
-function activeClick(index) {
-  currentIndex.value = index
+function activeClick(index: any) {
+  currentIndex.value = index;
 }
 
 function toggleSearch() {
-  emit('toggleSearch', true)
+  emit("toggleSearch", true);
 }
 
 function showMiniMenu() {
-  isShowMiniMenu.value = true
+  isShowMiniMenu.value = true;
 }
 
 function closeMiniMenu() {
@@ -75,16 +90,15 @@ function closeMiniMenu() {
 }
 
 onMounted(() => {
-  let scroll: number = document.documentElement.scrollTop
-  isStickTop.value = scroll > 10 ? true : false
+  let scroll: number = document.documentElement.scrollTop;
+  isStickTop.value = scroll > 10 ? true : false;
   //监听滚动事件
-  window.addEventListener('scroll', e => {
+  window.addEventListener("scroll", (e) => {
     //滚动条高度大于10的时候导航栏固定
-    scroll = document.documentElement.scrollTop
-    scroll > 10 ? isStickTop.value = true : isStickTop.value = false
-  })
-})
-
+    scroll = document.documentElement.scrollTop;
+    scroll > 10 ? (isStickTop.value = true) : (isStickTop.value = false);
+  });
+});
 </script>
 
 <style>
@@ -104,10 +118,10 @@ onMounted(() => {
   color: #000 !important;
 }
 
-@media screen and (max-width:1200px) {
+@media screen and (max-width: 1200px) {
   .head .menus a {
     font-size: 14px;
-    transition: all .5s;
+    transition: all 0.5s;
   }
 }
 
@@ -125,7 +139,7 @@ onMounted(() => {
   justify-content: space-between;
   padding: 0 var(--mtop);
   background-color: rgba(255, 255, 255, 0);
-  transition: all .2s linear;
+  transition: all 0.2s linear;
   color: var(--defaultColor);
   z-index: 10;
 }
@@ -149,7 +163,7 @@ onMounted(() => {
 .head .logo a {
   line-height: 4.5rem;
   font-size: 1.875rem;
-  background-color: rgba(255, 244, 244, .5);
+  background-color: rgba(255, 244, 244, 0.5);
   border-radius: 15px;
   padding: 0;
 }
@@ -168,7 +182,7 @@ onMounted(() => {
   display: block;
 }
 
-@media screen and (max-width:768px) {
+@media screen and (max-width: 768px) {
   .menuBtn {
     display: block !important;
   }
@@ -214,7 +228,7 @@ onMounted(() => {
     box-shadow: 0 0 10px var(--shadow);
     text-align: center;
     color: #000;
-    transition: all .5s;
+    transition: all 0.5s;
   }
 
   .head .menus a {
@@ -256,7 +270,7 @@ onMounted(() => {
 .head .other .search:hover,
 .head .other .user:hover {
   color: aqua;
-  transition: all .5s;
+  transition: all 0.5s;
 }
 
 .head .other .search span,

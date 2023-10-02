@@ -1,15 +1,15 @@
 <template>
   <div class="userInfo">
     <div class="userIns">
-      <img :src="props.user.hdportrait" alt="">
-      <div class="userName">{{ props.user.nickname }}</div>
+      <img :src="props.user.avatar" alt="">
+      <div class="userName">{{ props.user.name }}</div>
       <div class="userQianMing">{{ props.user.signature }}</div>
     </div>
     <div class="userData">
       <div class="userArticle">文章</div>
       <div class="label">标签</div>
       <div class="article-num">
-        <nuxt-link to="/archive">{{ 0 && props.user.articlenum }}</nuxt-link>
+        <nuxt-link to="/archive">{{ 0 && props.user.article_num }}</nuxt-link>
       </div>
       <div class="labek-num">
         <nuxt-link to="/archive">{{ 0 && props.user.labelnum }}</nuxt-link>
@@ -47,13 +47,12 @@ const props = withDefaults(defineProps<{
   user?: userStateType
 }>(), {
   user: () => <userStateType>{
-    uid: 0,
-    nickname: "您还未登录",
+    id: 0,
+    name: "您还未登录",
     signature: "",
     sex: "男",
-    hdportrait: "https://tse4-mm.cn.bing.net/th/id/OIP-C.X-VG5gTN2ak8rGRij3oCogAAAA?w=163&h=180&c=7&r=0&o=5&dpr=1.12&pid=1.7",
-    articlenum: 0,
-    labelnum: 0,
+    avatar: "https://tse4-mm.cn.bing.net/th/id/OIP-C.X-VG5gTN2ak8rGRij3oCogAAAA?w=163&h=180&c=7&r=0&o=5&dpr=1.12&pid=1.7",
+    article_num: 0,
   }
 })
 
@@ -61,12 +60,12 @@ let user = useState<userStateType>('userState')
 
 if ((user ?? "") === "") {
   user.value = {
-    uid: 0,
-    nickname: "您还未登录",
+    id: 0,
+    name: "您还未登录",
     signature: "",
     sex: "男",
-    hdportrait: "https://tse4-mm.cn.bing.net/th/id/OIP-C.X-VG5gTN2ak8rGRij3oCogAAAA?w=163&h=180&c=7&r=0&o=5&dpr=1.12&pid=1.7",
-    articlenum: 0,
+    avatar: "https://tse4-mm.cn.bing.net/th/id/OIP-C.X-VG5gTN2ak8rGRij3oCogAAAA?w=163&h=180&c=7&r=0&o=5&dpr=1.12&pid=1.7",
+    article_num: 0,
     labelnum: 0,
   }
 }

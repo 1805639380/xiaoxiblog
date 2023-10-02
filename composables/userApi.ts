@@ -1,50 +1,66 @@
+type LoginType = {
+  account: string;
+  password: string;
+};
 
 /**
  * 登录
- * @param datas 
- * @returns 
+ * @param datas
+ * @returns
  */
-export const login = function (datas) {
+export const login = function (datas: LoginType) {
   return useRequest({
-    url: "/loginCheck",
+    url: "/login",
     method: "post",
-    data: datas
-  })
-}
+    data: datas,
+  });
+};
+
+type RegisterType = {
+  account: string;
+  password: string;
+  email: string;
+  email_code: string;
+};
 
 // 注册
-export const register = function (datas) {
+export const register = function (datas: RegisterType) {
   return useRequest({
-    url: "/registerCheck",
+    url: "/user",
     method: "post",
-    data: datas
-  })
-}
-
+    data: datas,
+  });
+};
 
 // 发送验证码
-export const sendCode = function (datas: object) {
+export const sendCode = function (datas: { email: string }) {
   return useRequest({
-    url: "/sendCheckCdoe",
+    url: "/email/send",
     method: "post",
-    data: datas
-  })
-}
+    data: datas,
+  });
+};
 
 // 获取用户数据
 export const getUserData = function () {
   return useRequest({
     url: "/user",
-    method: "get"
-  })
-}
+    method: "get",
+  });
+};
 
+type UpdateProfile = {
+  name?: string;
+  signature?: string;
+  sex?: string;
+  avatar?: string;
+};
 
 // 更新用户数据
-export const updateUserData = function (id: number, data) {
+export const updateUserData = function (data: UpdataProfile) {
   return useRequest({
-    url: `/account/${id}`,
+    url: `/user/profile`,
     method: "PATCH",
     data,
-  })
-}
+  });
+};

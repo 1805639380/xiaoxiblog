@@ -2,15 +2,17 @@
   "private": true,
   "scripts": {
     "build": "nuxt build",
-    "dev": "nuxt dev --port 5000",
+    "dev": "nuxt dev --port 5000 --host",
     "generate": "nuxt generate",
     "start": "nuxi build && node .output/server/index.mjs",
     "preview": "nuxt preview"
   },
   "devDependencies": {
+    "@element-plus/nuxt": "^1.0.6",
+    "@nuxt/devtools": "^0.8.5",
     "babel-eslint": "^10.1.0",
     "eslint": "^8.18.0",
-    "nuxt": "^3.0.0-rc.3"
+    "nuxt": "^3.7.4"
   },
   "eslintConfig": {
     "root": true,

@@ -1,9 +1,9 @@
-export type userStateType = {
-  uid: number,
-  nickname: string,
-  signature?: string,
-  sex: "男" | "女" | "保密",
-  hdportrait: string,
-  articlenum: number,
-  labelnum: number
-}
+export type UserStateType = {
+  id: number;
+  name: string;
+  signature?: string;
+  sex: "男" | "女" | "保密";
+  avatar: string;
+  article_num: number;
+  labelnum: number;
+};

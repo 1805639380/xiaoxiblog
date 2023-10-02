@@ -15,7 +15,7 @@
 
 <script setup lang='ts'>
 import { ElMessage } from 'element-plus';
-import articleType from '~~/types/article';
+import { ArticleData, ArticleType } from '~~/types/article';
 import lottie from 'lottie-web';
 import animationData from '@/assets/lottie/animation_ll7j9mp7.json'
 
@@ -24,7 +24,7 @@ const loading = ref(false)
 
 onMounted(() => {
   lottie.loadAnimation({
-    container: lottieLoadingDom.value,
+    container: lottieLoadingDom.value!,
     renderer: 'svg',
     loop: true,
     autoplay: true,
@@ -33,34 +33,32 @@ onMounted(() => {
 })
 
 const props = defineProps<{
-  articleList: Array<articleType>,
-  currentPage: number
+  articleList: Array<ArticleType>,
+  currentPage: number,
+  count: number,
+  offset: number
 }>()
 
 let currentPage = ref<number>(props.currentPage)
-let articleList = reactive<Array<articleType>>(props.articleList)
-let islastPage = ref<boolean>(false)
+let articleList = reactive<Array<ArticleType>>(props.articleList)
 
+// 加载文章
 async function getMoreArticle() {
-  if (islastPage.value) {
-    // 已达到最大页码
+  // 超过页数
+  if (Math.ceil(props.count / props.offset) <= currentPage.value) {
     ElMessage({ message: "后面没有内容了。", type: "warning" })
     return
   }
   loading.value = true
   currentPage.value++
-  let { data: article_res } = await selectArticle({ page: currentPage.value })
+  let { data: article_res } = await selectArticle({ page: currentPage.value, offset: props.offset })
   loading.value = false
   if (!article_res.value) {
     ElMessage({ message: "服务器繁忙，请稍后再试！", type: 'error' })
     return
   }
-  if (article_res.value.data.length < 1) {
-    islastPage.value = true
-    ElMessage({ message: "后面没有内容了。", type: "warning" })
-    return
-  }
-  articleList.push(...article_res.value.data)
+
+  articleList.push(...article_res.value.data.rows)
 }
 
 </script>
@@ -71,10 +69,12 @@ async function getMoreArticle() {
   text-align: center;
   justify-content: center;
 }
+
 .getMore .lottie_loading {
   width: 100px;
   /* height: 41px; */
 }
+
 .getMore button {
   outline: none;
   padding: 10px 20px;

@@ -1,7 +1,7 @@
 <template>
   <div id="bgcBox">
     <div class="middleInfo">
-      <p>
+      <p :class="{ gradationText: props.gradationText }">
         <slot></slot>
       </p>
     </div>
@@ -9,22 +9,26 @@
     <div class="banner_war2" v-if="showWar"></div>
   </div>
 </template>
-  
-<script setup lang='ts'>
-const props = withDefaults(defineProps<{
-  height?: string,
-  showWar?: boolean,
-  background?: string
-}>(), {
-  height: "80vh",
-  showWar: false,
-  background: "https://img-baofun.zhhainiao.com/fs/7c0eebecbe887fc488b77f9d14b00ef6.jpg"
-})
 
-const background = `url(${props.background})`
+<script setup lang="ts">
+const props = withDefaults(
+  defineProps<{
+    height?: string;
+    showWar?: boolean;
+    background?: string;
+    gradationText?: boolean;
+  }>(),
+  {
+    height: "80vh",
+    showWar: false,
+    background:
+      "https://xiaoxiblog.oss-cn-beijing.aliyuncs.com/image/girlfriends_girls_gestures_213471_1920x1080.jpg",
+  }
+);
 
+const background = `url(${props.background})`;
 </script>
-  
+
 <style scoped>
 .banner_war1,
 .banner_war2 {
@@ -36,7 +40,7 @@ const background = `url(${props.background})`
   left: -236px;
   z-index: 4;
   opacity: 1;
-  transition-duration: .4s, .4s;
+  transition-duration: 0.4s, 0.4s;
   animation-duration: 120s;
   animation-fill-mode: backwards;
   animation-timing-function: linear;
@@ -56,7 +60,6 @@ const background = `url(${props.background})`
 }
 
 @keyframes move1 {
-
   0%,
   100% {
     background-position: 0 0;
@@ -68,7 +71,6 @@ const background = `url(${props.background})`
 }
 
 @keyframes move2 {
-
   0%,
   100% {
     background-position: 0 0;
@@ -90,20 +92,30 @@ const background = `url(${props.background})`
   position: absolute;
   left: 50%;
   top: 50%;
-  width: fit-content;
+  /* width: fit-content; */
+  width: 100%;
+  text-align: center;
   transform: translateX(-50%) translateY(-50%);
 }
 
 #bgcBox .middleInfo p {
-  font-size: 5.3125rem;
+  /* font-size: 5.3125rem; */
+  font-size: 6vw;
   color: #fff;
   font-weight: 900;
   text-shadow: 0 0 15px;
   animation: textChange 3s linear infinite;
 }
 
-@keyframes textChange {
+#bgcBox .middleInfo .gradationText {
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  background-image: linear-gradient(#accbee, #ace0f9 100%);
+  animation: none;
+}
 
+@keyframes textChange {
   0%,
   100% {
     text-shadow: 4px 6px 25px rgb(241, 101, 101);
@@ -131,7 +143,7 @@ const background = `url(${props.background})`
   background-image: url(https://cdn.jsdelivr.net/gh/moezx/cdn@3.1.9/img/Sakura/images/grid.png);
 }
 
-@media screen and (max-width:320px) {
+@media screen and (max-width: 320px) {
   #app #bgcBox {
     height: 280px;
   }

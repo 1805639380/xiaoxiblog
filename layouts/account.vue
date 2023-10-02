@@ -7,11 +7,18 @@
       <ul class="account-ui">
         <!-- 信息栏 -->
         <template v-for="(item, index) in accountProps.accountList">
-          <li class="account-list" :class="{ 'account-list-active': props.active === index }">
-            <nuxt-link :to="item.path">
-              <el-icon class="account-list-icon" :size="24" :color="props.active === index ? '#fff' : '#000'">
-                <User v-if='index === 0' />
-                <Edit v-if='index === 1' />
+          <li
+            class="account-list"
+            :class="{ 'account-list-active': props.active === index }"
+          >
+            <nuxt-link :to="item.linkpath">
+              <el-icon
+                class="account-list-icon"
+                :size="24"
+                :color="props.active === index ? '#fff' : '#000'"
+              >
+                <User v-if="index === 0" />
+                <Edit v-if="index === 1" />
               </el-icon>
               <span>{{ item.title }}</span>
             </nuxt-link>
@@ -39,51 +46,49 @@
   </div>
 </template>
 
-<script setup lang='ts'>
-import { Edit, User } from '@element-plus/icons'
-import { ElMessage } from 'element-plus'
+<script setup lang="ts">
+import { Edit, User } from "@element-plus/icons";
 
-const router = useRouter()
+const router = useRouter();
 
 const props = defineProps<{
-  active: number,
-  title: string
-}>()
+  active: number;
+  title: string;
+}>();
 
-const accountProps = reactive({
+const accountProps = ref({
   active: 1,
   accountList: [
     {
       title: "我的信息",
-      path: "/account",
+      linkpath: "/account",
     },
     {
       title: "编辑文章",
-      path: "/account/editArticle",
-    }
+      linkpath: "/account/editArticle",
+    },
   ],
-  title: "我的信息"
-})
+  title: "我的信息",
+});
 
 // 退出登录
 function exit() {
   // 清除token
-  const token = useCookie("token")
-  token.value = ''
+  const token = useCookie("token");
+  token.value = "";
   // 清除vuex保存的状态
-  cleanUserState()
+  cleanUserState();
   ElMessage({
     message: "退出成功！",
-    type: "success"
-  })
+    type: "success",
+  });
   // 跳转首页
-  router.push('/')
+  router.push("/");
 }
-
 </script>
 
 <style scoped>
-@media screen and (max-width:720px) {
+@media screen and (max-width: 720px) {
   .account_content {
     width: 80% !important;
     flex-direction: column;
@@ -93,8 +98,8 @@ function exit() {
     display: flex;
   }
 
-  .account_content .account-left>div,
-  .account_content .account-left>ul li {
+  .account_content .account-left > div,
+  .account_content .account-left > ul li {
     padding: 0 15px;
   }
 }
@@ -113,7 +118,7 @@ function exit() {
 .account_content .account-left {
   position: relative;
   flex: 1;
-  background-color: #FAFAFA;
+  background-color: #fafafa;
   border-right: 1px solid #ddd;
 }
 
@@ -146,7 +151,7 @@ function exit() {
   background-color: #ccc;
 }
 
-.account-left .account-ui .account-list+.account-list a {
+.account-left .account-ui .account-list + .account-list a {
   margin-top: 1px;
 }
 
@@ -202,7 +207,7 @@ function exit() {
   font-size: 16px;
   border-radius: 0;
   height: 40px;
-  font-family: 'tsxmm';
+  font-family: "tsxmm";
 }
 
 .account_wrap {

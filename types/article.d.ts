@@ -1,13 +1,20 @@
-export default interface articleType {
-  article_id: string,
-  article_title: string,
-  article_snippet: string,
-  article_pic: string,
-  article_content: string,
-  article_type: string,
-  article_watch: number,
-  comment_num: number,
-  publish_date: string,
-  user: userStateType,
-  user_uid: number
+export interface ArticleData {
+  rows: Array<ArticleType>;
+  count: number;
+}
+
+export interface ArticleType {
+  id: string;
+  author_id: string;
+  comment_num: number;
+  content: string;
+  createTime: string;
+  deleteAt: string;
+  description: string;
+  pic: string;
+  publish_date: string;
+  title: string;
+  type: string;
+  updatedTime: string;
+  watch_num: number;
 }

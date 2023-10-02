@@ -1,7 +1,6 @@
 <template>
   <div id="defaultLayout">
-
-    <Head :menus="menus" :user="props.user" @toggleSearch="toggleSearch"></Head>
+    <Header :menus="menus" :user="props.user" @toggleSearch="toggleSearch"></Header>
     <BackTop />
     <LazySearch :isSearchShow="isSearchShow" @toggleSearch="toggleSearch" />
     <slot></slot>

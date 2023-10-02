@@ -57,7 +57,7 @@ const checkCode = ref<string>("")
 const serverCode = ref<string>("")
 
 // 发送验证码
-function sendCheckCode(): void {
+function sendCheckCode(this: any): void {
 
   if (email.value.trim() === "") {
     ElMessage({
@@ -87,7 +87,7 @@ function sendCheckCode(): void {
         clearInterval(setInter);
       }
     }, 1000);
-    timeP.call(this);
+    let that = this
 
     let date = new Date();
 
@@ -96,7 +96,11 @@ function sendCheckCode(): void {
       email: email.value,
     })
       .then(({ data: res }) => {
-        serverCode.value = res.value.checkCode;
+        timeP.call(that);
+        ElMessage({
+          message: res.value.data.message,
+          type: 'success'
+        })
       })
       .catch(err => {
         ElMessage({
@@ -158,22 +162,15 @@ function submitForm(): void {
     });
     return;
   }
-  // 验证码错误
-  if (checkCode.value != serverCode.value) {
-    ElMessage({
-      message: "验证码错误！",
-      type: "error",
-    });
-    return;
-  }
   // 调用注册请求
   register({
-    username: username.value,
+    account: username.value,
     password: password.value,
-    emailL: email.value,
+    email: email.value,
+    email_code: checkCode.value
   })
     .then(({ data: res }) => {
-      if (res.value.success) {
+      if (res.value?.code === 1001) {
         // 注册成功
         ElMessage({
           message: res.value.message,
@@ -188,12 +185,6 @@ function submitForm(): void {
         });
         return;
       }
-    })
-    .catch(err => {
-      ElMessage({
-        message: err,
-        type: "error",
-      });
     })
 }
 

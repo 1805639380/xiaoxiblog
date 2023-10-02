@@ -80,19 +80,15 @@ async function submitForm() {
 
 
     login({
-        username: username.value,
+        account: username.value,
         password: password.value,
     })
         .then((res) => {
             if (res.error.value) {
-                ElMessage({
-                    message: "请求失败，服务器繁忙!",
-                    type: 'error'
-                })
                 return
             }
             let resDataRef = res.data
-            if (!resDataRef.value.exist) {
+            if (resDataRef.value.code !== 1001) {
                 // 登录失败
                 ElMessage({
                     message: resDataRef.value.message,
@@ -109,12 +105,10 @@ async function submitForm() {
                 let expires = new Date(currentTime + 60 * 1000 * 60 * 24 * 30)
                 const token = useCookie("token", { expires })
 
-                token.value = resDataRef.value.token
-
-                console.log('token.value', token.value)
+                token.value = resDataRef.value?.data.access_token
 
                 ElMessage({
-                    message: resDataRef.value.message,
+                    message: resDataRef.value?.message,
                     type: "success",
                 });
                 setTimeout(() => {

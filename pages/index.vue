@@ -31,11 +31,7 @@ const articleCount = ref<number>(0);
 const typedString = ref<Element | null>(null);
 
 let options = {
-  strings: [
-    "探索，发现自我。",
-    "生活，无限美好。",
-    "创造，无限可能。",
-  ],
+  strings: ["探索，发现自我。", "生活，无限美好。", "创造，无限可能。"],
   typeSpeed: 100,
   // loop: true
   backSpeed: 100,

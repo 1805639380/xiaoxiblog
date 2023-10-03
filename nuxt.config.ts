@@ -13,8 +13,11 @@ export default defineNuxtConfig({
     shim: false,
     strict: false,
   },
-  // components: true,
-  vite: {},
+  vite: {
+    esbuild: {
+      drop: ["console", "debugger"],
+    },
+  },
   components: {
     dirs: ["~/composables", "~/types", "~/components"],
     global: true,
@@ -42,7 +45,6 @@ export default defineNuxtConfig({
   },
   build: {
     analyze: true,
-    terser: true,
     transpile: lifecycle === "build" ? ["element-plus"] : [],
   },
   runtimeConfig: {

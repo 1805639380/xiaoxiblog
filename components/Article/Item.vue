@@ -39,7 +39,11 @@
     <div class="bgi">
       <nuxt-link :to="'/archive/' + props.articleData?.id">
         <div class="imgBg">
-          <img :src="props.articleData?.pic" :alt="props.articleData?.title" />
+          <img
+            :data-src="props.articleData?.pic"
+            :alt="props.articleData?.title"
+          />
+          <div class="img_loading"></div>
         </div>
       </nuxt-link>
     </div>
@@ -48,6 +52,8 @@
 
 <script setup lang="ts">
 import { ArticleType } from "~~/types/article";
+import animationData from "~/assets/lottie/animation_lna1ssgf.json";
+import lottie from "lottie-web";
 
 const props = withDefaults(
   defineProps<{
@@ -58,9 +64,42 @@ const props = withDefaults(
     isRowReverse: false,
   }
 );
+
+onMounted(() => {
+  const imgs = document.querySelectorAll<HTMLImageElement>("img[data-src]");
+  useLazyLoadImage(imgs);
+
+  const imgLoads = document.querySelectorAll<HTMLDivElement>(".img_loading");
+  imgLoads.forEach((item, index) => {
+    const loadingLottie = lottie.loadAnimation({
+      container: item,
+      renderer: "svg",
+      loop: true,
+      autoplay: true,
+      animationData,
+    });
+    imgs[index].onload = () => {
+      loadingLottie.destroy();
+      item.classList.add("img_loading_hidden");
+    };
+  });
+});
 </script>
 
 <style scoped>
+.img_loading_hidden {
+  display: none;
+}
+.img_loading {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: yellow;
+  transition: all .25s;
+}
 .rowReverse {
   flex-direction: row-reverse;
 }
@@ -157,6 +196,7 @@ const props = withDefaults(
 }
 
 .bgi .imgBg {
+  position: relative;
   width: 100%;
   height: 100%;
   /* background-image: url(@/assets/img/sw.jpg); */
@@ -184,7 +224,7 @@ const props = withDefaults(
   font-weight: lighter;
   font-size: 15px;
   overflow: hidden;
-  color: rgba(0,0,0,.66);
+  color: rgba(0, 0, 0, 0.66);
 }
 
 .releaseTime {

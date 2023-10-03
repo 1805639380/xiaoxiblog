@@ -9,12 +9,12 @@
           <Notice />
         </template>
         <template #containerLeftMain>
-          <ArticleWrap
+          <LazyArticleWrap
             :currentPage="1"
             :offset="5"
             :articleList="artilceData"
             :count="articleCount"
-          ></ArticleWrap>
+          ></LazyArticleWrap>
         </template>
       </nuxt-layout>
     </nuxt-layout>

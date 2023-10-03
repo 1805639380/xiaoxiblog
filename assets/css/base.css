@@ -13,6 +13,12 @@ li {
     list-style: none;
 }
 
+html,
+body {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+}
+
 @media screen and (max-width:1200px) {
     html {
         font-size: 14px;

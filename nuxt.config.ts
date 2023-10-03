@@ -41,6 +41,8 @@ export default defineNuxtConfig({
     },
   },
   build: {
+    analyze: true,
+    terser: true,
     transpile: lifecycle === "build" ? ["element-plus"] : [],
   },
   runtimeConfig: {

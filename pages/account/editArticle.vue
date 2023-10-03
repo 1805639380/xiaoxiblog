@@ -224,7 +224,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         description: editForm.snippet,
         pic: editForm.imageUrl,
       });
-      if (data.value?.code === 1001) {
+      if (data.value.code === 1001) {
         ElMessage.success("发布成功");
         setTimeout(() => {
           router.push("/");

@@ -49,9 +49,10 @@ useHead({
 const userData = await useUserState();
 
 let { data: article_res, refresh } = await selectArticle();
+
 if (article_res.value) {
-  artilceData.value = article_res.value?.data.rows;
-  articleCount.value = article_res.value?.data.count;
+  artilceData.value = article_res.value.data.rows;
+  articleCount.value = article_res.value.data.count;
 }
 </script>
 

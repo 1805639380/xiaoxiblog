@@ -103,7 +103,7 @@ for (let key in userInfo) {
 
 // 更新头像
 function updateAvatar(event: Event) {
-  let file = event.target?.files[0];
+  let file = (event.target as any).files[0];
   let reader = new FileReader();
   reader.readAsDataURL(file);
   reader.onload = (e) => {

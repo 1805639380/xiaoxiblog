@@ -49,7 +49,7 @@ export const getUserData = function () {
   });
 };
 
-type UpdateProfile = {
+type UpdataProfile = {
   name?: string;
   signature?: string;
   sex?: string;

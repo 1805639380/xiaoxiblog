@@ -1,3 +1,5 @@
+import { ArticleType } from "~/types/article";
+
 interface selectArticleDataType {
   page?: number;
   offset?: number;
@@ -28,6 +30,11 @@ export const getArticleTimeline = <T>() => {
   });
 };
 
+type SelectArticle = {
+  rows: Array<ArticleType>;
+  count: number;
+};
+
 /**
  * 查询文章
  * @param data
@@ -44,7 +51,7 @@ export const selectArticle = (
     }
   }
 
-  return useRequest({
+  return useRequest<SelectArticle>({
     url: API_PREFIX + "s",
     method: "GET",
     params: params,

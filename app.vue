@@ -1,11 +1,16 @@
 <template>
   <div id="app">
+    <Loading v-if="isShowLoading"></Loading>
     <NuxtPage></NuxtPage>
   </div>
 </template>
 
 <script setup lang="ts">
 import nprogress from "nprogress";
+
+const isShowLoading = ref(true);
+
+const nuxtApp = useNuxtApp();
 
 const router = useRouter();
 
@@ -20,21 +25,24 @@ const userState = await useUserState();
 
 await keepUserData(userState);
 
+nuxtApp.hook("page:start", () => {
+  nprogress.start();
+});
+
+nuxtApp.hook("page:finish", () => {
+  isShowLoading.value = false;
+  nprogress.done();
+  if (process.client) {
+    window.scrollTo(0, 0);
+  }
+});
+
 router.beforeEach(async (to, from, next) => {
   if (from.path === "/login") {
     await keepUserData(userState);
   }
 
-  nprogress.start();
-
   next();
-});
-
-router.afterEach(() => {
-  nprogress.done();
-  if (process.client) {
-    window.scrollTo(0, 0);
-  }
 });
 </script>
 

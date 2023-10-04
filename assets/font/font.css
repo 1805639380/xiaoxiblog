@@ -12,9 +12,11 @@
 @font-face {
     font-family: xionghaizi;
     src: url(https://img.tukuppt.com/font_temp/184e753ae0bcd223fa8278eaba2b07a3.woff);
+    font-display: swap;
 }
 
 @font-face {
     font-family: tsxmm;
     src: url(https://xiaoxiblog.oss-cn-beijing.aliyuncs.com/font/tsxmm.ttf);
+    font-display: swap;
 }

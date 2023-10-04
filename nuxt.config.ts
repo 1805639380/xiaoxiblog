@@ -1,4 +1,5 @@
 const lifecycle = process.env.npm_lifecycle_event;
+import viteCompression from "vite-plugin-compression";
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -14,6 +15,8 @@ export default defineNuxtConfig({
     strict: false,
   },
   vite: {
+    build: {},
+    plugins: [viteCompression()],
     esbuild: {
       drop: ["console", "debugger"],
     },

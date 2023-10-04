@@ -2,24 +2,23 @@
   <div id="search" :class="{ show: props.isSearchShow }">
     <div class="c-search">
       <h2>想要找点什么？</h2>
-      <input type="text" ref="search" placeholder="搜索" title="请填写此字段">
+      <input type="text" ref="search" placeholder="搜索" title="请填写此字段" />
     </div>
     <div class="closeSearch" @click.self="toggleSearch">×</div>
   </div>
 </template>
 
 <script setup lang="ts">
-
 const props = defineProps({
   isSearchShow: {
     type: Boolean,
-    default: false
-  }
-})
+    default: false,
+  },
+});
 
-const emit = defineEmits(['toggleSearch'])
+const emit = defineEmits(["toggleSearch"]);
 
-let search = ref(null)
+let search = ref(null);
 
 function toggleSearch() {
   emit("toggleSearch", false);
@@ -27,8 +26,7 @@ function toggleSearch() {
 
 onMounted(() => {
   search.value.focus();
-})
-
+});
 </script>
 
 <style scoped>
@@ -85,7 +83,7 @@ onMounted(() => {
   background-color: #fff;
   z-index: 11;
   animation: show 0.5s cubic-bezier(0, 0.84, 0.19, 1.15) forwards;
-  background-image: url(assets/img/iloli.gif);
+  background-image: url("https://xiaoxiblog.oss-cn-beijing.aliyuncs.com/image/iloli.gif");
   background-repeat: no-repeat;
   background-position: 100% 100%;
 }
@@ -102,7 +100,7 @@ onMounted(() => {
   }
 }
 
-@media screen and (max-width:425px) {
+@media screen and (max-width: 425px) {
   #search {
     background-size: 50%;
   }

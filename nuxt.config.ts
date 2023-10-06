@@ -27,6 +27,9 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
+      htmlAttrs: {
+        lang: "zh-CN",
+      },
       titleTemplate: `小析のblog - %s`,
       meta: [
         { name: "viewport", content: "width=device-width, initial-scale=1" },

@@ -307,6 +307,9 @@ const like = async (id: string, finish: () => void) => {
   const likeIdArr = config.user.likeIds.filter(
     (commentId) => commentId === +id
   );
+  if (likeIdArr?.length > 0) {
+    isLike.value = false;
+  }
   const event = window.event;
 
   if (isThrottled) {
@@ -327,9 +330,6 @@ const like = async (id: string, finish: () => void) => {
     option.isReply = true;
   }
 
-  if (likeIdArr?.length > 0) {
-    isLike.value = false;
-  }
   const { data } = await likesComment(option);
   if (data.value?.code === 1001) {
     isLike.value = false;

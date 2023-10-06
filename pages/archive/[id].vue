@@ -52,7 +52,7 @@
               @submit="submit"
               @like="like"
             >
-              <template v-if="config.comments.length < 1">&nbsp;</template>
+              <template v-if="config.comments?.length < 1">&nbsp;</template>
             </u-comment>
           </u-comment-scroll>
         </ClientOnly>
@@ -130,7 +130,7 @@ function getComments(commentRows): CommentApi[] {
         parentId: reply.comment_id,
         uid: reply.user_id,
         address: "",
-        likes: reply.likes.length,
+        likes: reply.likes?.length,
         user: {
           username: reply.user.profile.name,
           avatar: reply.user.profile.avatar,
@@ -149,7 +149,7 @@ function getComments(commentRows): CommentApi[] {
       uid: item.user?.id || 0,
       address: "",
       content: item.content,
-      likes: item.likes.length,
+      likes: item.likes?.length,
       user: {
         username: item.user.profile.name,
         avatar: item.user.profile.avatar,
@@ -159,7 +159,7 @@ function getComments(commentRows): CommentApi[] {
       // createTime: dayjs(item.createTime).format(dateFormat),
       createTime: formatRelativeTime(item.createTime),
       reply: {
-        total: item.replys.length,
+        total: item.replys?.length,
         list: replyList,
       },
     };
@@ -200,12 +200,12 @@ let likeIds = commentData.value?.data.rows?.map((comment) => {
   const commentLikes = comment.likes?.filter((user) => user.id === userId);
   const replyIds = comment.replys.map((reply) => {
     const replyLikes = reply.likes?.filter((user) => user.id === userId);
-    if (replyLikes.length > 0) {
+    if (replyLikes?.length > 0) {
       return reply.id;
     }
   });
 
-  if (commentLikes.length > 0) {
+  if (commentLikes?.length > 0) {
     return replyIds.concat([comment.id]);
   }
 });
@@ -245,7 +245,7 @@ const submit = async ({ content, parentId, finish }) => {
   console.log("提交评论: " + content, parentId);
 
   const comment: CommentApi = {
-    id: (config.comments[config.comments.length - 1]?.id as number) + 1 || 1,
+    id: (config.comments[config.comments?.length - 1]?.id as number) + 1 || 1,
     parentId: parentId,
     uid: config.user.id,
     address: "",
@@ -327,7 +327,7 @@ const like = async (id: string, finish: () => void) => {
     option.isReply = true;
   }
 
-  if (likeIdArr.length > 0) {
+  if (likeIdArr?.length > 0) {
     isLike.value = false;
   }
   const { data } = await likesComment(option);

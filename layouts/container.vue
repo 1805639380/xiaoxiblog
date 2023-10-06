@@ -12,16 +12,18 @@
   </div>
 </template>
 
-<script setup lang='ts'>
-import { userStateType } from '../types/user'
+<script setup lang="ts">
+import { UserStateType } from "../types/user";
 
-const props = withDefaults(defineProps<{
-  user?: userStateType,
-  showUserInfo?: boolean
-}>(), {
-  showUserInfo: true
-})
-
+const props = withDefaults(
+  defineProps<{
+    user?: UserStateType;
+    showUserInfo?: boolean;
+  }>(),
+  {
+    showUserInfo: true,
+  }
+);
 </script>
 
 <style scoped>

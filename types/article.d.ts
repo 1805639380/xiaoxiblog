@@ -4,7 +4,7 @@ export interface ArticleData {
 }
 
 export interface ArticleType {
-  id: string;
+  id: number;
   author_id: string;
   comment_num: number;
   content: string;

@@ -29,9 +29,14 @@ onMounted(() => {
   width: 200px;
   height: 200px;
 }
+@media screen and (max-width: 1024px) {
+  #pet {
+    display: none;
+  }
+}
 @media screen and (max-width: 720px) {
-    #pet {
-        display: none;
-    }
+  #pet {
+    display: none;
+  }
 }
 </style>

@@ -16,22 +16,9 @@
 </template>
 
 <script setup lang="ts">
-import Lottie from "lottie-web";
-import loadingData from "@/assets/lottie/loading.json";
-
 const loadingText = ref("首次加载较慢，请耐心等待~");
 useHead({
   title: "加载中~",
-});
-const lottieAnimationRef = ref(null);
-onMounted(() => {
-  //   Lottie.loadAnimation({
-  //     container: lottieAnimationRef.value,
-  //     renderer: "svg",
-  //     animationData: loadingData,
-  //     autoplay: true,
-  //     loop: true,
-  //   });
 });
 </script>
 

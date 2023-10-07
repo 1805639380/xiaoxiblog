@@ -1,8 +1,8 @@
 <template>
   <div class="userInfo">
     <div class="userIns">
-      <img :src="props.user.avatar" alt="">
-      <div class="userName">{{ props.user.name }}</div>
+      <img :src="props.user.avatar || defaultAvatar" alt="" />
+      <div class="userName">{{ props.user.name || defaultName }}</div>
       <div class="userQianMing">{{ props.user.signature }}</div>
     </div>
     <div class="userData">
@@ -40,36 +40,31 @@
   </div>
 </template>
 
-<script setup lang='ts'>
-import { userStateType } from '@/types/user'
+<script setup lang="ts">
+import { UserStateType } from "@/types/user";
 
-const props = withDefaults(defineProps<{
-  user?: userStateType
-}>(), {
-  user: () => <userStateType>{
-    id: 0,
-    name: "您还未登录",
-    signature: "",
-    sex: "男",
-    avatar: "https://tse4-mm.cn.bing.net/th/id/OIP-C.X-VG5gTN2ak8rGRij3oCogAAAA?w=163&h=180&c=7&r=0&o=5&dpr=1.12&pid=1.7",
-    article_num: 0,
+const props = withDefaults(
+  defineProps<{
+    user?: UserStateType;
+  }>(),
+  {
+    user: () =>
+      <UserStateType>{
+        id: 0,
+        name: "您还未登录",
+        signature: "",
+        sex: "男",
+        avatar:
+          "https://tse4-mm.cn.bing.net/th/id/OIP-C.X-VG5gTN2ak8rGRij3oCogAAAA?w=163&h=180&c=7&r=0&o=5&dpr=1.12&pid=1.7",
+        article_num: 0,
+      },
   }
-})
+);
 
-let user = useState<userStateType>('userState')
-
-if ((user ?? "") === "") {
-  user.value = {
-    id: 0,
-    name: "您还未登录",
-    signature: "",
-    sex: "男",
-    avatar: "https://tse4-mm.cn.bing.net/th/id/OIP-C.X-VG5gTN2ak8rGRij3oCogAAAA?w=163&h=180&c=7&r=0&o=5&dpr=1.12&pid=1.7",
-    article_num: 0,
-    labelnum: 0,
-  }
-}
-
+const defaultAvatar = ref(
+  "https://tse4-mm.cn.bing.net/th/id/OIP-C.X-VG5gTN2ak8rGRij3oCogAAAA?w=163&h=180&c=7&r=0&o=5&dpr=1.12&pid=1.7"
+);
+const defaultName = ref("您还未登陆");
 </script>
 
 <style scoped>
@@ -87,7 +82,7 @@ if ((user ?? "") === "") {
   font-weight: 600;
   font-family: serif;
   box-shadow: 0 1px 20px -8px var(--shadow);
-  transition: box-shadow .5s;
+  transition: box-shadow 0.5s;
   font-size: var(--fontSize);
   background-color: var(--defaultColor);
 }
@@ -144,7 +139,7 @@ if ((user ?? "") === "") {
   font-size: 25px;
 }
 
-@media screen and (max-width:768px) {
+@media screen and (max-width: 768px) {
   .userData {
     display: none;
   }

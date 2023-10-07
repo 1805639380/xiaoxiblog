@@ -38,10 +38,6 @@ nuxtApp.hook("page:finish", () => {
 });
 
 router.beforeEach(async (to, from, next) => {
-  if (from.path === "/login") {
-    await keepUserData(userState);
-  }
-
   next();
 });
 </script>

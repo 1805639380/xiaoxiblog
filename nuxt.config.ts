@@ -1,5 +1,7 @@
 const lifecycle = process.env.npm_lifecycle_event;
 import viteCompression from "vite-plugin-compression";
+import IconsResolver from "unplugin-icons/resolver";
+import Components from "unplugin-vue-components/vite";
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -16,7 +18,13 @@ export default defineNuxtConfig({
   },
   vite: {
     build: {},
-    plugins: [viteCompression()],
+    plugins: [
+      viteCompression(),
+      Components({
+        dts: true,
+        resolvers: [IconsResolver({})],
+      }),
+    ],
     esbuild: {
       drop: ["console", "debugger"],
     },

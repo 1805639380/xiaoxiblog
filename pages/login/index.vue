@@ -111,7 +111,12 @@ async function submitForm() {
                     message: resDataRef.value?.message,
                     type: "success",
                 });
-                setTimeout(() => {
+
+                
+                setTimeout(async () => {
+                    // 重新获取用户数据，并且存入state
+                    const userState = await useUserState()
+                    await keepUserData(userState)
                     router.push("/");
                     // 登录成功 dispath 异步用户数据
                     // this.$store.dispatch("getUser");

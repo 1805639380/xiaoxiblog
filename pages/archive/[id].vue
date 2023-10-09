@@ -14,13 +14,15 @@
               <el-icon>
                 <Calendar />
               </el-icon>
-              <span>{{ article_data?.publish_date?.split(" ")[0] }}</span>
+              <span>{{
+                dayjs(article_data?.publish_date).format("YYYY-MM-DD HH:mm:ss")
+              }}</span>
             </div>
             <div class="article_author">
               <el-icon>
                 <UserFilled />
               </el-icon>
-              <span>{{ article_data?.author_id }}</span>
+              <span>{{ article_data?.author.profile.name }}</span>
             </div>
             <div class="article_watch">
               <el-icon>

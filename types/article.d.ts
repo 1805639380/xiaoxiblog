@@ -1,3 +1,5 @@
+import { User } from "./user";
+
 export interface ArticleData {
   rows: Array<ArticleType>;
   count: number;
@@ -5,7 +7,7 @@ export interface ArticleData {
 
 export interface ArticleType {
   id: number;
-  author_id: string;
+  author: User;
   comment_num: number;
   content: string;
   createTime: string;

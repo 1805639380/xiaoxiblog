@@ -28,11 +28,11 @@ let menus = [
     icon: "&#xe6e6;",
     path: "/",
   },
-  // {
-  //   title: "归档",
-  //   icon: "&#xe6b8;",
-  //   path: "/archive"
-  // },
+  {
+    title: "归档",
+    icon: "&#xe6b8;",
+    path: "/archive"
+  },
   // {
   //   title: "清单",
   //   icon: "&#xe677;",

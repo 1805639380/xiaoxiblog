@@ -11,29 +11,34 @@
                 <div class="tip">在线用户列表</div>
                 <template v-for="item in userQueue" :key="item?.user?.uid">
                   <div class="chart-list-item">
-                    <el-avatar :src="item?.user?.hdportrait"></el-avatar>
-                    <span class="chart-list-item-name">{{ item?.user?.nickname }}</span>
+                    <el-avatar :src="item?.onlineUser?.avatar"></el-avatar>
+                    <span class="chart-list-item-name">{{
+                      item?.onlineUser?.name
+                    }}</span>
                   </div>
                 </template>
               </div>
             </div>
             <div class="chart-right">
               <div class="chart-top">
-                <span>xxx聊天室</span>
+                <span>聊天室</span>
                 <span>当前在线({{ userCount }})人</span>
               </div>
               <div class="chart-wrap" ref="chartWrap">
-                <template v-for="item in charts" :key="item.user.uid">
-                  <div class="chart-item" :class="{ 'current-user': item.user.uid === userData?.uid }">
+                <template v-for="item in charts" :key="item?.user?.id">
+                  <div
+                    class="chart-item"
+                    :class="{ 'current-user': item?.user?.id === userData?.id }"
+                  >
                     <div class="chart-user-avatar">
-                      <el-avatar :src="item.user.hdportrait"></el-avatar>
+                      <el-avatar :src="item?.user?.avatar"></el-avatar>
                     </div>
                     <div class="chart-msg">
                       <div class="chart-user-name">
-                        <span>{{ item.user.nickname }}</span>
+                        <span>{{ item?.user?.name }}</span>
                       </div>
                       <div class="chart-user-msg">
-                        <span>{{ item.msg }}</span>
+                        <span>{{ item?.msg }}</span>
                       </div>
                     </div>
                   </div>
@@ -41,11 +46,19 @@
               </div>
               <div class="chart-send">
                 <div class="chart-text">
-                  <textarea v-model="chartMsg" @keydown.prevent.enter="chartSend" name="" id="" placeholder="请输入……"
-                    autofocus></textarea>
+                  <textarea
+                    v-model="chartMsg"
+                    @keydown.prevent.enter="chartSend"
+                    name=""
+                    id=""
+                    placeholder="请输入……"
+                    autofocus
+                  ></textarea>
                 </div>
                 <div class="chart-send-btn">
-                  <el-button type="primary" size="small" @click="chartSend">发送</el-button>
+                  <el-button type="primary" size="small" @click="chartSend"
+                    >发送</el-button
+                  >
                 </div>
               </div>
             </div>
@@ -55,123 +68,125 @@
     </nuxt-layout>
   </nuxt-layout>
 </template>
-  
-<script setup lang='ts'>
-import { Ref, onBeforeUnmount } from 'vue';
-import { userStateType } from '~~/types/user';
-import { ElNotification, ElMessageBox } from 'element-plus'
-import { io } from 'socket.io-client'
-const socket = io(useRuntimeConfig().public.socket_url)
+
+<script setup lang="ts">
+import { Ref, onBeforeUnmount } from "vue";
+import { UserStateType } from "~~/types/user";
+import { ElNotification, ElMessageBox } from "element-plus";
+import { io } from "socket.io-client";
+const socket = io(useRuntimeConfig().public.socket_url);
 
 useHead({
-  title: "聊天室"
-})
+  title: "聊天室",
+});
 
-const background = 'https://img-baofun.zhhainiao.com/fs/f46d074062d2df78ab46936dbefa39ea.jpg'
+const background =
+  "https://img-baofun.zhhainiao.com/fs/f46d074062d2df78ab46936dbefa39ea.jpg";
 
-const chartMsg = ref<string>('')
-const userCount = ref<number>(0)
-const charts = ref<Array<{ msg: string, user: userStateType }>>([])
-const userQueue = ref<Array<any>>([])
-const isLogin = ref<boolean>(false)
+const chartMsg = ref<string>("");
+const userCount = ref<number>(0);
+const charts = ref([]);
+const userQueue = ref<Array<any>>([]);
+const isLogin = ref<boolean>(false);
 
-const router = useRouter()
+const router = useRouter();
 
-const [err, userData] = await useCatch<Ref<userStateType>>(useUserState())
+const [err, userData] = await useCatch<Ref<UserStateType>>(useUserState());
 // const { $socket } = useNuxtApp()
 
 // 用户未登录
-if (userData.value) isLogin.value = true
+if (userData.value) isLogin.value = true;
 
 if (isLogin.value && process.client) {
-  socket.on('connect', () => {
-    console.log("连接成功")
-    socket.emit('userFadeIn', {
+  socket.on("connect", () => {
+    console.log("连接成功");
+    socket.emit("userFadeIn", {
       user: userData.value,
-      status: "连接"
-    })
-  })
+      status: "连接",
+    });
+  });
 
   // 监听用户状态-
-  socket.on('users', (data) => {
-    let status = data.currentUser.status == "在线" ? "进入" : "离开"
+  socket.on("users", (data) => {
+    let status = data.currentUser.status == "在线" ? "进入" : "离开";
 
     ElNotification({
       title: "通知",
-      message: '欢迎' + data.currentUser.user.nickname + status + '聊天室',
-    })
-    userQueue.value = data.userQueue
-    userCount.value = data.userCount
-  })
+      message: "欢迎" + data.currentUser.onlineUser.name + status + "聊天室",
+    });
+    userQueue.value = data.userQueue;
+    userCount.value = data.userQueue.length;
+  });
 
   // 监听消息的回显
-  socket.on('chartMsg', data => {
-    console.log(data);
-    charts.value.push(data)
-  })
+  socket.on("chartMsg", (data) => {
+    if (data.hasOwnProperty("length")) {
+      charts.value = data;
+    } else {
+      charts.value.push(data);
+    }
+  });
 
   // 监听用户离开
-  socket.on('userFadeOut', data => {
+  socket.on("userFadeOut", (data) => {
     ElNotification({
       title: "通知",
-      message: data.fadeOutUser.user.nickname + "离开了聊天室"
-    })
-  })
+      message: data.onlineUser.name + "离开了聊天室",
+    });
+  });
 
   onBeforeUnmount(() => {
-
     // 取消事件监听
-    socket.removeListener('connect')
-    socket.removeListener('users')
+    socket.removeListener("connect");
+    socket.removeListener("users");
 
     // 断开连接
-    socket.disconnect()
-  })
-
+    socket.disconnect();
+  });
 } else {
-
   // 未登录
   ElMessageBox.alert("您还未登录，请先登录再来使用吧~", "消息提示", {
     confirmButtonText: "确认",
-    type: 'warning',
+    type: "warning",
     callback: () => {
-      router.push('/login')
-    }
-  })
+      router.push("/login");
+    },
+  });
 }
-
 
 const chartSend = () => {
   if (chartMsg.value === "") {
-    return
+    return;
   }
   // 将聊天信息传送服务器
-  socket.emit('chartMsg', {
+  socket.emit("chartMsg", {
     user: userData.value,
-    msg: chartMsg.value
-  })
+    msg: chartMsg.value,
+  });
   // 清空聊天框
-  chartMsg.value = ''
-}
+  chartMsg.value = "";
+};
 </script>
-  
+
 <style scoped>
 .chart {
-  flex: .7;
+  flex: 0.7;
   display: flex;
   justify-content: space-between;
   height: 500px;
-  border: 1px solid #ccc;
-  background-color: rgba(255, 255, 255, .8);
+  background-color: rgba(255, 255, 255, 0.8);
   border-radius: 10px;
+  box-shadow: 0 0 50px #fff0f0;
+  overflow: hidden;
+  --borderColor: #e3e3e3;
+  --bgc: #f8f8f8;
 }
 
 .chart .chart-left {
   flex: 1;
   display: flex;
   flex-direction: column;
-  /* background-color: rgb(116, 234, 255); */
-  border-right: 1px solid #ccc;
+  background-image: linear-gradient(150deg, #fff1eb 30%, #ace0f9 100%);
 }
 
 .chart .chart-left .userInfo {
@@ -196,8 +211,9 @@ const chartSend = () => {
 }
 
 .chart .chart-right .chart-top {
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid var(--borderColor);
   padding: 20px;
+  background-color: var(--bgc);
 }
 
 .chart .chart-right .chart-top span:last-child {
@@ -250,7 +266,8 @@ const chartSend = () => {
 
 .chart .chart-right .chart-send {
   position: relative;
-  border-top: 1px solid #ccc;
+  border-top: 1px solid var(--borderColor);
+  background-color: var(--bgc);
 }
 
 .chart .chart-right .chart-send .chart-text textarea {
@@ -274,15 +291,19 @@ const chartSend = () => {
 
 .chart-list {
   flex: 1;
-  padding: 15px;
-  border-top: 1px solid #ccc;
+  padding: 5px;
   overflow: auto;
 }
-
+.chart-list .tip {
+  padding: 0 10px;
+}
 .chart-list .chart-list-item {
   display: flex;
   align-items: center;
-  margin: 15px 0;
+  padding: 10px 15px;
+  margin: 5px 0;
+  background-color: #fff;
+  border-radius: 15px;
 }
 
 .chart-list .chart-list-item .chart-list-item-name {
@@ -290,9 +311,9 @@ const chartSend = () => {
   font-size: 16px;
 }
 
-@media screen and (max-width:768px) {
+@media screen and (max-width: 768px) {
   .chart {
-    flex: .9;
+    flex: 0.9;
   }
 }
 </style>

@@ -1,3 +1,5 @@
+import { ResponseData } from "~/types/common";
+
 type LoginType = {
   account: string;
   password: string;
@@ -34,7 +36,7 @@ export const register = function (datas: RegisterType) {
 
 // 发送验证码
 export const sendCode = function (datas: { email: string }) {
-  return useRequest({
+  return useRequest<ResponseData<any>>({
     url: "/email/send",
     method: "post",
     data: datas,

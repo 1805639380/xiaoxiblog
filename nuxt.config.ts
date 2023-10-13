@@ -64,7 +64,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       requestBaseUrl: process.env.API_HOST + process.env.API_PREFIX,
-      socket_url: "http://localhost:3000",
+      socket_url: "ws://localhost:3000",
     },
   },
 });

@@ -38,11 +38,11 @@ let menus = [
   //   icon: "&#xe677;",
   //   path: "/list"
   // },
-  // {
-  //   title: "聊天室",
-  //   icon: "&#xe63a;",
-  //   path: "/chat"
-  // },
+  {
+    title: "聊天室",
+    icon: "&#xe63a;",
+    path: "/chat"
+  },
   // {
   //   title: "留言板",
   //   icon: "&#xe60c;",

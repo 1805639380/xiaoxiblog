@@ -22,7 +22,7 @@ const props = withDefaults(
     height: "80vh",
     showWar: false,
     background:
-      "https://xiaoxiblog.oss-cn-beijing.aliyuncs.com/image/girlfriends_girls_gestures_213471_1920x1080.jpg",
+      "http://cdn-hw-static2.shanhutech.cn/bizhi/staticwp/202208/6ee6cdc29067c626843ce0f6cf13a595--1278567875.jpg",
   }
 );
 

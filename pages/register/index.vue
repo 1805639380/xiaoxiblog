@@ -2,69 +2,124 @@
   <nuxt-layout name="default">
     <div class="register">
       <form action="#" class="form-wrapper">
-        <div class="logo"><img src="~assets/img/logo.svg" alt=""> Su chamber</div>
+        <div class="logo">
+          <img src="~assets/img/logo.svg" alt="" /> Su chamber
+        </div>
         <div class="form-item">
           <label for="username">username:</label>
-          <input type="text" id="usernmae" name="username" autocomplete="off" v-model="username">
+          <input
+            type="text"
+            id="usernmae"
+            name="username"
+            autocomplete="off"
+            v-model="username"
+          />
         </div>
         <div class="form-item">
           <label for="userpassword">password:</label>
-          <input type="password" id="userpassword" name="password" autocomplete="off" v-model="password">
+          <input
+            type="password"
+            id="userpassword"
+            name="password"
+            autocomplete="off"
+            v-model="password"
+          />
         </div>
         <div class="form-item">
           <label for="confirmPwd">confirm password:</label>
-          <input type="password" id="confirmPwd" name="confirmPwd" autocomplete="off" v-model="confirmPassword">
+          <input
+            type="password"
+            id="confirmPwd"
+            name="confirmPwd"
+            autocomplete="off"
+            v-model="confirmPassword"
+          />
         </div>
         <div class="form-item">
           <label for="email">email:</label>
-          <input type="email" id="email" name="email" autocomplete="off" v-model="email">
+          <input
+            type="email"
+            id="email"
+            name="email"
+            autocomplete="off"
+            v-model="email"
+          />
         </div>
         <div class="form-item">
           <label for="checkCode">Verification code:</label>
           <div class="check">
-            <input type="text" id="checkCode" name="checkCode" autocomplete="off" v-model="checkCode">
+            <input
+              type="text"
+              id="checkCode"
+              name="checkCode"
+              autocomplete="off"
+              v-model="checkCode"
+            />
             <button @click.prevent="sendCheckCode">{{ sendBtn }}</button>
           </div>
         </div>
         <div class="form-item">
-          <input type="submit" id="smt" value="Sign up" @mousedown="changeBtnColor" @mouseup="hfBtnColor"
-            :class="{ mousedownClick: isBtnClick }" @click.prevent="submitForm">
+          <input
+            type="submit"
+            id="smt"
+            value="Sign up"
+            @mousedown="changeBtnColor"
+            @mouseup="hfBtnColor"
+            :class="{ mousedownClick: isBtnClick }"
+            @click.prevent="submitForm"
+          />
         </div>
-        <p class="tips">已有账号?点击 <router-link to="/login">登录</router-link>
+        <p class="tips">
+          已有账号?点击 <router-link to="/login">登录</router-link>
         </p>
       </form>
     </div>
   </nuxt-layout>
 </template>
 
-<script setup lang='ts'>
-import { ElMessage } from 'element-plus'
+<script setup lang="ts">
+import { ElMessage } from "element-plus";
 
 useHead({
-  title: "注册"
-})
+  title: "注册",
+});
 
-const router = useRouter()
+const router = useRouter();
 
-const username = ref<string>("")
-const password = ref<string>("")
-const confirmPassword = ref<string>("")
-const email = ref<string>("")
-const isBtnClick = ref<boolean>(false)
-const sendBtn = ref<string>("发送验证码")
-const canSend = ref<boolean>(true)
-const checkCode = ref<string>("")
-const serverCode = ref<string>("")
+const username = ref<string>("");
+const password = ref<string>("");
+const confirmPassword = ref<string>("");
+const email = ref<string>("");
+const isBtnClick = ref<boolean>(false);
+const sendBtn = ref<string>("发送验证码");
+const canSend = ref<boolean>(true);
+const checkCode = ref<string>("");
+const serverCode = ref<string>("");
+
+function timepiece(time: number) {
+  function timeP() {
+    sendBtn.value = time-- + "s";
+  }
+  let setInter = setInterval(() => {
+    timeP.call(timeP);
+    // 倒计时完成清除定时器
+    if (time < 0) {
+      canSend.value = true;
+      sendBtn.value = "重新发送";
+      clearInterval(setInter);
+    }
+  }, 1000);
+  return setInter;
+}
 
 // 发送验证码
 function sendCheckCode(this: any): void {
-
   if (email.value.trim() === "") {
     ElMessage({
       message: "请填写邮箱",
       type: "error",
     });
-    return
+    return;
   }
 
   if (canSend.value && email.value.trim() != "") {
@@ -73,42 +128,27 @@ function sendCheckCode(this: any): void {
 
     // 定义倒计时
     let time = 60;
-
-    function timeP() {
-      sendBtn.value = time-- + "s";
-    }
-
-    let setInter = setInterval(() => {
-      timeP.call(this);
-      // 倒计时完成清除定时器
-      if (time < 0) {
-        canSend.value = true;
-        sendBtn.value = "重新发送";
-        clearInterval(setInter);
-      }
-    }, 1000);
-    let that = this
-
-    let date = new Date();
+    let setInter = null;
 
     sendCode({
-      startTime: date.getHours() + ":" + date.getMinutes(),
       email: email.value,
     })
       .then(({ data: res }) => {
-        timeP.call(that);
+        setInter = timepiece(time);
         ElMessage({
           message: res.value.data.message,
-          type: 'success'
-        })
+          type: "success",
+        });
       })
-      .catch(err => {
+      .catch((err) => {
         ElMessage({
           message: err,
           type: "error",
         });
+        clearInterval(setInter);
+        sendBtn.value = "重新发送";
         canSend.value = true;
-      })
+      });
   }
 }
 
@@ -167,27 +207,25 @@ function submitForm(): void {
     account: username.value,
     password: password.value,
     email: email.value,
-    email_code: checkCode.value
-  })
-    .then(({ data: res }) => {
-      if (res.value?.code === 1001) {
-        // 注册成功
-        ElMessage({
-          message: res.value.message,
-          type: "success",
-        });
-        router.push("/login");
-      } else {
-        // 注册失败
-        ElMessage({
-          message: res.value.message,
-          type: "error",
-        });
-        return;
-      }
-    })
+    email_code: checkCode.value,
+  }).then(({ data: res }) => {
+    if (res.value?.code === 1001) {
+      // 注册成功
+      ElMessage({
+        message: res.value.message,
+        type: "success",
+      });
+      router.push("/login");
+    } else {
+      // 注册失败
+      ElMessage({
+        message: res.value.message,
+        type: "error",
+      });
+      return;
+    }
+  });
 }
-
 </script>
 
 <style scoped>

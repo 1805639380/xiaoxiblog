@@ -78,7 +78,6 @@
 </template>
 
 <script setup lang="ts">
-import { ElMessage } from "element-plus";
 
 useHead({
   title: "注册",
@@ -115,7 +114,7 @@ function timepiece(time: number) {
 // 发送验证码
 function sendCheckCode(this: any): void {
   if (email.value.trim() === "") {
-    ElMessage({
+    useMessage({
       message: "请填写邮箱",
       type: "error",
     });
@@ -135,13 +134,13 @@ function sendCheckCode(this: any): void {
     })
       .then(({ data: res }) => {
         setInter = timepiece(time);
-        ElMessage({
+        useMessage({
           message: res.value.data.message,
           type: "success",
         });
       })
       .catch((err) => {
-        ElMessage({
+        useMessage({
           message: err,
           type: "error",
         });
@@ -172,7 +171,7 @@ function submitForm(): void {
   let emailRe = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
   // 用户名不符合要求
   if (!check(usernameRe, username.value)) {
-    ElMessage({
+    useMessage({
       message: "用户名需在8-15位！",
       type: "error",
     });
@@ -180,7 +179,7 @@ function submitForm(): void {
   }
   // 密码不符合要求
   if (!check(passwordRe, password.value)) {
-    ElMessage({
+    useMessage({
       message: "密码需在6-16位！",
       type: "error",
     });
@@ -188,7 +187,7 @@ function submitForm(): void {
   }
   // 输入的密码与确认的密码 不匹配
   if (password.value !== confirmPassword.value) {
-    ElMessage({
+    useMessage({
       message: "两次输入的密码不一致！",
       type: "error",
     });
@@ -196,7 +195,7 @@ function submitForm(): void {
   }
   // 邮箱格式不正确
   if (!check(emailRe, email.value)) {
-    ElMessage({
+    useMessage({
       message: "邮箱格式不正确！",
       type: "error",
     });
@@ -211,14 +210,14 @@ function submitForm(): void {
   }).then(({ data: res }) => {
     if (res.value?.code === 1001) {
       // 注册成功
-      ElMessage({
+      useMessage({
         message: res.value.message,
         type: "success",
       });
       router.push("/login");
     } else {
       // 注册失败
-      ElMessage({
+      useMessage({
         message: res.value.message,
         type: "error",
       });

@@ -26,7 +26,6 @@
   
 <script setup lang='ts'>
 import md5 from "js-md5";
-import { ElMessage } from 'element-plus'
 
 useHead({
     title: "登录"
@@ -54,7 +53,7 @@ function hfBtnColor(): void {
 async function submitForm() {
     // 未输入用户名
     if (username.value.length < 1) {
-        ElMessage({
+        useMessage({
             message: "用户名不能为空！",
             type: 'error'
         })
@@ -63,7 +62,7 @@ async function submitForm() {
 
     // 未输入密码
     if (password.value.length < 1) {
-        ElMessage({
+        useMessage({
             message: "密码不能为空！",
             type: 'error'
         })
@@ -90,7 +89,7 @@ async function submitForm() {
             let resDataRef = res.data
             if (resDataRef.value.code !== 1001) {
                 // 登录失败
-                ElMessage({
+                useMessage({
                     message: resDataRef.value.message,
                     type: "error",
                 });
@@ -107,7 +106,7 @@ async function submitForm() {
 
                 token.value = resDataRef.value?.data.access_token
 
-                ElMessage({
+                useMessage({
                     message: resDataRef.value?.message,
                     type: "success",
                 });
@@ -124,7 +123,7 @@ async function submitForm() {
             }
         })
         .catch((err) => {
-            ElMessage({
+            useMessage({
                 message: err,
                 type: "error",
             });

@@ -70,7 +70,6 @@
 
 <script setup lang="ts">
 import { UserStateType } from "@/types/user";
-import { ElMessage } from "element-plus";
 
 useHead({
   title: "我的信息",
@@ -140,7 +139,7 @@ async function updateHandler() {
     // 调用vuex action中 方法 查询用户信息，存入vux
     const userState = await useUserState();
     await keepUserData(userState);
-    ElMessage({
+    useMessage({
       message: "修改成功！",
       type: "success",
     });

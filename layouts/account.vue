@@ -78,7 +78,7 @@ function exit() {
   token.value = "";
   // 清除vuex保存的状态
   cleanUserState();
-  ElMessage({
+  useMessage({
     message: "退出成功！",
     type: "success",
   });

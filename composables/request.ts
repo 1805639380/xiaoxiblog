@@ -1,5 +1,3 @@
-import { ElMessage } from "element-plus";
-
 interface RequestType {
   url: string;
   data?: object | string;
@@ -42,14 +40,14 @@ export const useRequest = <T>(options: RequestType, lazy: boolean = false) => {
     lazy,
     onRequestError({ request, options, error }) {
       // 处理请求错误
-      ElMessage({
+      useMessage({
         message: error.message,
         type: "error",
       });
     },
     onResponseError({ request, response, options }) {
       // 处理响应错误
-      ElMessage({
+      useMessage({
         message: response._data.message,
         type: "error",
       });

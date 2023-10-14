@@ -14,7 +14,6 @@
 </template>
 
 <script setup lang='ts'>
-import { ElMessage } from 'element-plus';
 import { ArticleData, ArticleType } from '~~/types/article';
 import lottie from 'lottie-web';
 import animationData from '@/assets/lottie/animation_ll7j9mp7.json'
@@ -46,7 +45,7 @@ let articleList = reactive<Array<ArticleType>>(props.articleList)
 async function getMoreArticle() {
   // 超过页数
   if (Math.ceil(props.count / props.offset) <= currentPage.value) {
-    ElMessage({ message: "后面没有内容了。", type: "warning" })
+    useMessage({ message: "后面没有内容了。", type: "warning" })
     return
   }
   loading.value = true
@@ -54,7 +53,7 @@ async function getMoreArticle() {
   let { data: article_res } = await selectArticle({ page: currentPage.value, offset: props.offset })
   loading.value = false
   if (!article_res.value) {
-    ElMessage({ message: "服务器繁忙，请稍后再试！", type: 'error' })
+    useMessage({ message: "服务器繁忙，请稍后再试！", type: 'error' })
     return
   }
 

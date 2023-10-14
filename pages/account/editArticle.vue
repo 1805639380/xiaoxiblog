@@ -87,7 +87,6 @@
 <script setup lang="ts">
 import type { FormInstance } from "element-plus";
 import { Plus } from "@element-plus/icons";
-import { ElMessage } from "element-plus";
 import type { UploadProps } from "element-plus";
 import sanitizeHtml from "sanitize-html";
 import MdEditor from "md-editor-v3";
@@ -143,7 +142,10 @@ const typeOptions = [
 // 图片上传前校验
 const beforeAvatarUpload: UploadProps["beforeUpload"] = (rawFile) => {
   if (rawFile.size / 1024 > 200) {
-    ElMessage.error("图片文件不能超过200kb!");
+    useMessage({
+      message: "图片文件不能超过200kb!",
+      type: "error",
+    });
     return false;
   }
   return true;
@@ -225,7 +227,10 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         pic: editForm.imageUrl,
       });
       if (data.value.code === 1001) {
-        ElMessage.success("发布成功");
+        useMessage({
+          message: "发布成功",
+          type: "success",
+        });
         setTimeout(() => {
           router.push("/");
         }, 1000);

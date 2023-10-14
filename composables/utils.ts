@@ -1,3 +1,5 @@
+import { MessageParams } from "element-plus";
+
 export const useCatch = <T>(fn: Promise<T>) => {
   return fn
     .then((res: T) => {
@@ -25,4 +27,18 @@ export const useLazyLoadImage = (imgs: NodeListOf<HTMLImageElement>) => {
   imgs.forEach((img) => {
     io.observe(img);
   });
+};
+
+let currentMessage = null;
+/**
+ * 自定义消息提示
+ * @param options
+ */
+export const useMessage = (options: MessageParams) => {
+  if (currentMessage) {
+    currentMessage.close();
+  }
+  const message = ElMessage(Object.assign({ offset: 80 }, options));
+
+  currentMessage = message;
 };

@@ -63,7 +63,7 @@ router.beforeEach(async (to, from, next) => {
   transition: filter 1s linear;
 }
 .loadingComplete {
-  filter: blur(0px);
+  filter: none;
 }
 /* showContent */
 .showContent {

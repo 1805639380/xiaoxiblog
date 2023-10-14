@@ -2,64 +2,82 @@
   <div class="article">
     <div class="articleWrap">
       <div class="articleItems">
-        <ArticleItem v-for="(item, index) in articleList" :articleData="item" :key="index"
-          :isRowReverse="index % 2 == 0" />
+        <ArticleItem
+          v-for="(item, index) in articleList"
+          :articleData="item"
+          :key="index"
+          :isRowReverse="index % 2 == 0"
+        />
       </div>
+      <el-empty
+        v-if="articleList.length < 1"
+        :image-size="200"
+        :description="emptyDescription"
+      />
     </div>
-    <div class="getMore">
-      <div v-show="loading" ref="lottieLoadingDom" id="lottie_loading" class="lottie_loading"></div>
-      <button v-show="!loading" type="button" @click="getMoreArticle">MoreArticle</button>
+    <div class="getMore" v-if="articleList.length > 0">
+      <div
+        v-show="loading"
+        ref="lottieLoadingDom"
+        id="lottie_loading"
+        class="lottie_loading"
+      ></div>
+      <button v-show="!loading" type="button" @click="getMoreArticle">
+        MoreArticle
+      </button>
     </div>
   </div>
 </template>
 
-<script setup lang='ts'>
-import { ArticleData, ArticleType } from '~~/types/article';
-import lottie from 'lottie-web';
-import animationData from '@/assets/lottie/animation_ll7j9mp7.json'
+<script setup lang="ts">
+import { ArticleData, ArticleType } from "~~/types/article";
+import lottie from "lottie-web";
+import animationData from "@/assets/lottie/animation_ll7j9mp7.json";
 
-const lottieLoadingDom = ref(null)
-const loading = ref(false)
-
+const lottieLoadingDom = ref(null);
+const loading = ref(false);
+const emptyDescription = "网站中暂无文章数据。";
 onMounted(() => {
   lottie.loadAnimation({
     container: lottieLoadingDom.value!,
-    renderer: 'svg',
+    renderer: "svg",
     loop: true,
     autoplay: true,
-    animationData
-  })
-})
+    animationData,
+  });
+});
 
 const props = defineProps<{
-  articleList: Array<ArticleType>,
-  currentPage: number,
-  count: number,
-  offset: number
-}>()
+  articleList: Array<ArticleType>;
+  currentPage: number;
+  count: number;
+  offset: number;
+}>();
 
-let currentPage = ref<number>(props.currentPage)
-let articleList = reactive<Array<ArticleType>>(props.articleList)
+let currentPage = ref<number>(props.currentPage);
+let articleList = reactive<Array<ArticleType>>(props.articleList);
 
 // 加载文章
 async function getMoreArticle() {
   // 超过页数
   if (Math.ceil(props.count / props.offset) <= currentPage.value) {
-    useMessage({ message: "后面没有内容了。", type: "warning" })
-    return
+    useMessage({ message: "后面没有内容了。", type: "warning" });
+    return;
   }
-  loading.value = true
-  currentPage.value++
-  let { data: article_res } = await selectArticle({ page: currentPage.value, offset: props.offset })
-  loading.value = false
+  loading.value = true;
+  currentPage.value++;
+  let { data: article_res } = await selectArticle({
+    page: currentPage.value,
+    offset: props.offset,
+  });
+  loading.value = false;
   if (!article_res.value) {
-    useMessage({ message: "服务器繁忙，请稍后再试！", type: 'error' })
-    return
+    useMessage({ message: "服务器繁忙，请稍后再试！", type: "error" });
+    return;
   }
 
-  articleList.push(...article_res.value.data.rows)
+  articleList.push(...article_res.value.data.rows);
 }
-
 </script>
 
 <style scoped>

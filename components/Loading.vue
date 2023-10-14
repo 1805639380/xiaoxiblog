@@ -1,7 +1,10 @@
 <template>
-  <div class="loading">
+  <div
+    class="loading"
+    :class="{ complete: props.isComplete }"
+    @animationend="animationComplete"
+  >
     <div class="loading_content">
-      <!-- <div class="loading_animation" ref="lottieAnimationRef"></div> -->
       <div class="sk-chase">
         <div class="sk-chase-dot"></div>
         <div class="sk-chase-dot"></div>
@@ -16,10 +19,18 @@
 </template>
 
 <script setup lang="ts">
-const loadingText = ref("首次加载较慢，请耐心等待~");
+const loadingText = ref("加载中……若是首次加载较慢，请耐心等待~");
 useHead({
   title: "加载中~",
 });
+const props = defineProps<{
+  isComplete: boolean;
+  completeHandle: Function;
+}>();
+
+const animationComplete = () => {
+  props.completeHandle();
+};
 </script>
 
 <style scoped>
@@ -30,7 +41,19 @@ useHead({
   right: 0;
   bottom: 0;
   z-index: 99;
-  background-color: #fff;
+  width: 100%;
+  background-image: linear-gradient(180deg, #fff1eb 40%, #ace0f9 100%);
+}
+.complete {
+  animation: leave 1s forwards cubic-bezier(0.83, 0, 0.17, 1);
+}
+@keyframes leave {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }
 .loading_content {
   width: 100%;

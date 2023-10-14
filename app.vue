@@ -1,7 +1,11 @@
 <template>
   <div id="app">
-    <Loading v-if="isShowLoading"></Loading>
-    <NuxtPage></NuxtPage>
+    <Loading
+      v-if="isShowLoading"
+      :completeHandle="completeHandle"
+      :isComplete="isComplete"
+    ></Loading>
+    <NuxtPage class="nuxt_page" :class="{loadingComplete: isComplete}"></NuxtPage>
   </div>
 </template>
 
@@ -21,6 +25,9 @@ nprogress.configure({
   trickleSpeed: 200, // 自动递增间隔
   minimum: 0.3, // 初始化时的最小百分比
 });
+
+const completeHandle = () => (isShowLoading.value = false);
+
 const userState = await useUserState();
 
 await keepUserData(userState);
@@ -28,9 +35,10 @@ await keepUserData(userState);
 nuxtApp.hook("page:start", () => {
   nprogress.start();
 });
+const isComplete = ref(false);
 
 nuxtApp.hook("page:finish", () => {
-  isShowLoading.value = false;
+  isComplete.value = true;
   nprogress.done();
   if (process.client) {
     window.scrollTo(0, 0);
@@ -49,6 +57,14 @@ router.beforeEach(async (to, from, next) => {
 @import "element-plus/dist/index.css";
 @import "nprogress/nprogress.css";
 
+.nuxt_page {
+  filter: blur(100px);
+  overflow: hidden;
+  transition: filter 1s linear;
+}
+.loadingComplete {
+  filter: blur(0px);
+}
 /* showContent */
 .showContent {
   padding-top: 85.05px;

@@ -3,7 +3,7 @@
     <Banner :height="'50vh'">归档</Banner>
     <nuxt-layout name="container" :showUserInfo="false">
       <template #containerLeftMain>
-        <el-empty v-if="!articlesGroup" description="内容为空" />
+        <el-empty v-if="articlesGroup.length < 1" description="内容为空" />
         <el-timeline v-else>
           <template v-for="parent_item in articlesGroup">
             <el-timeline-item
@@ -73,9 +73,9 @@ let { data: articles } = await getArticleTimeline<{
   rows: ArticleGroup[];
 }>();
 
-const articlesGroup = ref<Array<ArticleGroup>>([]);
+const articlesGroup = ref<Array<ArticleGroup>>();
 // 遍历数据并按照年份和月份进行分类
-articlesGroup.value = articles.value?.data?.rows;
+articlesGroup.value = articles.value?.data?.rows || [];
 </script>
 
 <style scoped>

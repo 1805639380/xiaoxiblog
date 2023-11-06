@@ -11,7 +11,9 @@ type LoginType = {
  * @returns
  */
 export const login = function (datas: LoginType) {
-  return useRequest({
+  return useRequest<{
+    access_token: string;
+  }>({
     url: "/login",
     method: "post",
     data: datas,
@@ -27,7 +29,7 @@ type RegisterType = {
 
 // 注册
 export const register = function (datas: RegisterType) {
-  return useRequest({
+  return useRequest<ResponseData<any>>({
     url: "/user",
     method: "post",
     data: datas,

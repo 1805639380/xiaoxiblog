@@ -104,6 +104,7 @@ onMounted(() => {
 <style>
 .menus .router-link-active {
   color: pink;
+  font-weight: bold;
 }
 
 .loginAndRegister {
@@ -158,6 +159,7 @@ onMounted(() => {
   display: inline-block;
   text-align: center;
   /* width: 7.5rem; */
+  font-weight: bold;
 }
 
 .head .logo a {

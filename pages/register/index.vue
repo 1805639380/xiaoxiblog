@@ -3,10 +3,11 @@
     <div class="register">
       <form action="#" class="form-wrapper">
         <div class="logo">
-          <img src="~assets/img/logo.svg" alt="" /> Su chamber
+          <img src="~assets/img/logo.svg" alt="" />
+          <span class="logo-text">Su chamber</span>
         </div>
         <div class="form-item">
-          <label for="username">username:</label>
+          <label for="username">账号:</label>
           <input
             type="text"
             id="usernmae"
@@ -16,7 +17,7 @@
           />
         </div>
         <div class="form-item">
-          <label for="userpassword">password:</label>
+          <label for="userpassword">密码:</label>
           <input
             type="password"
             id="userpassword"
@@ -26,7 +27,7 @@
           />
         </div>
         <div class="form-item">
-          <label for="confirmPwd">confirm password:</label>
+          <label for="confirmPwd">确认密码:</label>
           <input
             type="password"
             id="confirmPwd"
@@ -36,7 +37,7 @@
           />
         </div>
         <div class="form-item">
-          <label for="email">email:</label>
+          <label for="email">邮箱:</label>
           <input
             type="email"
             id="email"
@@ -46,7 +47,7 @@
           />
         </div>
         <div class="form-item">
-          <label for="checkCode">Verification code:</label>
+          <label for="checkCode">验证码:</label>
           <div class="check">
             <input
               type="text"
@@ -293,8 +294,14 @@ function submitForm(): void {
 
 .logo {
   padding: 25px 0;
-  font-size: 30px;
+  font-size: 0;
   color: #7043fe;
+}
+
+.logo .logo-text {
+  font-size: 30px;
+  font-weight: 700;
+  vertical-align: middle;
 }
 
 .logo img {

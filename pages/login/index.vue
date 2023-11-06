@@ -2,13 +2,16 @@
     <nuxt-layout name="default">
         <div class="login">
             <form action="#" class="form-wrapper" @submit.prevent="submitForm">
-                <div class="logo"><img src="~assets/img/logo.svg" alt=""> Su chamber</div>
+                <div class="logo">
+                    <img src="~assets/img/logo.svg" alt="" />
+                    <span class="logo-text">Su chamber</span>
+                </div>
                 <div class="form-item">
-                    <label for="username">username:</label>
+                    <label for="username">账号:</label>
                     <input type="text" id="usernmae" name="username" autocomplete="off" v-model="username">
                 </div>
                 <div class="form-item">
-                    <label for="userpassword">password:</label>
+                    <label for="userpassword">密码:</label>
                     <input type="password" id="userpassword" name="password" autocomplete="off" v-model="password">
                 </div>
                 <p><input type="checkbox" @change="isChecked" :checked="isKnowUser" id="check"><label
@@ -184,11 +187,16 @@ onMounted(() => {
 }
 
 .logo {
-    padding: 25px 0;
-    font-size: 30px;
-    color: #7043fe;
+  padding: 25px 0;
+  font-size: 0;
+  color: #7043fe;
 }
 
+.logo .logo-text {
+  font-size: 30px;
+  font-weight: 700;
+  vertical-align: middle;
+}
 .logo img {
     vertical-align: middle;
     transform: rotate(60deg);

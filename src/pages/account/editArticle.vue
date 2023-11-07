@@ -91,6 +91,7 @@ import type { UploadProps } from "element-plus";
 import sanitizeHtml from "sanitize-html";
 import MdEditor from "md-editor-v3";
 import "md-editor-v3/lib/style.css";
+import { addArticle } from "~/api/articleApi";
 
 useHead({
   title: "文章编辑",

@@ -1,17 +1,17 @@
-import * as userType from "~~/types/user";
+import { getUserData } from "~/api/userApi";
+import * as userType from "~/types/user";
 
 export const getWindowWidth = (document) =>
   document.documentElement.clientWidth;
 
 export const useToken = () => {
   const token = useCookie("token");
-  console.log("获取");
 
   return token;
 };
 
 export const keepUserData = async (
-  userState: globalThis.Ref<UserStateType>
+  userState: globalThis.Ref<userType.UserStateType>
 ) => {
   let { data, refresh } = await getUserData();
 

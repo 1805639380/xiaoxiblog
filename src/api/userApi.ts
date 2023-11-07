@@ -47,7 +47,7 @@ export const sendCode = function (datas: { email: string }) {
 
 // 获取用户数据
 export const getUserData = function () {
-  return useRequest({
+  return useRequest<ResponseData<any>>({
     url: "/user",
     method: "get",
   });

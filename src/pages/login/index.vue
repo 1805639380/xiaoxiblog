@@ -29,6 +29,7 @@
   
 <script setup lang='ts'>
 import md5 from "js-md5";
+import { login } from "~/api/userApi";
 
 useHead({
     title: "登录"

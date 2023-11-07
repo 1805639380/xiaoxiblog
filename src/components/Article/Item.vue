@@ -51,7 +51,7 @@
 </template>
 
 <script setup lang="ts">
-import { ArticleType } from "~~/types/article";
+import { ArticleType } from "~/types/article";
 import animationData from "~/assets/lottie/animation_lna1ssgf.json";
 import lottie from "lottie-web";
 

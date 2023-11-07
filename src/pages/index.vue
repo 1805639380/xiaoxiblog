@@ -23,6 +23,7 @@
 
 <script setup lang="ts">
 import Typed from "typed.js";
+import { selectArticle } from "~/api/articleApi";
 import { ArticleType } from "~/types/article";
 
 const artilceData = ref<Array<ArticleType>>([]);

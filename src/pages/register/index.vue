@@ -79,6 +79,8 @@
 </template>
 
 <script setup lang="ts">
+import { register, sendCode } from '~/api/userApi';
+
 
 useHead({
   title: "注册",

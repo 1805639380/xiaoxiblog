@@ -1,43 +1,43 @@
 <template>
   <div id="backTop">
-    <a href="javascript:void(0)" :class="{ isShow: windowScrollTop > 200 }" @click="backTopFun"></a>
+    <a
+      href="javascript:void(0)"
+      :class="{ isShow: windowScrollTop > 200 }"
+      @click="backTopFun"
+    ></a>
   </div>
 </template>
 
 <script setup lang="ts">
+let windowScrollTop = ref(0);
 
-let windowScrollTop = ref(0)
+let isStickTop = ref(true);
 
-let isStickTop = ref(true)
-
-let backTopFun = ref(() => { })
+let backTopFun = ref(() => {});
 
 onMounted(() => {
-  windowScrollTop.value = document.documentElement.scrollTop
-  window.addEventListener('scroll', e => {
+  windowScrollTop.value = document.documentElement.scrollTop;
+  window.addEventListener("scroll", (e) => {
     //滚动条高度大于10的时候导航栏固定
-    windowScrollTop.value = document.documentElement.scrollTop
+    windowScrollTop.value = document.documentElement.scrollTop;
 
-    windowScrollTop.value > 10 ? isStickTop.value = true : isStickTop.value = false
-  })
+    windowScrollTop.value > 10
+      ? (isStickTop.value = true)
+      : (isStickTop.value = false);
+  });
 
   backTopFun.value = function () {
     let top = document.documentElement.scrollTop || document.body.scrollTop;
+    let speed = Math.ceil(top / 10); // 每次滚动多少 （步长值）
     // 实现滚动效果
     const timeTop = setInterval(() => {
-
-      document.body.scrollTop =
-        document.documentElement.scrollTop =
-        top -=
-        50;
+      document.documentElement.scrollTop = top -= speed;
       if (top <= 0) {
         clearInterval(timeTop);
       }
-    }, 10);
-  }
-})
-
-
+    });
+  };
+});
 </script>
 
 <style scoped>
@@ -55,11 +55,10 @@ onMounted(() => {
   background: url(assets/img/scroll.png) no-repeat center;
   background-position-y: -1050px;
   z-index: 9;
-  transition: all .3s linear;
+  transition: all 0.3s linear;
 }
 
 @keyframes backTop {
-
   0%,
   100% {
     transform: translateY(-10px);

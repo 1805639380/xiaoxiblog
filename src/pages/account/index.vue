@@ -70,6 +70,7 @@
 
 <script setup lang="ts">
 import { UserStateType } from "@/types/user";
+import { updateUserData } from "~/api/userApi";
 
 useHead({
   title: "我的信息",

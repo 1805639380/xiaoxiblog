@@ -16,6 +16,7 @@ export default defineNuxtConfig({
     shim: false,
     strict: false,
   },
+  srcDir: "src",
   vite: {
     build: {},
     plugins: [
@@ -30,7 +31,7 @@ export default defineNuxtConfig({
     },
   },
   components: {
-    dirs: ["~/composables", "~/types", "~/components"],
+    dirs: ["~/composables", "~/components"],
     global: true,
   },
   routeRules: {

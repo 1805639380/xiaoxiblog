@@ -83,7 +83,8 @@ import emoji from "@/assets/emoji";
 import { CommentApi, ConfigApi, UToast, throttle } from "undraw-ui";
 import { ArticleType } from "~/types/article";
 import { dayjs } from "element-plus";
-import { LikesCommentData } from "~/composables/commentApi";
+import { getArticleDetail } from "~/api/articleApi";
+import { LikesCommentData, addComment, delComment, likesComment, replyComment, selectComment } from "~/api/commentApi";
 
 const background = ref(
   "https://img-baofun.zhhainiao.com/fs/71e6812c9fec3f987897c8763a7f385f.jpg"

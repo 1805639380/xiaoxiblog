@@ -20,3 +20,29 @@
     src: url(https://xiaoxiblog.oss-cn-beijing.aliyuncs.com/font/tsxmm.ttf);
     font-display: swap;
 }
+
+/* 在线链接服务仅供平台体验和调试使用，平台不承诺服务的稳定性，企业客户需下载字体包自行发布使用并做好备份。 */
+@font-face {
+    font-family: "思源宋体 Regular";
+    font-weight: 400;
+    src: url("//at.alicdn.com/wf/webfont/t5J22Ciu8Ivi/XH5n4irhKiKz.woff2") format("woff2"),
+        url("//at.alicdn.com/wf/webfont/t5J22Ciu8Ivi/BJr2H5IWTGvT.woff") format("woff");
+    font-display: swap;
+}
+
+/* 在线链接服务仅供平台体验和调试使用，平台不承诺服务的稳定性，企业客户需下载字体包自行发布使用并做好备份。 */
+@font-face {
+    font-family: "Nabla Regular";
+    src: url("//at.alicdn.com/wf/webfont/t5J22Ciu8Ivi/21j6FUMTElrI.woff2") format("woff2"),
+        url("//at.alicdn.com/wf/webfont/t5J22Ciu8Ivi/FafCxZT7D4W7.woff") format("woff");
+    font-display: swap;
+}
+
+/* 在线链接服务仅供平台体验和调试使用，平台不承诺服务的稳定性，企业客户需下载字体包自行发布使用并做好备份。 */
+@font-face {
+    font-family: "钉钉进步体 Regular";
+    font-weight: 400;
+    src: url("./hd9eh4A9jFvw.woff2") format("woff2"),
+        url("./hd9eh4A9jFvw.woff") format("woff");
+    font-display: swap;
+}

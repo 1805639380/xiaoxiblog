@@ -1,5 +1,5 @@
 import { getUserData } from "~/api/userApi";
-import * as userType from "~/types/user";
+import type * as userType from "~/types/user";
 
 export const getWindowWidth = (document) =>
   document.documentElement.clientWidth;

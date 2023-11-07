@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-import { ArticleData, ArticleType } from "~/types/article";
+import type { ArticleData, ArticleType } from "~/types/article";
 import lottie from "lottie-web";
 import animationData from "@/assets/lottie/animation_ll7j9mp7.json";
 import { selectArticle } from "~/api/articleApi";
@@ -56,7 +56,7 @@ const props = defineProps<{
 }>();
 
 let currentPage = ref<number>(props.currentPage);
-let articleList = reactive<Array<ArticleType>>(props.articleList);
+let articleList = reactive<Array<ArticleType>>(props.articleList || []);
 
 // 加载文章
 async function getMoreArticle() {

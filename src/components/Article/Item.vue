@@ -51,7 +51,7 @@
 </template>
 
 <script setup lang="ts">
-import { ArticleType } from "~/types/article";
+import type { ArticleType } from "~/types/article";
 import animationData from "~/assets/lottie/animation_lna1ssgf.json";
 import lottie from "lottie-web";
 
@@ -98,7 +98,7 @@ onMounted(() => {
   bottom: 0;
   width: 100%;
   background-color: yellow;
-  transition: all .25s;
+  transition: all 0.25s;
 }
 .rowReverse {
   flex-direction: row-reverse;

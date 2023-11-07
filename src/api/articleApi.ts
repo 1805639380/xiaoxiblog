@@ -1,4 +1,4 @@
-import { ArticleType } from "~/types/article";
+import type { ArticleType } from "~/types/article";
 
 interface selectArticleDataType {
   page?: number;

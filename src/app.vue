@@ -1,10 +1,10 @@
 <template>
+  <Loading
+    v-if="isShowLoading"
+    :completeHandle="completeHandle"
+    :isComplete="isComplete"
+  ></Loading>
   <div id="app">
-    <Loading
-      v-if="isShowLoading"
-      :completeHandle="completeHandle"
-      :isComplete="isComplete"
-    ></Loading>
     <NuxtPage class="nuxt_page" :class="{loadingComplete: isComplete}"></NuxtPage>
   </div>
 </template>

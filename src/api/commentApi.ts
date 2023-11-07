@@ -1,5 +1,5 @@
-import { Comment } from "~/types/comment";
-import { ResponseData } from "~/types/common";
+import type { Comment } from "~/types/comment";
+import type { ResponseData } from "~/types/common";
 
 const API_PREFIX = "/comment";
 

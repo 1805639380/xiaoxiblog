@@ -1,4 +1,4 @@
-import { ResponseData } from "~/types/common";
+import type { ResponseData } from "~/types/common";
 
 type LoginType = {
   account: string;

@@ -9,12 +9,12 @@
           <Notice />
         </template>
         <template #containerLeftMain>
-          <LazyArticleWrap
+          <ArticleWrap
             :currentPage="1"
             :offset="5"
             :articleList="artilceData"
             :count="articleCount"
-          ></LazyArticleWrap>
+          ></ArticleWrap>
         </template>
       </nuxt-layout>
     </nuxt-layout>
@@ -24,7 +24,7 @@
 <script setup lang="ts">
 import Typed from "typed.js";
 import { selectArticle } from "~/api/articleApi";
-import { ArticleType } from "~/types/article";
+import type { ArticleType } from "~/types/article";
 
 const artilceData = ref<Array<ArticleType>>([]);
 const articleCount = ref<number>(0);

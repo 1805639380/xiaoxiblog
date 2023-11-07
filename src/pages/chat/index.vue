@@ -70,8 +70,7 @@
 </template>
 
 <script setup lang="ts">
-import { Ref, onBeforeUnmount } from "vue";
-import { UserStateType } from "~/types/user";
+import type { UserStateType } from "~/types/user";
 import { ElNotification, ElMessageBox } from "element-plus";
 import { io } from "socket.io-client";
 const socket = io(useRuntimeConfig().public.socket_url);

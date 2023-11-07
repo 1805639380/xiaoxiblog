@@ -55,8 +55,8 @@ import {
   dayjs,
 } from "element-plus";
 import { View, Comment } from "@element-plus/icons";
-import { ArticleType } from "~/types/article";
-import { ResponseData } from "~/types/common";
+import type { ArticleType } from "~/types/article";
+import type { ResponseData } from "~/types/common";
 import { getArticleTimeline } from "~/api/articleApi";
 
 useHead({

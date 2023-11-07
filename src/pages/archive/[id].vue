@@ -80,11 +80,20 @@ import {
   UserFilled,
 } from "@element-plus/icons";
 import emoji from "@/assets/emoji";
-import { CommentApi, ConfigApi, UToast, throttle } from "undraw-ui";
-import { ArticleType } from "~/types/article";
+import { UToast, throttle } from "undraw-ui";
+import type { ConfigApi, CommentApi } from "undraw-ui";
+import type { ArticleType } from "~/types/article";
 import { dayjs } from "element-plus";
 import { getArticleDetail } from "~/api/articleApi";
-import { LikesCommentData, addComment, delComment, likesComment, replyComment, selectComment } from "~/api/commentApi";
+import {
+  addComment,
+  delComment,
+  likesComment,
+  replyComment,
+  selectComment,
+} from "~/api/commentApi";
+
+import type { LikesCommentData } from "~/api/commentApi";
 
 const background = ref(
   "https://img-baofun.zhhainiao.com/fs/71e6812c9fec3f987897c8763a7f385f.jpg"

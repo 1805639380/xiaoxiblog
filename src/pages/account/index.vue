@@ -69,7 +69,7 @@
 </template>
 
 <script setup lang="ts">
-import { UserStateType } from "@/types/user";
+import type { UserStateType } from "@/types/user";
 import { updateUserData } from "~/api/userApi";
 
 useHead({

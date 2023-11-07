@@ -15,7 +15,7 @@
               </label>
               <input
                 type="file"
-                @change="updateAvatar"
+                @change="showAvatarBlob"
                 accept="image/*"
                 name=""
                 id="avatar"
@@ -70,6 +70,7 @@
 
 <script setup lang="ts">
 import type { UserStateType } from "@/types/user";
+import { uploadImage } from "~/api/common";
 import { updateUserData } from "~/api/userApi";
 
 useHead({
@@ -101,9 +102,13 @@ for (let key in userInfo) {
   }
 }
 
-// 更新头像
-function updateAvatar(event: Event) {
+// 头像文件
+const avatarFile = ref<File>();
+
+// 头像回显
+function showAvatarBlob(event: Event) {
   let file = (event.target as any).files[0];
+  avatarFile.value = file;
   let reader = new FileReader();
   reader.readAsDataURL(file);
   reader.onload = (e) => {
@@ -113,25 +118,27 @@ function updateAvatar(event: Event) {
   };
 }
 
+// 更新用户信息
 async function updateHandler() {
-  const formData: object = {};
-  // base64转bolb数据
-  let blob: Blob = new Blob();
-  if (!userInfo.avatar.startsWith("http") && userInfo.avatar !== "") {
-    blob = dataURLtoBlob(userInfo.avatar);
+  // 更新头像
+  const f = new FormData();
+  f.append("file", avatarFile.value);
+  const { data: uploadResponse } = await uploadImage(f);
+
+  if (uploadResponse.value.code !== 1001) {
+    throw "上传头像失败";
   }
+  userInfo.avatar = uploadResponse.value.data.imageUrl;
+
+  const formData: object = {};
   for (let item in userInfo) {
-    if (item === "avatar" && blob.size > 0) {
-      (formData as any)[item] = blob;
-    } else {
-      if (item === "sex") {
-        (formData as any)[item] = sexMap.findIndex(
-          (val) => val === (userInfo as any)[item]
-        );
-        continue;
-      }
-      (formData as any)[item] = (userInfo as any)[item];
+    if (item === "sex") {
+      (formData as any)[item] = sexMap.findIndex(
+        (val) => val === (userInfo as any)[item]
+      );
+      continue;
     }
+    (formData as any)[item] = (userInfo as any)[item];
   }
   console.log(formData);
 

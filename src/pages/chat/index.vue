@@ -313,6 +313,7 @@ const chartSend = () => {
 @media screen and (max-width: 768px) {
   .chart {
     flex: 0.9;
+    font-size: 2rem;
   }
 }
 </style>

@@ -99,8 +99,7 @@ const background = `url(${props.background})`;
 }
 
 #bgcBox .middleInfo p {
-  /* font-size: 5.3125rem; */
-  font-size: 6vw;
+  font-size: 5rem;
   color: #fff;
   font-weight: 900;
   text-shadow: 0 0 15px;

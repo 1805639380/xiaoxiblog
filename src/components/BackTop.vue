@@ -74,4 +74,9 @@ onMounted(() => {
     -ms-transform: translateY(0px);
   }
 }
+@media screen and (max-width: 768px) {
+  #backTop {
+    display: none;
+  }
+}
 </style>

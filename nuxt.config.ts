@@ -11,6 +11,9 @@ export default defineNuxtConfig({
     },
   },
   devtools: { enabled: true },
+  dir: {
+    static: "/public",
+  },
   modules: ["@element-plus/nuxt"],
   typescript: {
     shim: false,

@@ -10,10 +10,31 @@
     <div class="logo">
       <nuxt-link to="/">小析のBlog</nuxt-link>
     </div>
-    <div class="menuBtn hide" @click="showMiniMenu">三</div>
+    <div class="menuBtn hide" @click="showMiniMenu">☰</div>
     <div class="menus" :class="{ miniMenuShow: isShowMiniMenu }">
-      <div class="closed hide" @click="closeMiniMenu">X</div>
-      <slot></slot>
+      <div class="closed hide" @click="closeMiniMenu">
+        <svg
+          t="1699412633290"
+          class="icon"
+          viewBox="0 0 1024 1024"
+          version="1.1"
+          xmlns="http://www.w3.org/2000/svg"
+          p-id="4017"
+          width="25"
+          height="25"
+        >
+          <path
+            d="M801.645714 170.666667l51.833905 51.590095L565.150476 511.951238l288.353524 289.670095-51.833905 51.614477-288.109714-289.450667L225.426286 853.23581 173.592381 801.621333l288.329143-289.670095L173.592381 222.256762 225.426286 170.666667l288.109714 289.426285L801.645714 170.666667z"
+            p-id="4018"
+          ></path>
+        </svg>
+      </div>
+      <slot>
+        <div class="logo">
+          <h1>小析的Blog</h1>
+
+        </div>
+      </slot>
       <div class="menu" v-for="(item, index) in props.menus" :key="index">
         <nuxt-link :to="item.path"
           ><span class="iconfont" v-html="item.icon"></span
@@ -128,6 +149,8 @@ onMounted(() => {
 
 .head img {
   width: 100%;
+  height: 100%;
+  object-fit: cover;
   border-radius: 50%;
 }
 
@@ -181,12 +204,27 @@ onMounted(() => {
 
 .head .other .search a,
 .head .other .user a {
-  display: block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.head .menus .logo {
+  display: none;
 }
 
 @media screen and (max-width: 768px) {
   .menuBtn {
     display: block !important;
+  }
+
+  .head .menus .logo {
+    display: block;
+    font-size: 1.5rem;
+    padding: 2rem;
+    font-family: cursive;
   }
 
   .closed {
@@ -195,9 +233,8 @@ onMounted(() => {
 
   .closed {
     position: absolute;
-    right: 0;
-    font-size: 25px;
-    width: 50px;
+    right: 10px;
+    top: 10px;
   }
 
   .miniMenuShow {
@@ -225,7 +262,7 @@ onMounted(() => {
     flex-direction: column;
     justify-content: start;
     height: 100vh;
-    width: 200px;
+    width: 220px;
     background-color: #fff;
     box-shadow: 0 0 10px var(--shadow);
     text-align: center;
@@ -245,6 +282,9 @@ onMounted(() => {
   .head .other .search,
   .head .other .user {
     width: 5rem;
+  }
+  .head .other .user {
+    height: 5rem;
   }
 }
 
@@ -267,6 +307,9 @@ onMounted(() => {
   width: 3rem;
   text-align: center;
   cursor: pointer;
+}
+.user {
+  height: 3rem;
 }
 
 .head .other .search:hover,

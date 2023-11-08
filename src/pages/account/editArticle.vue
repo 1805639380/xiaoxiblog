@@ -245,15 +245,19 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 </script>
 
 <style scoped>
-:deep(.md) {
-  width: 647px;
-}
-
-:deep(.md-toolbar-wrapper) {
+:deep(.md-editor-toolbar-wrapper) {
   overflow: auto;
 }
 
-:deep(.md-toolbar-wrapper .md-toolbar) {
+:deep(.md-editor-footer) {
+  height: auto;
+}
+
+:deep(.md-editor-toolbar-wrapper .md-editor-toolbar),
+:deep(
+    .md-editor-toolbar-wrapper .md-editor-toolbar-left,
+    .md-editor-toolbar-wrapper .md-editor-toolbar-right
+  ) {
   flex-wrap: wrap;
 }
 

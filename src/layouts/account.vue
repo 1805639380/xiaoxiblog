@@ -88,22 +88,6 @@ function exit() {
 </script>
 
 <style scoped>
-@media screen and (max-width: 720px) {
-  .account_content {
-    width: 80% !important;
-    flex-direction: column;
-  }
-
-  .account_content .account-left {
-    display: flex;
-  }
-
-  .account_content .account-left > div,
-  .account_content .account-left > ul li {
-    padding: 0 15px;
-  }
-}
-
 .account_content {
   display: flex;
   /* width: 60%;    */
@@ -212,5 +196,28 @@ function exit() {
 
 .account_wrap {
   padding: 20px;
+}
+@media screen and (max-width: 720px) {
+  .account_content {
+    width: 50rem;
+    flex-direction: column;
+  }
+
+  .account_content .account-left {
+    display: flex;
+  }
+
+  .account_content .account-left > div,
+  .account_content .account-left > ul li {
+    padding: 0 15px;
+  }
+  .account-ui,
+  .account-exit {
+    display: none;
+  }
+  .account-left .account-title,
+  .account_content .account-left {
+    border: none;
+  }
 }
 </style>

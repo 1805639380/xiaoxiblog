@@ -79,7 +79,7 @@ import {
   Cellphone,
   UserFilled,
 } from "@element-plus/icons";
-import emoji from "@/assets/emoji";
+import emoji from "~/assets/emoji";
 import { UToast, throttle } from "undraw-ui";
 import type { ConfigApi, CommentApi } from "undraw-ui";
 import type { ArticleType } from "~/types/article";
@@ -390,7 +390,6 @@ function loadComment() {}
   padding: 25px 10px;
   background-color: var(--defaultColor);
   border-radius: 11px;
-  box-shadow: 0 1px 20px -8px var(--shadow);
 
   .article_title {
     text-align: center;
@@ -399,12 +398,13 @@ function loadComment() {}
   .article_info {
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
     margin: 15px 0;
     font-family: cursive;
 
     & > div {
       display: inline-flex;
-      margin: 0 10px;
+      margin: 10px;
 
       :deep(.el-icon) {
         margin-right: 5px;
@@ -435,5 +435,15 @@ function loadComment() {}
 :deep(.action-box) {
   font-family: "Merriweather Sans", Helvetica, Tahoma, Arial, "PingFang SC",
     "Hiragino Sans GB", "Microsoft Yahei", "WenQuanYi Micro Hei", sans-serif;
+}
+@media screen and (max-width: 768px) {
+  .article_content {
+    font-size: 1.8rem;
+    .article_info {
+      & > div {
+        margin-right: auto;
+      }
+    }
+  }
 }
 </style>

@@ -105,6 +105,8 @@ const defaultName = ref("您还未登陆");
   display: block;
   margin: 0 auto;
   width: 7.5rem;
+  height: 7.5rem;
+  object-fit: cover;
   border-radius: 50%;
 }
 

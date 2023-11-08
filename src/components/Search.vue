@@ -68,8 +68,9 @@ onMounted(() => {
   padding-left: 55px;
   border: 1px solid #ccc;
   font-size: 25px;
-  background: url(assets/img/search.png) no-repeat #fff;
-  background-size: 40px;
+  font-family: cursive;
+  background: url(assets/img/search.svg) no-repeat #fff;
+  background-size: 32px;
   background-position: 10px;
 }
 

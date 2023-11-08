@@ -19,6 +19,12 @@ export const useRequest = <T>(options: RequestType, lazy: boolean = false) => {
   const runtimeConfig = useRuntimeConfig();
   const baseURL = runtimeConfig.public.requestBaseUrl;
 
+  const { url } = options;
+  let requestUrl = url;
+  if (!url.startsWith("http")) {
+    requestUrl = `${baseURL}${url}`;
+  }
+
   if (!options.headers) {
     options.headers = {};
   }
@@ -31,7 +37,7 @@ export const useRequest = <T>(options: RequestType, lazy: boolean = false) => {
 
   options.headers["cookie"] = useRequestHeaders(["cookie"]);
 
-  return useFetch<ResponseType<T>>(`${baseURL}${options.url}`, {
+  return useFetch<ResponseType<T>>(requestUrl, {
     body: options.data,
     credentials: "include",
     params: options.params,

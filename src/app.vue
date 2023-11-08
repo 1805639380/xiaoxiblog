@@ -30,12 +30,12 @@ nprogress.configure({
   minimum: 0.3, // 初始化时的最小百分比
 });
 const loadingAnimateCompleteNum = ref(0);
-const completeHandle = (index:number) => {
+const completeHandle = (index: number) => {
   if (index > 1) {
-    isShowLoading.value = false 
+    isShowLoading.value = false;
   }
-  loadingAnimateCompleteNum.value = index
-}
+  loadingAnimateCompleteNum.value = index;
+};
 
 const userState = await useUserState();
 

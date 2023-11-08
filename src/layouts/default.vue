@@ -10,6 +10,9 @@
     <slot></slot>
     <Footer />
     <Pet></Pet>
+    <ClientOnly>
+      <GlobalMusic />
+    </ClientOnly>
   </div>
 </template>
 
@@ -31,7 +34,7 @@ let menus = [
   {
     title: "归档",
     icon: "&#xe6b8;",
-    path: "/archive"
+    path: "/archive",
   },
   // {
   //   title: "清单",
@@ -41,7 +44,7 @@ let menus = [
   {
     title: "聊天室",
     icon: "&#xe63a;",
-    path: "/chat"
+    path: "/chat",
   },
   // {
   //   title: "留言板",

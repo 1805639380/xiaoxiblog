@@ -7,7 +7,7 @@
   <div id="app">
     <NuxtPage
       class="nuxt_page"
-      :class="{ loadingComplete: isComplete && loadingAnimateCompleteNum > 0 }"
+      :class="{ loadingComplete: isComplete }"
     ></NuxtPage>
   </div>
 </template>
@@ -29,12 +29,8 @@ nprogress.configure({
   trickleSpeed: 200, // 自动递增间隔
   minimum: 0.3, // 初始化时的最小百分比
 });
-const loadingAnimateCompleteNum = ref(0);
-const completeHandle = (index: number) => {
-  if (index > 1) {
-    isShowLoading.value = false;
-  }
-  loadingAnimateCompleteNum.value = index;
+const completeHandle = () => {
+  isShowLoading.value = false;
 };
 
 const userState = await useUserState();
@@ -48,7 +44,9 @@ const isComplete = ref(false);
 provide("isLoadingComplete", isComplete);
 
 nuxtApp.hook("page:finish", () => {
-  isComplete.value = true;
+  setTimeout(() => {
+    isComplete.value = true;
+  }, 500);
   nprogress.done();
   if (process.client) {
     window.scrollTo(0, 0);

@@ -1,9 +1,5 @@
 <template>
-  <div
-    class="loading animate__animated animate__fadeInLeftBig"
-    :class="{ complete: animateCompleteNums > 0 && props.isComplete }"
-    @animationend="animationComplete"
-  >
+  <div ref="loadingEl" class="loading animate__animated animate__fadeInLeftBig">
     <div class="loading_content">
       <div class="sk-chase">
         <div class="sk-chase-dot"></div>
@@ -27,12 +23,21 @@ const props = defineProps<{
   isComplete: boolean;
   completeHandle: Function;
 }>();
-// 统计动画完成次数
-const animateCompleteNums = ref(0);
+
+const loadingEl = ref<HTMLDivElement>(null);
+
 const animationComplete = () => {
-  animateCompleteNums.value++;
-  props.completeHandle(animateCompleteNums.value);
+  setTimeout(() => {
+    loadingEl.value.classList.add("complete");
+    loadingEl.value.addEventListener("animationend", (e) => {
+      props.completeHandle();
+    });
+  }, 500);
 };
+
+onMounted(() => {
+  animationComplete();
+});
 </script>
 
 <style scoped>

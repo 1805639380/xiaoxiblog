@@ -44,9 +44,6 @@ const isComplete = ref(false);
 provide("isLoadingComplete", isComplete);
 
 nuxtApp.hook("page:finish", () => {
-  setTimeout(() => {
-    isComplete.value = true;
-  }, 500);
   nprogress.done();
   if (process.client) {
     window.scrollTo(0, 0);
@@ -56,6 +53,11 @@ nuxtApp.hook("page:finish", () => {
 router.beforeEach(async (to, from, next) => {
   next();
 });
+onMounted(() => {
+  setTimeout(() => {
+    isComplete.value = true;
+  }, 500);
+})
 </script>
 
 <style>

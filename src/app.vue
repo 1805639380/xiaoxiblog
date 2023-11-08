@@ -5,12 +5,16 @@
     :isComplete="isComplete"
   ></Loading>
   <div id="app">
-    <NuxtPage class="nuxt_page" :class="{loadingComplete: isComplete}"></NuxtPage>
+    <NuxtPage
+      class="nuxt_page"
+      :class="{ loadingComplete: isComplete && loadingAnimateCompleteNum > 0 }"
+    ></NuxtPage>
   </div>
 </template>
 
 <script setup lang="ts">
 import nprogress from "nprogress";
+import "animate.css";
 
 const isShowLoading = ref(true);
 
@@ -25,8 +29,13 @@ nprogress.configure({
   trickleSpeed: 200, // 自动递增间隔
   minimum: 0.3, // 初始化时的最小百分比
 });
-
-const completeHandle = () => (isShowLoading.value = false);
+const loadingAnimateCompleteNum = ref(0);
+const completeHandle = (index:number) => {
+  if (index > 1) {
+    isShowLoading.value = false 
+  }
+  loadingAnimateCompleteNum.value = index
+}
 
 const userState = await useUserState();
 
@@ -36,6 +45,7 @@ nuxtApp.hook("page:start", () => {
   nprogress.start();
 });
 const isComplete = ref(false);
+provide("isLoadingComplete", isComplete);
 
 nuxtApp.hook("page:finish", () => {
   isComplete.value = true;

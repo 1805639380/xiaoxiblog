@@ -94,6 +94,8 @@ button {
 
 /* 配置默认色 */
 :root {
+    /* animate.css默认延迟 */
+    --animate-delay: 0.5s;
     --baseColor: #2abce9;
     --shadow: #e8e8e8;
     --hshadow: #444;

@@ -1,7 +1,7 @@
 <template>
   <div
-    class="loading"
-    :class="{ complete: props.isComplete }"
+    class="loading animate__animated animate__fadeInLeftBig"
+    :class="{ complete: animateCompleteNums > 0 && props.isComplete }"
     @animationend="animationComplete"
   >
     <div class="loading_content">
@@ -27,9 +27,11 @@ const props = defineProps<{
   isComplete: boolean;
   completeHandle: Function;
 }>();
-
+// 统计动画完成次数
+const animateCompleteNums = ref(0);
 const animationComplete = () => {
-  props.completeHandle();
+  animateCompleteNums.value++;
+  props.completeHandle(animateCompleteNums.value);
 };
 </script>
 

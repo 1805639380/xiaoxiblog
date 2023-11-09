@@ -121,14 +121,15 @@ function showAvatarBlob(event: Event) {
 // 更新用户信息
 async function updateHandler() {
   // 更新头像
-  const f = new FormData();
-  f.append("file", avatarFile.value);
-  const { data: uploadResponse } = await uploadImage(f);
-
-  if (uploadResponse.value.code !== 1001) {
-    throw "上传头像失败";
+  if (avatarFile.value) {
+    const f = new FormData();
+    f.append("file", avatarFile.value);
+    const { data: uploadResponse } = await uploadImage(f);
+    if (uploadResponse.value.code !== 1001) {
+      throw "上传头像失败";
+    }
+    userInfo.avatar = uploadResponse.value.data.imageUrl;
   }
-  userInfo.avatar = uploadResponse.value.data.imageUrl;
 
   const formData: object = {};
   for (let item in userInfo) {

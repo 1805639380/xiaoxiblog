@@ -300,6 +300,7 @@ input[type="checkbox"] {
 @media screen and (max-width: 425px) {
     .login .form-wrapper {
         width: 90%;
+        font-size: 2rem;
     }
 }
 </style>

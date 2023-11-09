@@ -77,6 +77,10 @@ let { data: articles } = await getArticleTimeline<{
 const articlesGroup = ref<Array<ArticleGroup>>([]);
 // 遍历数据并按照年份和月份进行分类
 articlesGroup.value = articles.value?.data?.rows || [];
+
+watch(articles, (newVal) => {
+  articlesGroup.value = newVal.data?.rows || [];
+});
 </script>
 
 <style scoped>

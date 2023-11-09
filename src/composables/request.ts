@@ -15,7 +15,7 @@ interface ResponseType<T> {
 }
 
 // 封装 请求 工具
-export const useRequest = <T>(options: RequestType, lazy: boolean = false) => {
+export const useRequest = <T>(options: RequestType, lazy: boolean = true) => {
   const runtimeConfig = useRuntimeConfig();
   const baseURL = runtimeConfig.public.requestBaseUrl;
 

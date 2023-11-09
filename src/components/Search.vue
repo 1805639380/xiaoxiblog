@@ -84,7 +84,7 @@ onMounted(() => {
   background-color: #fff;
   z-index: 11;
   animation: show 0.5s cubic-bezier(0, 0.84, 0.19, 1.15) forwards;
-  background-image: url("https://xiaoxiblog.oss-cn-beijing.aliyuncs.com/image/iloli.gif");
+  background-image: url("~/assets/img/iloli.gif");
   background-repeat: no-repeat;
   background-position: 100% 100%;
 }

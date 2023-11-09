@@ -3,7 +3,7 @@
     <Banner :height="'80vh'" :background="background">{{
       article_data?.title
     }}</Banner>
-    <nuxt-layout name="container" :user="userData">
+    <nuxt-layout name="container" :user="userData" :showUserInfo="false">
       <template #containerLeftMain>
         <div class="article_content">
           <div class="article_title">
@@ -60,10 +60,10 @@
         </ClientOnly>
       </template>
       <template #containerRight>
-        <u-anchor
+        <!-- <u-anchor
           style="position: sticky; right: 0; top: 100px"
           container="#article"
-        ></u-anchor>
+        ></u-anchor> -->
       </template>
     </nuxt-layout>
   </nuxt-layout>
@@ -106,9 +106,27 @@ const disableScrollComment = ref(false);
 const id: string = route.params.id as string;
 const { data, refresh: refreshArticleData } = await getArticleDetail(id);
 
-const article_data: ArticleType = toReactive((data.value as any).data.row);
+let article_data: ArticleType = toReactive((data.value as any)?.data.row);
 
-background.value = article_data?.pic;
+// 监听异步数据变化
+watch(data, async (newData) => {
+  article_data = toReactive((newData as any)?.data.row);
+  await clientInit();
+
+  // 更新评论配置
+  config.comments = getComments(commentData?.value?.data.rows) || [];
+  config.total = commentData?.value?.data.count || 0;
+});
+
+let commentData = null;
+
+async function clientInit() {
+  // 设置背景
+  background.value = article_data?.pic;
+
+  // 获取评论区数据;
+  commentData = await requestComments(page.value, offset.value);
+}
 useHead({
   title: article_data?.title || "详情页",
 });
@@ -116,20 +134,27 @@ useHead({
 const page = ref(1);
 const offset = ref(5);
 
+// 初始化
+clientInit();
+
 const userData = await useUserState();
 
+// 请求评论区数据;
 async function requestComments(page, offset) {
-  const { data, refresh: commentRefresh } = await selectComment({
-    page: page,
-    article_id: article_data?.id,
-    offset: offset,
-  });
+  if (article_data) {
+    const { data, refresh: commentRefresh } = await selectComment({
+      page: page,
+      article_id: article_data?.id,
+      offset: offset,
+    });
+    return data;
+  }
 
-  return data;
+  return null;
 }
 
 // 获取评论区数据;
-const commentData = await requestComments(page.value, offset.value);
+commentData = await requestComments(page.value, offset.value);
 
 const dateFormat = "YYYY-MM-DD";
 
@@ -207,22 +232,32 @@ function formatRelativeTime(createdAt) {
   }
 }
 
-let likeIds = commentData.value?.data.rows?.map((comment) => {
-  const userId = userData.value?.id;
-  const commentLikes = comment.likes?.filter((user) => user.id === userId);
-  const replyIds = comment.replys.map((reply) => {
-    const replyLikes = reply.likes?.filter((user) => user.id === userId);
-    if (replyLikes?.length > 0) {
-      return reply.id;
+const flatLikeIds = ref<Number[]>([]);
+
+// 获取评论id数组
+function getFlatLikeIds() {
+  let likeIds = commentData.value?.data.rows?.map((comment) => {
+    const userId = userData.value?.id;
+    const commentLikes = comment.likes?.filter((user) => user.id === userId);
+    const replyIds = comment.replys.map((reply) => {
+      const replyLikes = reply.likes?.filter((user) => user.id === userId);
+      if (replyLikes?.length > 0) {
+        return reply.id;
+      }
+    });
+
+    if (commentLikes?.length > 0) {
+      return replyIds.concat([comment.id]);
     }
   });
 
-  if (commentLikes?.length > 0) {
-    return replyIds.concat([comment.id]);
-  }
-});
-let flatLikeIds: number[] = [].concat(...likeIds);
-flatLikeIds = flatLikeIds.filter((likeId) => likeId !== undefined);
+  flatLikeIds.value = [].concat(...likeIds);
+  flatLikeIds.value = flatLikeIds.value.filter(
+    (likeId) => likeId !== undefined
+  );
+}
+
+if (article_data) getFlatLikeIds();
 
 const config = reactive<ConfigApi>({
   user: {
@@ -230,17 +265,16 @@ const config = reactive<ConfigApi>({
     username: userData.value?.name || "游客",
     avatar: userData.value?.avatar || "",
     // 评论id数组 建议:存储方式用户uid和评论id组成关系,根据用户uid来获取对应点赞评论id,然后加入到数组中返回
-    likeIds: flatLikeIds || [],
+    likeIds: (flatLikeIds.value as any) || [],
   },
   emoji: emoji,
-  comments: getComments(commentData.value?.data.rows) || [],
-  total: commentData.value?.data.count || 0,
+  comments: getComments(commentData?.value?.data.rows) || [],
+  total: commentData?.value?.data.count || 0,
 });
 
-let total = commentData.value.data.count;
 // 加载更多评论
 const getMoreComment = () => {
-  if (page.value <= Math.ceil(total / offset.value)) {
+  if (page.value <= Math.ceil(commentData.value.data.count / offset.value)) {
     setTimeout(async () => {
       page.value = page.value + 1;
       const commentData = await requestComments(page.value, offset.value);

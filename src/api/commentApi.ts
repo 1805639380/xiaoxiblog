@@ -38,11 +38,14 @@ export interface LikesCommentData {
  * @returns
  */
 export const selectComment = (data: selectCommentDataType) => {
-  return useRequest<ResponseData<Comment>>({
-    url: API_PREFIX + "/" + data.article_id,
-    method: "GET",
-    params: data,
-  });
+  return useRequest<ResponseData<Comment>>(
+    {
+      url: API_PREFIX + "/" + data.article_id,
+      method: "GET",
+      params: data,
+    },
+    true
+  );
 };
 
 /**

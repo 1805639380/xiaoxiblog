@@ -2,6 +2,8 @@ import { CommonEntity } from "./common";
 import { User } from "./user";
 
 export interface Comment extends CommonEntity {
+  value: any;
+  data: any;
   content: string;
   likes: User[];
   user: User;

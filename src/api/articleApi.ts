@@ -1,4 +1,5 @@
 import type { ArticleType } from "~/types/article";
+import type { ResponseData } from "~/types/common";
 
 interface selectArticleDataType {
   page?: number;
@@ -64,7 +65,7 @@ export const selectArticle = (
  * @returns
  */
 export const getArticleDetail = (id: string) => {
-  return useRequest({
+  return useRequest<ResponseData<ArticleType>>({
     url: API_PREFIX + "/" + id,
     method: "GET",
   });

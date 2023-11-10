@@ -2,26 +2,12 @@
   <div class="article">
     <div class="articleWrap">
       <div class="articleItems">
-        <ArticleItem
-          v-for="(item, index) in articleList"
-          :articleData="item"
-          :key="index"
-          :isRowReverse="index % 2 == 0"
-        />
+        <ArticleItem v-for="(item, index) in articles" :articleData="item" :key="index" :isRowReverse="index % 2 == 0" />
       </div>
-      <el-empty
-        v-if="articleList.length < 1"
-        :image-size="200"
-        :description="emptyDescription"
-      />
+      <el-empty v-if="articles.length < 1" :image-size="200" :description="emptyDescription" />
     </div>
-    <div class="getMore" v-if="articleList.length > 0">
-      <div
-        v-show="loading"
-        ref="lottieLoadingDom"
-        id="lottie_loading"
-        class="lottie_loading"
-      ></div>
+    <div class="getMore" v-if="articles.length > 0">
+      <div v-show="loading" ref="lottieLoadingDom" id="lottie_loading" class="lottie_loading"></div>
       <button v-show="!loading" type="button" @click="getMoreArticle">
         MoreArticle
       </button>
@@ -54,6 +40,11 @@ const props = defineProps<{
   count: number;
   offset: number;
 }>();
+const articles = ref<Array<ArticleType>>([])
+watchEffect(() => {
+  // 在这里处理 prop 变化，例如更新局部数据
+  articles.value = props.articleList;
+});
 
 let currentPage = ref<number>(props.currentPage);
 let articleList = reactive<Array<ArticleType>>(props.articleList || []);

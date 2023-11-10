@@ -1,17 +1,11 @@
+import type { ResponseType } from '~/types/common'
+
 interface RequestType {
   url: string;
   data?: object | string;
   params?: any;
   method?: string;
   headers?: any;
-}
-
-interface ResponseType<T> {
-  code: number;
-  data: T;
-  path: string;
-  timestamp: string;
-  message: string;
 }
 
 // 封装 请求 工具

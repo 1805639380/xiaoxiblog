@@ -1,6 +1,6 @@
 <template>
   <nuxt-layout name="default">
-    <Banner :height="'80vh'" :background="background">{{
+    <Banner :height="'80vh'" :background="backgroundImage">{{
       article_data?.title
     }}</Banner>
     <nuxt-layout name="container" :user="userData" :showUserInfo="false">
@@ -34,7 +34,7 @@
               <el-icon>
                 <ChatLineSquare />
               </el-icon>
-              <span>{{ commentData?.data.count || 0 }}条评论</span>
+              <span>{{ commentData?.data?.count || 0 }}条评论</span>
             </div>
           </div>
           <div id="article" class="content">
@@ -42,18 +42,8 @@
           </div>
         </div>
         <ClientOnly>
-          <u-comment-scroll
-            :disable="disableScrollComment"
-            @more="getMoreComment"
-          >
-            <u-comment
-              page
-              :config="config"
-              style="width: 100%"
-              @operate="operate"
-              @submit="submit"
-              @like="like"
-            >
+          <u-comment-scroll :disable="disableScrollComment" @more="getMoreComment">
+            <u-comment page :config="config" style="width: 100%" @operate="operate" @submit="submit" @like="like">
               <template v-if="config.comments?.length < 1">&nbsp;</template>
             </u-comment>
           </u-comment-scroll>
@@ -72,7 +62,6 @@
 <script setup lang="ts">
 import MdEditor from "md-editor-v3";
 import "md-editor-v3/lib/style.css";
-import { toReactive } from "@vueuse/core";
 import {
   Calendar,
   ChatLineSquare,
@@ -94,67 +83,57 @@ import {
 } from "~/api/commentApi";
 
 import type { LikesCommentData } from "~/api/commentApi";
-
-const background = ref(
-  "https://img-baofun.zhhainiao.com/fs/71e6812c9fec3f987897c8763a7f385f.jpg"
-);
+import type { Comment } from "~/types/comment";
+import type { ResponseData, ResponseType } from "~/types/common";
 
 const route = useRoute();
+
+// 获取用户数据
+const userData = await useUserState();
 
 // 是否禁用滚动加载评论
 const disableScrollComment = ref(false);
 const id: string = route.params.id as string;
-const { data, refresh: refreshArticleData } = await getArticleDetail(id);
+const { data, refresh: refreshArticleData, pending } = await getArticleDetail(id);
 
-let article_data: ArticleType = toReactive((data.value as any)?.data.row);
+const article_data = computed(() =>
+  !pending.value ? data.value.data.row : null
+);
 
-// 监听异步数据变化
-watch(data, async (newData) => {
-  article_data = toReactive((newData as any)?.data.row);
-  await clientInit();
-
-  // 更新评论配置
-  config.comments = getComments(commentData?.value?.data.rows) || [];
-  config.total = commentData?.value?.data.count || 0;
-});
-
-let commentData = null;
-
-async function clientInit() {
-  // 设置背景
-  background.value = article_data?.pic;
-
-  // 获取评论区数据;
-  commentData = await requestComments(page.value, offset.value);
-}
 useHead({
-  title: article_data?.title || "详情页",
+  title: article_data.value?.title || "详情页",
 });
+
+// 背景图片
+const backgroundImage = computed(() =>
+  !pending.value
+    ? data.value.data?.row.pic
+    : "https://img-baofun.zhhainiao.com/fs/71e6812c9fec3f987897c8763a7f385f.jpg"
+);
 
 const page = ref(1);
 const offset = ref(5);
-
-// 初始化
-clientInit();
-
-const userData = await useUserState();
-
 // 请求评论区数据;
 async function requestComments(page, offset) {
-  if (article_data) {
-    const { data, refresh: commentRefresh } = await selectComment({
-      page: page,
-      article_id: article_data?.id,
-      offset: offset,
-    });
-    return data;
-  }
-
-  return null;
+  const { data, refresh: commentRefresh } = await selectComment({
+    page: page,
+    article_id: article_data?.value.id,
+    offset: offset,
+  });
+  return data;
 }
 
-// 获取评论区数据;
-commentData = await requestComments(page.value, offset.value);
+const commentData = ref<ResponseType<ResponseData<Comment>>>();
+
+watch(article_data, async (newData) => {
+  const commentRes = await requestComments(page.value, offset.value);
+  commentData.value = commentRes.value;
+  console.log(commentData.value);
+
+  // 更新评论数据
+  config.comments = getComments(commentData?.value?.data.rows) || [];
+  config.total = commentData?.value?.data.count || 0;
+});
 
 const dateFormat = "YYYY-MM-DD";
 
@@ -250,14 +229,19 @@ function getFlatLikeIds() {
       return replyIds.concat([comment.id]);
     }
   });
-
-  flatLikeIds.value = [].concat(...likeIds);
-  flatLikeIds.value = flatLikeIds.value.filter(
-    (likeId) => likeId !== undefined
-  );
+  if (likeIds?.length === 0) {
+    flatLikeIds.value = [].concat(...likeIds);
+    flatLikeIds.value = flatLikeIds.value.filter(
+      (likeId) => likeId !== undefined
+    );
+  }
 }
 
-if (article_data) getFlatLikeIds();
+if (article_data.value?.id) {
+  const commentRes = await requestComments(page.value, offset.value);
+  commentData.value = commentRes.value;
+  getFlatLikeIds();
+}
 
 const config = reactive<ConfigApi>({
   user: {
@@ -268,8 +252,8 @@ const config = reactive<ConfigApi>({
     likeIds: (flatLikeIds.value as any) || [],
   },
   emoji: emoji,
-  comments: getComments(commentData?.value?.data.rows) || [],
-  total: commentData?.value?.data.count || 0,
+  comments: getComments(commentData?.value?.data?.rows) || [],
+  total: commentData?.value?.data?.count || 0,
 });
 
 // 加载更多评论
@@ -312,7 +296,7 @@ const submit = async ({ content, parentId, finish }) => {
     let { data } = await addComment({
       content: content,
       user_id: config.user.id as number,
-      article_id: article_data.id,
+      article_id: article_data.value.id,
     });
     if (data.value?.code === 1001) {
       setTimeout(async () => {
@@ -415,7 +399,7 @@ const operate = (type: string, comment: CommentApi, finish: Function) => {
   _throttle(type, comment, finish);
 };
 
-function loadComment() {}
+function loadComment() { }
 </script>
 
 <style scoped lang="less">
@@ -436,7 +420,7 @@ function loadComment() {}
     margin: 15px 0;
     font-family: cursive;
 
-    & > div {
+    &>div {
       display: inline-flex;
       margin: 10px;
 
@@ -465,16 +449,19 @@ function loadComment() {}
 :deep(.comment-main .user-info .time) {
   font-family: var(--font-article);
 }
+
 :deep(.txt-box),
 :deep(.action-box) {
   font-family: "Merriweather Sans", Helvetica, Tahoma, Arial, "PingFang SC",
     "Hiragino Sans GB", "Microsoft Yahei", "WenQuanYi Micro Hei", sans-serif;
 }
+
 @media screen and (max-width: 768px) {
   .article_content {
     font-size: 1.8rem;
+
     .article_info {
-      & > div {
+      &>div {
         margin-right: auto;
       }
     }

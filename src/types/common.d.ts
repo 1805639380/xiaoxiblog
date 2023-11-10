@@ -11,3 +11,11 @@ export interface ResponseData<T> {
   message: string;
   count?: number;
 }
+
+export interface ResponseType<T> {
+  code: number;
+  data: T;
+  path: string;
+  timestamp: string;
+  message: string;
+}

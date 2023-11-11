@@ -43,7 +43,7 @@
         </div>
         <ClientOnly>
           <u-comment-scroll :disable="disableScrollComment" @more="getMoreComment">
-            <u-comment page :config="config" style="width: 100%" @operate="operate" @submit="submit" @like="like">
+            <u-comment page :config="config" style="width: 100%" @reply-page="getMoreReply" @submit="submit" @like="like">
               <template v-if="config.comments?.length < 1">&nbsp;</template>
             </u-comment>
           </u-comment-scroll>
@@ -105,34 +105,39 @@ useHead({
 });
 
 // 背景图片
-const backgroundImage = computed(() =>
-  !pending.value
+const backgroundImage = computed(() => {
+  return !pending.value
     ? data.value.data?.row.pic
     : "https://img-baofun.zhhainiao.com/fs/71e6812c9fec3f987897c8763a7f385f.jpg"
-);
+});
 
 const page = ref(1);
 const offset = ref(5);
 // 请求评论区数据;
-async function requestComments(page, offset) {
-  const { data, refresh: commentRefresh } = await selectComment({
-    page: page,
-    article_id: article_data?.value.id,
-    offset: offset,
-  });
-  return data;
+async function requestComments(articleData, page, offset) {
+  if (articleData.id) {
+    const { data, refresh: commentRefresh } = await selectComment({
+      page: page,
+      article_id: articleData.id,
+      offset: offset,
+    });
+    return data;
+  }
 }
 
 const commentData = ref<ResponseType<ResponseData<Comment>>>();
 
-watch(article_data, async (newData) => {
-  const commentRes = await requestComments(page.value, offset.value);
-  commentData.value = commentRes.value;
-  console.log(commentData.value);
+watch(data, async (newData) => {
+  if (newData) {
+    const commentRes = await requestComments(newData.data.row, page.value, offset.value);
+    commentData.value = commentRes.value;
 
-  // 更新评论数据
-  config.comments = getComments(commentData?.value?.data.rows) || [];
-  config.total = commentData?.value?.data.count || 0;
+    // 更新评论数据
+    config.comments = getComments(commentData?.value?.data.rows) || [];
+    config.total = commentData?.value?.data.count || 0;
+    getFlatLikeIds()
+    config.user.likeIds = flatLikeIds.value
+  }
 });
 
 const dateFormat = "YYYY-MM-DD";
@@ -211,7 +216,7 @@ function formatRelativeTime(createdAt) {
   }
 }
 
-const flatLikeIds = ref<Number[]>([]);
+const flatLikeIds = ref<any[]>([]);
 
 // 获取评论id数组
 function getFlatLikeIds() {
@@ -229,7 +234,7 @@ function getFlatLikeIds() {
       return replyIds.concat([comment.id]);
     }
   });
-  if (likeIds?.length === 0) {
+  if (likeIds?.length !== 0) {
     flatLikeIds.value = [].concat(...likeIds);
     flatLikeIds.value = flatLikeIds.value.filter(
       (likeId) => likeId !== undefined
@@ -238,7 +243,7 @@ function getFlatLikeIds() {
 }
 
 if (article_data.value?.id) {
-  const commentRes = await requestComments(page.value, offset.value);
+  const commentRes = await requestComments(article_data.value, page.value, offset.value);
   commentData.value = commentRes.value;
   getFlatLikeIds();
 }
@@ -249,7 +254,7 @@ const config = reactive<ConfigApi>({
     username: userData.value?.name || "游客",
     avatar: userData.value?.avatar || "",
     // 评论id数组 建议:存储方式用户uid和评论id组成关系,根据用户uid来获取对应点赞评论id,然后加入到数组中返回
-    likeIds: (flatLikeIds.value as any) || [],
+    likeIds: flatLikeIds.value || [],
   },
   emoji: emoji,
   comments: getComments(commentData?.value?.data?.rows) || [],
@@ -261,7 +266,7 @@ const getMoreComment = () => {
   if (page.value <= Math.ceil(commentData.value.data.count / offset.value)) {
     setTimeout(async () => {
       page.value = page.value + 1;
-      const commentData = await requestComments(page.value, offset.value);
+      const commentData = await requestComments(article_data.value, page.value, offset.value);
       const comments = getComments(commentData.value.data.rows);
       config.comments.push(...comments);
     }, 200);
@@ -270,12 +275,17 @@ const getMoreComment = () => {
   }
 };
 
+// 加载更多回复
+const getMoreReply = ({ pageNum, pageSize, parentId, finish }) => {
+  // finish()
+}
+
 // 提交评论事件;
 const submit = async ({ content, parentId, finish }) => {
   console.log("提交评论: " + content, parentId);
-
+  let commentId = (config.comments[config.comments?.length - 1]?.id as number) + 1 || 1
   const comment: CommentApi = {
-    id: (config.comments[config.comments?.length - 1]?.id as number) + 1 || 1,
+    id: commentId,
     parentId: parentId,
     uid: config.user.id,
     address: "",
@@ -310,6 +320,13 @@ const submit = async ({ content, parentId, finish }) => {
       UToast({ message: "服务器繁忙，请稍后再试！", type: "warn" });
     }
   } else {
+    // 回复评论请求
+    const currentReplyComment = config.comments.find((item) => item.id === +parentId);
+    let replyList = currentReplyComment?.reply.list || []
+    replyList = replyList.sort((a, b) => {
+      return +b.id - +a.id
+    })
+    comment.id = (replyList[0]?.id as number) + 1 || 1;
     const { data } = await replyComment({
       content,
       user_id: config.user.id as number,
@@ -423,6 +440,7 @@ function loadComment() { }
     &>div {
       display: inline-flex;
       margin: 10px;
+      align-items: center;
 
       :deep(.el-icon) {
         margin-right: 5px;

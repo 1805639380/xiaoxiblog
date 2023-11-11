@@ -1,5 +1,5 @@
 <template>
-  <div id="bgcBox">
+  <div id="bgcBox" :style="{ backgroundImage: `url(${background})` }">
     <div class="middleInfo">
       <p :class="{ gradationText: props.gradationText }">
         <slot></slot>
@@ -25,8 +25,6 @@ const props = withDefaults(
       "http://cdn-hw-static2.shanhutech.cn/bizhi/staticwp/202208/6ee6cdc29067c626843ce0f6cf13a595--1278567875.jpg",
   }
 );
-
-const background = `url(${props.background})`;
 </script>
 
 <style scoped>
@@ -60,6 +58,7 @@ const background = `url(${props.background})`;
 }
 
 @keyframes move1 {
+
   0%,
   100% {
     background-position: 0 0;
@@ -71,6 +70,7 @@ const background = `url(${props.background})`;
 }
 
 @keyframes move2 {
+
   0%,
   100% {
     background-position: 0 0;
@@ -115,6 +115,7 @@ const background = `url(${props.background})`;
 }
 
 @keyframes textChange {
+
   0%,
   100% {
     text-shadow: 4px 6px 25px rgb(241, 101, 101);
@@ -128,7 +129,7 @@ const background = `url(${props.background})`;
 #bgcBox {
   position: relative;
   /* background: url("assets/img/48.jpg") no-repeat; */
-  background: v-bind(background) no-repeat;
+  background-repeat: no-repeat;
   background-size: cover;
   background-attachment: fixed;
 }
@@ -154,5 +155,4 @@ const background = `url(${props.background})`;
     background-size: 100% 90vw;
     background-image: url(assets/img/mhome.jpg);
   }
-}
-</style>
+}</style>

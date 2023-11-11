@@ -15,7 +15,7 @@
         <nuxt-link to="/archive">{{ 0 && props.user.labelnum }}</nuxt-link>
       </div>
     </div>
-    <div class="userContact">
+    <div class="userContact" v-if="false">
       <a href="javascript:void(0)" title="qq">
         <!-- <el-tooltip v-if="isClient" content="qq" placement="bottom" effect="light"> -->
         <span class="iconfont">&#xe876;</span>

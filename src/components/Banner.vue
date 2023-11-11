@@ -153,6 +153,6 @@ const props = withDefaults(
   #bgcBox {
     height: 338px;
     background-size: 100% 90vw;
-    background-image: url(assets/img/mhome.jpg);
+    background-image: url(assets/img/mhome.jpg) !important;
   }
 }</style>

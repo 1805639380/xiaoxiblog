@@ -1,10 +1,9 @@
 <template>
   <div id="backTop">
-    <a
-      href="javascript:void(0)"
+    <div class="back"
       :class="{ isShow: windowScrollTop > 200 }"
       @click="backTopFun"
-    ></a>
+    ></div>
   </div>
 </template>
 
@@ -47,7 +46,7 @@ onMounted(() => {
   height: 100vh !important;
 }
 
-#backTop a {
+#backTop .back {
   position: fixed;
   right: 1.875rem;
   height: 0vh;
@@ -56,6 +55,7 @@ onMounted(() => {
   background-position-y: -1050px;
   z-index: 9;
   transition: all 0.3s linear;
+  cursor: pointer;
 }
 
 @keyframes backTop {

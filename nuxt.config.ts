@@ -21,9 +21,27 @@ export default defineNuxtConfig({
   },
   srcDir: "src",
   vite: {
-    build: {},
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.includes("node_modules")) {
+              // 让每个插件都打包成独立的文件
+              return id
+                .toString()
+                .split("node_modules/")[1]
+                .split("/")[0]
+                .toString();
+            }
+          },
+        },
+      },
+    },
     plugins: [
-      viteCompression(),
+      viteCompression({
+        verbose: true,
+        threshold: 10240,
+      }),
       Components({
         dts: true,
         resolvers: [IconsResolver({})],

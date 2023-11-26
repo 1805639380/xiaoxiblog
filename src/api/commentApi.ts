@@ -1,4 +1,4 @@
-import type { Comment } from "~/types/comment";
+import type { Comment, Reply } from "~/types/comment";
 import type { ResponseData } from "~/types/common";
 
 const API_PREFIX = "/comment";
@@ -30,6 +30,12 @@ export interface LikesCommentData {
   flag?: boolean;
   isReply?: boolean;
   userId: number;
+}
+
+interface SelectCommentResponseData {
+  page?: number;
+  offset?: number;
+  comment_id: number;
 }
 
 /**
@@ -87,9 +93,27 @@ export const likesComment = (data: LikesCommentData) => {
   });
 };
 
+/**
+ * 删除评论
+ * @param id
+ * @returns
+ */
 export const delComment = (id: number) => {
   return useRequest({
     url: API_PREFIX + "/del/" + id,
     method: "DELETE",
+  });
+};
+
+/**
+ * 获取评论回复
+ * @param data
+ * @returns
+ */
+export const getCommentReply = (data: SelectCommentResponseData) => {
+  return useRequest<ResponseData<Reply>>({
+    url: API_PREFIX + "/" + data.comment_id + "/reply/",
+    method: "GET",
+    params: data,
   });
 };

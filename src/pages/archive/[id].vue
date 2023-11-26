@@ -70,7 +70,7 @@ import {
 } from "@element-plus/icons";
 import emoji from "~/assets/emoji";
 import { UToast, throttle } from "undraw-ui";
-import type { ConfigApi, CommentApi } from "undraw-ui";
+import type { ConfigApi, CommentApi, ReplyPageParamApi } from "undraw-ui";
 import type { ArticleType } from "~/types/article";
 import { dayjs } from "element-plus";
 import { getArticleDetail } from "~/api/articleApi";
@@ -80,6 +80,7 @@ import {
   likesComment,
   replyComment,
   selectComment,
+  getCommentReply
 } from "~/api/commentApi";
 
 import type { LikesCommentData } from "~/api/commentApi";
@@ -276,8 +277,14 @@ const getMoreComment = () => {
 };
 
 // 加载更多回复
-const getMoreReply = ({ pageNum, pageSize, parentId, finish }) => {
-  // finish()
+const getMoreReply = async ({ pageNum, pageSize, parentId, finish }: ReplyPageParamApi) => {
+  const { data: replyData } = await getCommentReply({ page: pageNum, offset: +pageSize, comment_id: +parentId })
+  if (replyData.value?.code === 1001) {
+    finish({
+      total: replyData.value?.data?.count,
+      list: getComments(replyData.value?.data?.rows),
+    });
+  }
 }
 
 // 提交评论事件;

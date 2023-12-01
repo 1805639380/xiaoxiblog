@@ -29,7 +29,7 @@ const animationComplete = () => {
     loadingEl.value.addEventListener("animationend", (e) => {
       props.completeHandle();
     });
-  }, 500);
+  }, 1500);
 };
 
 onMounted(() => {
@@ -144,4 +144,5 @@ onMounted(() => {
 .loading_text {
   font-size: 18px;
   color: #ff8383;
-}</style>
+}
+</style>

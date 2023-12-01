@@ -1,6 +1,6 @@
 <template>
   <nuxt-layout name="default">
-    <Banner :height="'80vh'" :background="backgroundImage">{{
+    <Banner :height="'50vh'" :background="backgroundImage">{{
       article_data?.title
     }}</Banner>
     <nuxt-layout name="container" :user="userData" :showUserInfo="false">

@@ -56,7 +56,7 @@ router.beforeEach(async (to, from, next) => {
 onMounted(() => {
   setTimeout(() => {
     isComplete.value = true;
-  }, 500);
+  }, 1500);
 })
 </script>
 

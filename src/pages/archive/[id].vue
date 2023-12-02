@@ -5,7 +5,20 @@
     }}</Banner>
     <nuxt-layout name="container" :user="userData" :showUserInfo="false">
       <template #containerLeftMain>
-        <div class="article_content">
+        <el-skeleton v-if="!data" :throttle="500" animated style="padding: 25px 10px;">
+          <template #template>
+            <el-skeleton-item variant="p" style="width: 50%;margin: auto;display: block;height: 28px;" />
+            <div>
+              <el-skeleton-item variant="p" style="margin: 25px auto;display: block;width: 80%;" />
+              <div class="skeletion_text" style="padding: 10px 20px;">
+                <el-skeleton-item v-for="i in 10" :key="i" variant="p"
+                  :style="{ width: (i % 4 === 0 || i === 1) ? '50%' : '100%', marginBottom: '25px' }"
+                  style="margin: 15px 0;display: block;" />
+              </div>
+            </div>
+          </template>
+        </el-skeleton>
+        <div class="article_content" v-else>
           <div class="article_title">
             <h1>{{ article_data?.title }}</h1>
           </div>
@@ -107,9 +120,7 @@ useHead({
 
 // 背景图片
 const backgroundImage = computed(() => {
-  return !pending.value
-    ? data.value.data?.row.pic
-    : "https://img-baofun.zhhainiao.com/fs/71e6812c9fec3f987897c8763a7f385f.jpg"
+  return "https://xiaoxiblog.oss-cn-beijing.aliyuncs.com/image/1a9509cc1d110faab218e22ca0c1cd769a123ac0.jpg%401256w_592h_%21web-article-pic.webp"
 });
 
 const page = ref(1);

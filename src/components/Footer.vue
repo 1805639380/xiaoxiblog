@@ -1,27 +1,7 @@
 <template>
   <div id="footer">
-    <span>苏程室 - suchengshi.top @ All Suluo rights Reserved</span>
+    <span>小析のblog-afblog.xyz @ All Hololo rights Reserved</span>
     <span>赣ICP备2020014038号-1 </span>
-    <span>
-      <img id="" src="~assets/img/beian.png" alt="公安" />
-      <a
-        target="_blank"
-        rel="noopener"
-        href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=36072202000182"
-        style="display: inline-block; text-decoration: none"
-      >
-        <p
-          style="
-            float: left;
-            height: 20px;
-            line-height: 20px;
-            margin: 0px 0px 0px 5px;
-          "
-        >
-          赣公网安备 36072202000182号
-        </p>
-      </a>
-    </span>
     <span>网站主要用于技术分享，若涉及个人权益请联系我们进行删除。</span>
     <span
       >本网站由<a

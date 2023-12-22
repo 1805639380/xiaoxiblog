@@ -1,7 +1,7 @@
 <template>
   <div id="footer">
     <span>小析のblog-afblog.xyz @ All Hololo rights Reserved</span>
-    <span>赣ICP备2020014038号-1 </span>
+    <span>赣ICP备2023017077号</span>
     <span>网站主要用于技术分享，若涉及个人权益请联系我们进行删除。</span>
     <span
       >本网站由<a

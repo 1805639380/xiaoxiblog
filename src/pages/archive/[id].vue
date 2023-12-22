@@ -5,7 +5,7 @@
     }}</Banner>
     <nuxt-layout name="container" :user="userData" :showUserInfo="false">
       <template #containerLeftMain>
-        <el-skeleton v-if="!data" :throttle="500" animated style="padding: 25px 10px;">
+        <el-skeleton v-if="!data" animated style="padding: 25px 10px;">
           <template #template>
             <el-skeleton-item variant="p" style="width: 50%;margin: auto;display: block;height: 28px;" />
             <div>

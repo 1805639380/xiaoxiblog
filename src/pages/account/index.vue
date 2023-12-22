@@ -130,6 +130,7 @@ async function updateHandler() {
     });
     uploadLoading.value = false
   } else {
+    uploadLoading.value = false
     throw "修改失败";
   }
 }

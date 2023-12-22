@@ -65,6 +65,7 @@ export default defineNuxtConfig({
       },
       titleTemplate: `小析のblog - %s`,
       meta: [
+        { name: "baidu-site-verification", content: "codeva-slR3BYfrFS" },
         { name: "viewport", content: "width=device-width, initial-scale=1" },
         {
           hid: "description",

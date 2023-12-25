@@ -2,7 +2,8 @@
   <div id="search" :class="{ show: props.isSearchShow }">
     <div class="c-search">
       <h2>想要找点什么？</h2>
-      <input type="text" ref="search" placeholder="搜索" title="请填写此字段" />
+      <input type="text" v-model="searchParam" @keydown.enter="handleSearch" ref="search" placeholder="搜索"
+        title="请填写此字段" />
     </div>
     <div class="closeSearch" @click.self="toggleSearch">×</div>
   </div>
@@ -15,6 +16,13 @@ const props = defineProps({
     default: false,
   },
 });
+
+const searchParam = ref('')
+const router = useRouter();
+
+const handleSearch = () => {
+  router.push("/archive/search/" + searchParam.value);
+};
 
 const emit = defineEmits(["toggleSearch"]);
 

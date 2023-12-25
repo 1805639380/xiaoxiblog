@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ArticleData, ArticleType } from "~/types/article";
+import type { ArticleType } from "~/types/article";
 import lottie from "lottie-web";
 import animationData from "@/assets/lottie/animation_ll7j9mp7.json";
 import { selectArticle } from "~/api/articleApi";
@@ -39,6 +39,8 @@ const props = defineProps<{
   currentPage: number;
   count: number;
   offset: number;
+  keyword?: string;
+  field?: string;
 }>();
 const articles = ref<Array<ArticleType>>([])
 watchEffect(() => {
@@ -47,7 +49,6 @@ watchEffect(() => {
 });
 
 let currentPage = ref<number>(props.currentPage);
-let articleList = reactive<Array<ArticleType>>(props.articleList || []);
 
 // 加载文章
 async function getMoreArticle() {
@@ -61,6 +62,8 @@ async function getMoreArticle() {
   let { data: article_res } = await selectArticle({
     page: currentPage.value,
     offset: props.offset,
+    keyword: props.keyword,
+    field: props.field,
   });
   loading.value = false;
   if (!article_res.value) {
@@ -68,7 +71,7 @@ async function getMoreArticle() {
     return;
   }
 
-  articleList.push(...article_res.value.data.rows);
+  articles.value.push(...article_res.value.data.rows);
 }
 </script>
 

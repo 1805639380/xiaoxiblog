@@ -5,6 +5,7 @@ interface selectArticleDataType {
   page?: number;
   offset?: number;
   keyword?: string;
+  field?: string;
 }
 
 const API_PREFIX = "/article";
@@ -42,7 +43,8 @@ type SelectArticle = {
  * @returns
  */
 export const selectArticle = (
-  data: selectArticleDataType = { page: 1, offset: 5 }
+  data: selectArticleDataType = { page: 1, offset: 5 },
+  lazy: boolean = true
 ) => {
   const params: selectArticleDataType = {};
 
@@ -52,11 +54,14 @@ export const selectArticle = (
     }
   }
 
-  return useRequest<SelectArticle>({
-    url: API_PREFIX + "s",
-    method: "GET",
-    params: params,
-  });
+  return useRequest<SelectArticle>(
+    {
+      url: API_PREFIX + "s",
+      method: "GET",
+      params: params,
+    },
+    lazy
+  );
 };
 
 /**

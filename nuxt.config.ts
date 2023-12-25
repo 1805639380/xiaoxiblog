@@ -48,7 +48,8 @@ export default defineNuxtConfig({
       }),
     ],
     esbuild: {
-      drop: ["console", "debugger"],
+      drop:
+        process.env.NODE_ENV !== "development" ? ["console", "debugger"] : [],
     },
   },
   components: {

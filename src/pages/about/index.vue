@@ -66,7 +66,7 @@
   
 <script setup lang='ts'>
 
-const background: string = 'https://img-baofun.zhhainiao.com/fs/c841301f2c45f25bf3dedff2583aaa53.jpg'
+const background: string = 'https://cloud.afblog.xyz/image/c841301f2c45f25bf3dedff2583aaa53.jpg!v1'
 
 const BIRTH: number = 2002
 const date: Date = new Date()

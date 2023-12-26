@@ -1,7 +1,8 @@
 <template>
   <div class="userInfo">
     <div class="userIns">
-      <img :src="props.user.avatar || defaultAvatar" alt="" />
+      <img :src="transformUpYunPicUrl({ url: props.user.avatar || defaultAvatar, options: { width: 105, quality: 90 } })"
+        alt="" />
       <div class="userName">{{ props.user.name || defaultName }}</div>
       <div class="userQianMing">{{ props.user.signature }}</div>
     </div>

@@ -158,7 +158,7 @@ const handleAvatarSuccess: UploadProps["onSuccess"] = (
   uploadFile
 ) => {
   if (response.code === 1001) {
-    editForm.imageUrl = response.data.imageUrl;
+    editForm.imageUrl = response.data.row;
   }
   // editForm.imageUrl = URL.createObjectURL(uploadFile.raw!)
 };

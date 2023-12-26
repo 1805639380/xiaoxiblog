@@ -1,32 +1,19 @@
 <template>
-  <div
-    class="head"
-    ref="tabBar"
-    :class="{
-      stickTop: isStickTop,
-      loginAndRegister: $route.path == '/login' || $route.path == '/register',
-    }"
-  >
+  <div class="head" ref="tabBar" :class="{
+    stickTop: isStickTop,
+    loginAndRegister: $route.path == '/login' || $route.path == '/register',
+  }">
     <div class="logo">
       <nuxt-link to="/">小析のBlog</nuxt-link>
     </div>
     <div class="menuBtn hide" @click="showMiniMenu">☰</div>
     <div class="menus" :class="{ miniMenuShow: isShowMiniMenu }">
       <div class="closed hide" @click="closeMiniMenu">
-        <svg
-          t="1699412633290"
-          class="icon"
-          viewBox="0 0 1024 1024"
-          version="1.1"
-          xmlns="http://www.w3.org/2000/svg"
-          p-id="4017"
-          width="25"
-          height="25"
-        >
+        <svg t="1699412633290" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
+          p-id="4017" width="25" height="25">
           <path
             d="M801.645714 170.666667l51.833905 51.590095L565.150476 511.951238l288.353524 289.670095-51.833905 51.614477-288.109714-289.450667L225.426286 853.23581 173.592381 801.621333l288.329143-289.670095L173.592381 222.256762 225.426286 170.666667l288.109714 289.426285L801.645714 170.666667z"
-            p-id="4018"
-          ></path>
+            p-id="4018"></path>
         </svg>
       </div>
       <slot>
@@ -36,10 +23,7 @@
         </div>
       </slot>
       <div class="menu" v-for="(item, index) in props.menus" :key="index">
-        <nuxt-link :to="item.path"
-          ><span class="iconfont" v-html="item.icon"></span
-          >{{ item.title }}</nuxt-link
-        >
+        <nuxt-link :to="item.path"><span class="iconfont" v-html="item.icon"></span>{{ item.title }}</nuxt-link>
       </div>
     </div>
     <div class="other">
@@ -49,25 +33,15 @@
       <div class="user">
         <nuxt-link to="/login" v-if="!userData">
           <client-only>
-            <el-tooltip
-              content="您还未登录，点击登录"
-              placement="bottom"
-              effect="light"
-            >
-              <span class="iconfont" title="您还未登录，点击登录"
-                >&#xe640;</span
-              >
+            <el-tooltip content="您还未登录，点击登录" placement="bottom" effect="light">
+              <span class="iconfont" title="您还未登录，点击登录">&#xe640;</span>
             </el-tooltip>
           </client-only>
         </nuxt-link>
         <nuxt-link to="/account" v-else title="点击进入用户管理页面">
           <client-only>
-            <el-tooltip
-              content="点击进入用户管理页面"
-              placement="bottom"
-              effect="light"
-            >
-              <img :src="userData.avatar" alt="" />
+            <el-tooltip content="点击进入用户管理页面" placement="bottom" effect="light">
+              <img :src="transformUpYunPicUrl({ url: userData.avatar, options: { width: 42, quality: 90 } })" alt="" />
             </el-tooltip>
           </client-only>
         </nuxt-link>
@@ -283,6 +257,7 @@ onMounted(() => {
   .head .other .user {
     width: 5rem;
   }
+
   .head .other .user {
     height: 5rem;
   }
@@ -308,6 +283,7 @@ onMounted(() => {
   text-align: center;
   cursor: pointer;
 }
+
 .user {
   height: 3rem;
 }

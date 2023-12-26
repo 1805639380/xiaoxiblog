@@ -1,4 +1,4 @@
-import { MessageParams } from "element-plus";
+import type { MessageParams } from "element-plus";
 
 export const useCatch = <T>(fn: Promise<T>) => {
   return fn
@@ -41,4 +41,41 @@ export const useMessage = (options: MessageParams) => {
   const message = ElMessage(Object.assign({ offset: 80 }, options));
 
   currentMessage = message;
+};
+
+type transformParam = {
+  url: string;
+  options: transformOptions;
+};
+type transformOptions = {
+  width?: number;
+  quality?: number;
+  height?: number;
+  widthAndHeight?: string;
+};
+/**
+ * 又拍云储存服务转化图片url
+ * @param url
+ * @param options
+ * @returns
+ */
+export const transformUpYunPicUrl = (params: transformParam) => {
+  const domain = "cloud.afblog.xyz";
+  const { url, options } = params;
+  function splicingParam(param: string | number, splice: string) {
+    return param ? splice + param : "";
+  }
+  if (url.includes(domain) && !url.includes("!")) {
+    return (
+      url +
+      `!v1/format/webp${splicingParam(options.width, "/fw/")}${splicingParam(
+        options.quality,
+        "/quality/"
+      )}${splicingParam(options.height, "/fh/")}${splicingParam(
+        options.widthAndHeight,
+        "/both/"
+      )}`
+    );
+  }
+  return url;
 };

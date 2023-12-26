@@ -11,7 +11,8 @@
                 <div class="tip">在线用户列表</div>
                 <template v-for="item in userQueue" :key="item?.user?.uid">
                   <div class="chart-list-item">
-                    <el-avatar :src="item?.onlineUser?.avatar"></el-avatar>
+                    <el-avatar
+                      :src="transformUpYunPicUrl({ url: item?.onlineUser?.avatar, options: { width: 40 } })"></el-avatar>
                     <span class="chart-list-item-name">{{
                       item?.onlineUser?.name
                     }}</span>
@@ -26,10 +27,7 @@
               </div>
               <div class="chart-wrap" ref="chartWrap">
                 <template v-for="item in charts" :key="item?.user?.id">
-                  <div
-                    class="chart-item"
-                    :class="{ 'current-user': item?.user?.id === userData?.id }"
-                  >
+                  <div class="chart-item" :class="{ 'current-user': item?.user?.id === userData?.id }">
                     <div class="chart-user-avatar">
                       <el-avatar :src="item?.user?.avatar"></el-avatar>
                     </div>
@@ -46,19 +44,11 @@
               </div>
               <div class="chart-send">
                 <div class="chart-text">
-                  <textarea
-                    v-model="chartMsg"
-                    @keydown.prevent.enter="chartSend"
-                    name=""
-                    id=""
-                    placeholder="请输入……"
-                    autofocus
-                  ></textarea>
+                  <textarea v-model="chartMsg" @keydown.prevent.enter="chartSend" name="" id="" placeholder="请输入……"
+                    autofocus></textarea>
                 </div>
                 <div class="chart-send-btn">
-                  <el-button type="primary" size="small" @click="chartSend"
-                    >发送</el-button
-                  >
+                  <el-button type="primary" size="small" @click="chartSend">发送</el-button>
                 </div>
               </div>
             </div>
@@ -80,7 +70,7 @@ useHead({
 });
 
 const background =
-  "https://img-baofun.zhhainiao.com/fs/f46d074062d2df78ab46936dbefa39ea.jpg";
+  "https://cloud.afblog.xyz/image/f46d074062d2df78ab46936dbefa39ea.jpg!v1";
 
 const chartMsg = ref<string>("");
 const userCount = ref<number>(0);
@@ -293,9 +283,11 @@ const chartSend = () => {
   padding: 5px;
   overflow: auto;
 }
+
 .chart-list .tip {
   padding: 0 10px;
 }
+
 .chart-list .chart-list-item {
   display: flex;
   align-items: center;

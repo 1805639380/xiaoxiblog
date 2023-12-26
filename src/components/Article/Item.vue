@@ -3,27 +3,22 @@
     <div class="content">
       <div class="releaseTime">
         <span class="iconfont">&#xe62b;</span>
-        <span class="showtime"
-          >发布于{{
-            new Date(props.articleData?.publish_date).toLocaleDateString()
-          }}</span
-        >
+        <span class="showtime">发布于{{
+          new Date(props.articleData?.publish_date).toLocaleDateString()
+        }}</span>
       </div>
       <div class="articleTitle">
         <p>
-          <nuxt-link :to="'/archive/' + props.articleData?.id"
-            >{{ props.articleData?.title }}
+          <nuxt-link :to="'/archive/' + props.articleData?.id">{{ props.articleData?.title }}
           </nuxt-link>
         </p>
       </div>
       <div class="see">
         <p>
-          <span class="iconfont">&#xe668;</span
-          ><span class="num">{{ props.articleData?.watch_num }}</span>
+          <span class="iconfont">&#xe668;</span><span class="num">{{ props.articleData?.watch_num }}</span>
         </p>
         <p>
-          <span class="iconfont">&#xe67b;</span
-          ><span class="num">{{ props.articleData?.comment_num }}</span>
+          <span class="iconfont">&#xe67b;</span><span class="num">{{ props.articleData?.comment_num }}</span>
         </p>
         <p>
           <span class="iconfont">&#xe66b;</span>
@@ -40,9 +35,8 @@
       <nuxt-link :to="'/archive/' + props.articleData?.id">
         <div class="imgBg">
           <img
-            :data-src="props.articleData?.pic"
-            :alt="props.articleData?.title"
-          />
+            :data-src="transformUpYunPicUrl({ url: props.articleData?.pic, options: { quality: 80, widthAndHeight: '380x273' } })"
+            :alt="props.articleData?.title" />
           <div class="img_loading"></div>
         </div>
       </nuxt-link>
@@ -90,6 +84,7 @@ onMounted(() => {
 .img_loading_hidden {
   display: none;
 }
+
 .img_loading {
   position: absolute;
   left: 0;
@@ -100,6 +95,7 @@ onMounted(() => {
   background-color: yellow;
   transition: all 0.25s;
 }
+
 .rowReverse {
   flex-direction: row-reverse;
 }

@@ -5,7 +5,7 @@
     }}</Banner>
     <nuxt-layout name="container" :user="userData" :showUserInfo="false">
       <template #containerLeftMain>
-        <el-skeleton v-if="!data" animated style="padding: 25px 10px;">
+        <el-skeleton :throttle="100" :loading="!data" animated style="padding: 25px 10px;">
           <template #template>
             <el-skeleton-item variant="p" style="width: 50%;margin: auto;display: block;height: 28px;" />
             <div>
@@ -17,43 +17,45 @@
               </div>
             </div>
           </template>
+          <template #default>
+            <div class="article_content">
+              <div class="article_title">
+                <h1>{{ article_data?.title }}</h1>
+              </div>
+              <div class="article_info">
+                <div class="publish_date">
+                  <el-icon>
+                    <Calendar />
+                  </el-icon>
+                  <span>{{
+                    dayjs(article_data?.publish_date).format("YYYY-MM-DD HH:mm:ss")
+                  }}</span>
+                </div>
+                <div class="article_author">
+                  <el-icon>
+                    <UserFilled />
+                  </el-icon>
+                  <span>{{ article_data?.author.profile.name }}</span>
+                </div>
+                <div class="article_watch">
+                  <el-icon>
+                    <Cellphone />
+                  </el-icon>
+                  <span>{{ article_data?.watch_num }}次阅读</span>
+                </div>
+                <div class="comment_num">
+                  <el-icon>
+                    <ChatLineSquare />
+                  </el-icon>
+                  <span>{{ commentData?.data?.count || 0 }}条评论</span>
+                </div>
+              </div>
+              <div id="article" class="content">
+                <MdEditor :model-value="article_data?.content" previewOnly />
+              </div>
+            </div>
+          </template>
         </el-skeleton>
-        <div class="article_content" v-else>
-          <div class="article_title">
-            <h1>{{ article_data?.title }}</h1>
-          </div>
-          <div class="article_info">
-            <div class="publish_date">
-              <el-icon>
-                <Calendar />
-              </el-icon>
-              <span>{{
-                dayjs(article_data?.publish_date).format("YYYY-MM-DD HH:mm:ss")
-              }}</span>
-            </div>
-            <div class="article_author">
-              <el-icon>
-                <UserFilled />
-              </el-icon>
-              <span>{{ article_data?.author.profile.name }}</span>
-            </div>
-            <div class="article_watch">
-              <el-icon>
-                <Cellphone />
-              </el-icon>
-              <span>{{ article_data?.watch_num }}次阅读</span>
-            </div>
-            <div class="comment_num">
-              <el-icon>
-                <ChatLineSquare />
-              </el-icon>
-              <span>{{ commentData?.data?.count || 0 }}条评论</span>
-            </div>
-          </div>
-          <div id="article" class="content">
-            <MdEditor :model-value="article_data?.content" previewOnly />
-          </div>
-        </div>
         <ClientOnly>
           <u-comment-scroll :disable="disableScrollComment" @more="getMoreComment">
             <u-comment page :config="config" style="width: 100%" @reply-page="getMoreReply" @submit="submit" @like="like">
@@ -84,7 +86,6 @@ import {
 import emoji from "~/assets/emoji";
 import { UToast, throttle } from "undraw-ui";
 import type { ConfigApi, CommentApi, ReplyPageParamApi } from "undraw-ui";
-import type { ArticleType } from "~/types/article";
 import { dayjs } from "element-plus";
 import { getArticleDetail } from "~/api/articleApi";
 import {

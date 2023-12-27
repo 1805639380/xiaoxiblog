@@ -1,6 +1,6 @@
 <template>
   <div ref="observeRef">
-    <el-skeleton :loading="skeletonLoading" animated style="width: 100%" class="articleItem"
+    <el-skeleton :throttle="50" :loading="skeletonLoading" animated style="width: 100%" class="articleItem"
       :class="{ rowReverse: props.isRowReverse }">
       <template #template>
         <div class="content">

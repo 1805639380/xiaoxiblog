@@ -79,3 +79,28 @@ export const transformUpYunPicUrl = (params: transformParam) => {
   }
   return url;
 };
+
+/**
+ * 图片骨架屏懒加载
+ * @param observeEl
+ * @param imgEl
+ * @param callback
+ */
+export const imageSkeletonLazyLoad = (
+  observeEl: HTMLDivElement,
+  imgEl: HTMLImageElement,
+  callback: any
+) => {
+  const io = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((item) => {
+        if (item.isIntersecting) {
+          io.unobserve(observeEl);
+          callback(imgEl.dataset.src);
+        }
+      });
+    },
+    { threshold: 0.7 }
+  );
+  io.observe(observeEl);
+};

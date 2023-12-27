@@ -1,53 +1,80 @@
 <template>
-  <div class="articleItem" :class="{ rowReverse: props.isRowReverse }">
-    <div class="content">
-      <div class="releaseTime">
-        <span class="iconfont">&#xe62b;</span>
-        <span class="showtime">发布于{{
-          new Date(props.articleData?.publish_date).toLocaleDateString()
-        }}</span>
-      </div>
-      <div class="articleTitle">
-        <p>
-          <nuxt-link :to="'/archive/' + props.articleData?.id">{{ props.articleData?.title }}
-          </nuxt-link>
-        </p>
-      </div>
-      <div class="see">
-        <p>
-          <span class="iconfont">&#xe668;</span><span class="num">{{ props.articleData?.watch_num }}</span>
-        </p>
-        <p>
-          <span class="iconfont">&#xe67b;</span><span class="num">{{ props.articleData?.comment_num }}</span>
-        </p>
-        <p>
-          <span class="iconfont">&#xe66b;</span>
-          <span class="type">{{ props.articleData?.type }}</span>
-        </p>
-      </div>
-      <div class="summary">
-        <p>
-          {{ props.articleData?.description }}
-        </p>
-      </div>
-    </div>
-    <div class="bgi">
-      <nuxt-link :to="'/archive/' + props.articleData?.id">
-        <div class="imgBg">
-          <img
-            :data-src="transformUpYunPicUrl({ url: props.articleData?.pic, options: { quality: 80, widthAndHeight: '380x273' } })"
-            :alt="props.articleData?.title" />
-          <div class="img_loading"></div>
+  <div ref="observeRef">
+    <el-skeleton :loading="skeletonLoading" animated style="width: 100%" class="articleItem"
+      :class="{ rowReverse: props.isRowReverse }">
+      <template #template>
+        <div class="content">
+          <div class="releaseTime">
+            <el-skeleton-item variant="p" style="width: 50%;height: 20px;" />
+          </div>
+          <div class="articleTitle">
+            <el-skeleton-item variant="p" style="width: 60%;margin: 1.5625rem 0;height: 21px;" />
+          </div>
+          <div class="see">
+            <el-skeleton-item v-for="i in 3" variant="text" style="flex: 1;margin: 0 10px;height: 20px;" />
+          </div>
+          <div class="summary">
+            <el-skeleton-item variant="p" style="width: 100%" />
+            <el-skeleton-item variant="p" style="width: 80%" />
+            <el-skeleton-item variant="p" style="width: 100%" />
+            <el-skeleton-item variant="p" style="width: 50%" />
+          </div>
         </div>
-      </nuxt-link>
-    </div>
+        <div class="bgi">
+          <el-skeleton-item variant="image" style="width:100%; height: 100%;" />
+        </div>
+      </template>
+      <template #default>
+        <div class="articleItem" :class="{ rowReverse: props.isRowReverse }">
+          <div class="content">
+            <div class="releaseTime">
+              <span class="iconfont">&#xe62b;</span>
+              <span class="showtime">发布于{{
+                new Date(props.articleData?.publish_date).toLocaleDateString()
+              }}</span>
+            </div>
+            <div class="articleTitle">
+              <p>
+                <nuxt-link :to="'/archive/' + props.articleData?.id">{{ props.articleData?.title }}
+                </nuxt-link>
+              </p>
+            </div>
+            <div class="see">
+              <p>
+                <span class="iconfont">&#xe668;</span><span class="num">{{ props.articleData?.watch_num }}</span>
+              </p>
+              <p>
+                <span class="iconfont">&#xe67b;</span><span class="num">{{ props.articleData?.comment_num }}</span>
+              </p>
+              <p>
+                <span class="iconfont">&#xe66b;</span>
+                <span class="type">{{ props.articleData?.type }}</span>
+              </p>
+            </div>
+            <div class="summary">
+              <p>
+                {{ props.articleData?.description }}
+              </p>
+            </div>
+          </div>
+          <div class="bgi">
+            <nuxt-link :to="'/archive/' + props.articleData?.id">
+              <div class="imgBg">
+                <img ref="imgRef"
+                  :data-src="transformUpYunPicUrl({ url: props.articleData?.pic, options: { quality: 80, widthAndHeight: '380x273' } })"
+                  :alt="props.articleData?.title" />
+                <div class="img_loading img_loading_hidden"></div>
+              </div>
+            </nuxt-link>
+          </div>
+        </div>
+      </template>
+    </el-skeleton>
   </div>
 </template>
 
 <script setup lang="ts">
 import type { ArticleType } from "~/types/article";
-import animationData from "~/assets/lottie/animation_lna1ssgf.json";
-import lottie from "lottie-web";
 
 const props = withDefaults(
   defineProps<{
@@ -59,24 +86,25 @@ const props = withDefaults(
   }
 );
 
-onMounted(() => {
-  const imgs = document.querySelectorAll<HTMLImageElement>("img[data-src]");
-  useLazyLoadImage(imgs);
+const skeletonLoading = ref(true)
+const imgRef = ref<HTMLImageElement>(null)
+const observeRef = ref<HTMLDivElement>(null)
 
-  const imgLoads = document.querySelectorAll<HTMLDivElement>(".img_loading");
-  imgLoads.forEach((item, index) => {
-    const loadingLottie = lottie.loadAnimation({
-      container: item,
-      renderer: "svg",
-      loop: true,
-      autoplay: true,
-      animationData,
-    });
-    imgs[index].onload = () => {
-      loadingLottie.destroy();
-      item.classList.add("img_loading_hidden");
-    };
-  });
+onMounted(() => {
+  // 监听触发函数
+  const observeCallback = (imgSrc: string) => {
+    const image = new Image()
+    image.src = imgSrc
+    image.onload = () => {
+      skeletonLoading.value = false
+      nextTick(() => {
+        imgRef.value.src = imgSrc
+      })
+    }
+  }
+  const observeEl = observeRef.value
+  imageSkeletonLazyLoad(observeEl, imgRef.value, observeCallback)
+
 });
 </script>
 

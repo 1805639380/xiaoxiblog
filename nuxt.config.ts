@@ -5,6 +5,36 @@ import Components from "unplugin-vue-components/vite";
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  postcss: {
+    plugins: {
+      '@fullhuman/postcss-purgecss':{
+        content: [
+          "./src/pages/**/*.vue",
+          "./src/layouts/**/*.vue",
+          "./src/components/**/*.vue",
+        ],
+        defaultExtractor(content) {
+          const contentWithoutStyleBlocks = content.replace(
+            /<style[^]+?<\/style>/gi,
+            ''
+          )
+          return (
+            contentWithoutStyleBlocks.match(
+              /[A-Za-z0-9-_/:]*[A-Za-z0-9-_/]+/g
+            ) || []
+          )
+        },
+        safelist: [
+          'html',
+          'body',
+          /-(leave|enter|appear)(|-(to|from|active))$/,
+          /^(?!(|.*?:)cursor-move).+-move$/,
+          /^router-link(|-exact)-active$/,
+          /data-v-.*/
+        ]
+      },
+    },
+  },
   nitro: {
     devProxy: {
       "/proxy": { target: "http://127.0.0.1:3000/api/v1", changeOrigin: true },

@@ -1,6 +1,7 @@
 <template>
   <div class="head" ref="tabBar" :class="{
     stickTop: isStickTop,
+    forceStatic: stickTop,
     loginAndRegister: $route.path == '/login' || $route.path == '/register',
   }">
     <div class="logo">
@@ -53,20 +54,21 @@
 <script setup lang="ts">
 import type { UserStateType } from "~/types/user";
 
-const emit = defineEmits(["toggleSearch"]);
-
-let currentIndex = ref<number>(0);
-let isStickTop = ref<boolean>(false);
-let isShowMiniMenu = ref<boolean>(false);
-
 interface tabProps {
   menus: Array<{ path: string; icon: string; title: string }>;
   user?: UserStateType;
+  stickTop?: boolean;
 }
+const props = defineProps<tabProps>();
+
+const emit = defineEmits(["toggleSearch"]);
+
+let currentIndex = ref<number>(0);
+let isStickTop = ref<boolean>(props.stickTop || false);
+let isShowMiniMenu = ref<boolean>(false);
+
 
 const userData = await useUserState();
-
-const props = defineProps<tabProps>();
 
 function activeClick(index: any) {
   currentIndex.value = index;
@@ -112,6 +114,11 @@ onMounted(() => {
   background-color: #fff !important;
   box-shadow: 0 -5px 25px #ccc;
   color: #000 !important;
+}
+
+.forceStatic {
+  color: #000 !important;
+  box-shadow: 0 -5px 10px #ccc;
 }
 
 @media screen and (max-width: 1200px) {

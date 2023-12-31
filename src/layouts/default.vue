@@ -1,14 +1,10 @@
 <template>
-  <div id="defaultLayout">
-    <Header
-      :menus="menus"
-      :user="props.user"
-      @toggleSearch="toggleSearch"
-    ></Header>
+  <div id="defaultLayout" :style="{ paddingTop: headStickTop && '5rem' }">
+    <Header :menus="menus" :user="props.user" :stick-top="headStickTop" @toggleSearch="toggleSearch"></Header>
     <BackTop />
     <LazySearch :isSearchShow="isSearchShow" @toggleSearch="toggleSearch" />
     <slot></slot>
-    <Footer />
+    <Footer v-if="showFooter" />
     <Pet></Pet>
     <ClientOnly>
       <GlobalMusic />
@@ -19,9 +15,13 @@
 <script setup lang="ts">
 import type { UserStateType } from "~/types/user";
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   user?: UserStateType;
-}>();
+  headStickTop?: boolean;
+  showFooter?: boolean;
+}>(), {
+  showFooter: true,
+});
 
 let isSearchShow = ref(false);
 

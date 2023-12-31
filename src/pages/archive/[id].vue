@@ -140,9 +140,19 @@ const {
   pending,
 } = await getArticleDetail(id);
 
-const article_data = computed(() =>
-  !pending.value ? data.value.data.row : null
-);
+const article_data = computed(() => {
+  if (!pending.value) {
+    if (!data.value) {
+      throw createError({
+        statusCode: 404,
+        statusMessage: "Page Not Found",
+      });
+    }
+
+    return data.value.data.row;
+  }
+  return null;
+});
 
 useHead({
   title: article_data.value?.title || "详情页",

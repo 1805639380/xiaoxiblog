@@ -38,6 +38,9 @@ onMounted(() => {
 </script>
 
 <style scoped>
+:global(body) {
+  overflow: hidden;
+}
 .loaders {
   display: flex;
   align-items: center;

@@ -140,7 +140,7 @@ const props = withDefaults(
   float: left;
   width: 100%;
   height: 100%;
-  background-image: url(https://cdn.jsdelivr.net/gh/moezx/cdn@3.1.9/img/Sakura/images/grid.png);
+  background-image: url('https://cloud.afblog.xyz/image/grid.png');
 }
 
 @media screen and (max-width: 320px) {

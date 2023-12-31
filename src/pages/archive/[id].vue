@@ -5,15 +5,28 @@
     }}</Banner>
     <nuxt-layout name="container" :user="userData" :showUserInfo="false">
       <template #containerLeftMain>
-        <el-skeleton :throttle="100" :loading="!data" animated style="padding: 25px 10px;">
+        <el-skeleton :loading="pending" animated style="padding: 25px 10px">
           <template #template>
-            <el-skeleton-item variant="p" style="width: 50%;margin: auto;display: block;height: 28px;" />
+            <el-skeleton-item
+              variant="p"
+              style="width: 50%; margin: auto; display: block; height: 28px"
+            />
             <div>
-              <el-skeleton-item variant="p" style="margin: 25px auto;display: block;width: 80%;" />
-              <div class="skeletion_text" style="padding: 10px 20px;">
-                <el-skeleton-item v-for="i in 10" :key="i" variant="p"
-                  :style="{ width: (i % 4 === 0 || i === 1) ? '50%' : '100%', marginBottom: '25px' }"
-                  style="margin: 15px 0;display: block;" />
+              <el-skeleton-item
+                variant="p"
+                style="margin: 25px auto; display: block; width: 80%"
+              />
+              <div class="skeletion_text" style="padding: 10px 20px">
+                <el-skeleton-item
+                  v-for="i in 10"
+                  :key="i"
+                  variant="p"
+                  :style="{
+                    width: i % 4 === 0 || i === 1 ? '50%' : '100%',
+                    marginBottom: '25px',
+                  }"
+                  style="margin: 15px 0; display: block"
+                />
               </div>
             </div>
           </template>
@@ -28,7 +41,9 @@
                     <Calendar />
                   </el-icon>
                   <span>{{
-                    dayjs(article_data?.publish_date).format("YYYY-MM-DD HH:mm:ss")
+                    dayjs(article_data?.publish_date).format(
+                      "YYYY-MM-DD HH:mm:ss"
+                    )
                   }}</span>
                 </div>
                 <div class="article_author">
@@ -57,8 +72,18 @@
           </template>
         </el-skeleton>
         <ClientOnly>
-          <u-comment-scroll :disable="disableScrollComment" @more="getMoreComment">
-            <u-comment page :config="config" style="width: 100%" @reply-page="getMoreReply" @submit="submit" @like="like">
+          <u-comment-scroll
+            :disable="disableScrollComment"
+            @more="getMoreComment"
+          >
+            <u-comment
+              page
+              :config="config"
+              style="width: 100%"
+              @reply-page="getMoreReply"
+              @submit="submit"
+              @like="like"
+            >
               <template v-if="config.comments?.length < 1">&nbsp;</template>
             </u-comment>
           </u-comment-scroll>
@@ -94,7 +119,7 @@ import {
   likesComment,
   replyComment,
   selectComment,
-  getCommentReply
+  getCommentReply,
 } from "~/api/commentApi";
 
 import type { LikesCommentData } from "~/api/commentApi";
@@ -109,7 +134,11 @@ const userData = await useUserState();
 // 是否禁用滚动加载评论
 const disableScrollComment = ref(false);
 const id: string = route.params.id as string;
-const { data, refresh: refreshArticleData, pending } = await getArticleDetail(id);
+const {
+  data,
+  refresh: refreshArticleData,
+  pending,
+} = await getArticleDetail(id);
 
 const article_data = computed(() =>
   !pending.value ? data.value.data.row : null
@@ -121,7 +150,7 @@ useHead({
 
 // 背景图片
 const backgroundImage = computed(() => {
-  return "https://xiaoxiblog.oss-cn-beijing.aliyuncs.com/image/1a9509cc1d110faab218e22ca0c1cd769a123ac0.jpg%401256w_592h_%21web-article-pic.webp"
+  return "https://cloud.afblog.xyz/image/ec8fc4f2a0ab79395fa197d14c02c98767180942.jpg!v1/format/webp/fh/400";
 });
 
 const page = ref(1);
@@ -142,14 +171,18 @@ const commentData = ref<ResponseType<ResponseData<Comment>>>();
 
 watch(data, async (newData) => {
   if (newData) {
-    const commentRes = await requestComments(newData.data.row, page.value, offset.value);
+    const commentRes = await requestComments(
+      newData.data.row,
+      page.value,
+      offset.value
+    );
     commentData.value = commentRes.value;
 
     // 更新评论数据
     config.comments = getComments(commentData?.value?.data.rows) || [];
     config.total = commentData?.value?.data.count || 0;
-    getFlatLikeIds()
-    config.user.likeIds = flatLikeIds.value
+    getFlatLikeIds();
+    config.user.likeIds = flatLikeIds.value;
   }
 });
 
@@ -256,7 +289,11 @@ function getFlatLikeIds() {
 }
 
 if (article_data.value?.id) {
-  const commentRes = await requestComments(article_data.value, page.value, offset.value);
+  const commentRes = await requestComments(
+    article_data.value,
+    page.value,
+    offset.value
+  );
   commentData.value = commentRes.value;
   getFlatLikeIds();
 }
@@ -279,7 +316,11 @@ const getMoreComment = () => {
   if (page.value <= Math.ceil(commentData.value.data.count / offset.value)) {
     setTimeout(async () => {
       page.value = page.value + 1;
-      const commentData = await requestComments(article_data.value, page.value, offset.value);
+      const commentData = await requestComments(
+        article_data.value,
+        page.value,
+        offset.value
+      );
       const comments = getComments(commentData.value.data.rows);
       config.comments.push(...comments);
     }, 200);
@@ -289,20 +330,30 @@ const getMoreComment = () => {
 };
 
 // 加载更多回复
-const getMoreReply = async ({ pageNum, pageSize, parentId, finish }: ReplyPageParamApi) => {
-  const { data: replyData } = await getCommentReply({ page: pageNum, offset: +pageSize, comment_id: +parentId })
+const getMoreReply = async ({
+  pageNum,
+  pageSize,
+  parentId,
+  finish,
+}: ReplyPageParamApi) => {
+  const { data: replyData } = await getCommentReply({
+    page: pageNum,
+    offset: +pageSize,
+    comment_id: +parentId,
+  });
   if (replyData.value?.code === 1001) {
     finish({
       total: replyData.value?.data?.count,
       list: getComments(replyData.value?.data?.rows),
     });
   }
-}
+};
 
 // 提交评论事件;
 const submit = async ({ content, parentId, finish }) => {
   console.log("提交评论: " + content, parentId);
-  let commentId = (config.comments[config.comments?.length - 1]?.id as number) + 1 || 1
+  let commentId =
+    (config.comments[config.comments?.length - 1]?.id as number) + 1 || 1;
   const comment: CommentApi = {
     id: commentId,
     parentId: parentId,
@@ -340,11 +391,13 @@ const submit = async ({ content, parentId, finish }) => {
     }
   } else {
     // 回复评论请求
-    const currentReplyComment = config.comments.find((item) => item.id === +parentId);
-    let replyList = currentReplyComment?.reply.list || []
+    const currentReplyComment = config.comments.find(
+      (item) => item.id === +parentId
+    );
+    let replyList = currentReplyComment?.reply.list || [];
     replyList = replyList.sort((a, b) => {
-      return +b.id - +a.id
-    })
+      return +b.id - +a.id;
+    });
     comment.id = (replyList[0]?.id as number) + 1 || 1;
     const { data } = await replyComment({
       content,
@@ -435,7 +488,7 @@ const operate = (type: string, comment: CommentApi, finish: Function) => {
   _throttle(type, comment, finish);
 };
 
-function loadComment() { }
+function loadComment() {}
 </script>
 
 <style scoped lang="less">
@@ -456,7 +509,7 @@ function loadComment() { }
     margin: 15px 0;
     font-family: cursive;
 
-    &>div {
+    & > div {
       display: inline-flex;
       margin: 10px;
       align-items: center;
@@ -498,7 +551,7 @@ function loadComment() { }
     font-size: 1.8rem;
 
     .article_info {
-      &>div {
+      & > div {
         margin-right: auto;
       }
     }

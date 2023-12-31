@@ -1,9 +1,9 @@
 <template>
-  <Loading
+  <PageLoading
     v-if="isShowLoading"
     :completeHandle="completeHandle"
     :isComplete="isComplete"
-  ></Loading>
+  ></PageLoading>
   <div id="app">
     <NuxtPage
       class="nuxt_page"
@@ -55,9 +55,10 @@ router.beforeEach(async (to, from, next) => {
 });
 onMounted(() => {
   setTimeout(() => {
+    document.body.classList.add('pageLoadingComplete');
     isComplete.value = true;
   }, 1500);
-})
+});
 </script>
 
 <style>
@@ -67,14 +68,19 @@ onMounted(() => {
 @import "element-plus/dist/index.css";
 @import "nprogress/nprogress.css";
 
+.pageLoadingComplete {
+  overflow: auto;
+}
 .nuxt_page {
   filter: blur(100px);
   overflow: hidden;
   transition: filter 1s linear;
 }
+
 .loadingComplete {
   filter: none;
 }
+
 /* showContent */
 .showContent {
   padding-top: 85.05px;

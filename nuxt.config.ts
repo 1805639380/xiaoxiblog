@@ -8,6 +8,17 @@ export default defineNuxtConfig({
   nitro: {
     devProxy: {
       "/proxy": { target: "http://127.0.0.1:3000/api/v1", changeOrigin: true },
+      "/ai": {
+        target:
+          "https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation",
+        changeOrigin: true,
+      },
+    },
+    routeRules: {
+      "/ai": {
+        proxy:
+          "https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation",
+      },
     },
   },
   devtools: { enabled: true },

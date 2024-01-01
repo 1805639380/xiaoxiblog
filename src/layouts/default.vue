@@ -5,9 +5,10 @@
     <LazySearch :isSearchShow="isSearchShow" @toggleSearch="toggleSearch" />
     <slot></slot>
     <Footer v-if="showFooter" />
-    <Pet></Pet>
     <ClientOnly>
-      <GlobalMusic />
+      <Pet v-if="showPet"></Pet>
+      <GlobalMusic v-if="showMusic"/>
+      <GlobalSetting @isShowMusic="onMusicSetting" @is-show-pet="onPetSetting"/>
     </ClientOnly>
   </div>
 </template>
@@ -23,7 +24,17 @@ const props = withDefaults(defineProps<{
   showFooter: true,
 });
 
+const showMusic = ref(false);
+const showPet = ref(false)
 let isSearchShow = ref(false);
+
+const onMusicSetting = (flag: boolean) => {
+  showMusic.value = flag;
+};
+
+const onPetSetting = (flag: boolean) => {
+  showPet.value = flag;
+};
 
 let menus = [
   {

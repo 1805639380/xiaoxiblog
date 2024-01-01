@@ -4,11 +4,8 @@ const {
 } = require('http-proxy-middleware')
 
 module.exports = (req, res) => {
-    let target = ''
-
-    // 代理目标地址
-    // 这里使用 backend 主要用于区分 vercel serverless 的 api 路径
-    // xxxxx 替换为你跨域请求的服务器 如： http://baidu.com
+    let target = 'https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation'
+    console.log(req.url);
     if (req.url.startsWith('/ai')) {
         target = 'https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation'
     }

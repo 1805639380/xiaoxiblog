@@ -65,6 +65,7 @@ onMounted(() => {
 @import url("@/assets/css/base.css");
 @import url("@/assets/font/iconfont.css");
 @import url("@/assets/font/font.css");
+@import url("@/assets/font/tsxmm/font.css");
 @import "element-plus/dist/index.css";
 @import "nprogress/nprogress.css";
 

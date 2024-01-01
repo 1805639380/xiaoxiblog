@@ -88,6 +88,7 @@ useHead({
 .about-box {
   width: 100%;
   margin-bottom: var(--mtop);
+  font-family: tsxmm;
 }
 
 .about-box .title {
@@ -95,6 +96,7 @@ useHead({
   font-size: 25px;
   color: #848484;
   margin-bottom: 50px;
+  font-weight: bold;
 }
 
 .about-box .content {
@@ -123,6 +125,7 @@ useHead({
 .about-box .content .skill .ins {
   padding-left: 50px;
   font-size: 14px;
+  font-family: '钉钉进步体 Regular';
 }
 
 .el-progress {

@@ -66,6 +66,7 @@ onMounted(() => {
   bottom: 80px;
   font-size: 35px;
   color: orange;
+  font-family: tsxmm;
 }
 
 #search .c-search input {

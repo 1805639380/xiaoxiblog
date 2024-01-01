@@ -164,6 +164,7 @@ onMounted(() => {
   text-align: center;
   /* width: 7.5rem; */
   font-weight: bold;
+  font-family: tsxmm;
 }
 
 .head .logo a {
@@ -276,6 +277,7 @@ onMounted(() => {
   text-align: center;
   line-height: 4.375rem;
   width: 5rem;
+  font-family: tsxmm;
 }
 
 .head .other {

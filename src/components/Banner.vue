@@ -104,6 +104,7 @@ const props = withDefaults(
   font-weight: 900;
   text-shadow: 0 0 15px;
   animation: textChange 3s linear infinite;
+  font-family: tsxmm;
 }
 
 #bgcBox .middleInfo .gradationText {

@@ -31,5 +31,6 @@
 
 #notice p {
   margin-left: 15px;
+  font-family: tsxmm;
 }
 </style>

@@ -107,12 +107,11 @@ const defaultName = ref("您还未登陆");
   width: 15.625rem;
   border-radius: 11px;
   padding: 20px 20px 0;
-  font-weight: 600;
-  font-family: serif;
   box-shadow: 0 1px 20px -8px var(--shadow);
   transition: box-shadow 0.5s;
   font-size: var(--fontSize);
   background-color: var(--defaultColor);
+  font-family: tsxmm;
 }
 
 .userInfo:hover {
@@ -157,6 +156,10 @@ const defaultName = ref("您还未登陆");
   text-align: center;
   display: inline-block;
   width: 6.25rem;
+}
+
+.userInfo .article-num {
+  font-family: '钉钉进步体 Regular';
 }
 
 .userData {

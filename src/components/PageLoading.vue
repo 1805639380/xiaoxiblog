@@ -147,5 +147,6 @@ onMounted(() => {
 .loading_text {
   font-size: 18px;
   color: #ff8383;
+  font-family: tsxmm;
 }
 </style>

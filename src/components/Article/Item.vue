@@ -138,6 +138,10 @@ onMounted(() => {
   background-color: var(--defaultColor);
 }
 
+.articleTitle {
+  font-family: 'tsxmm';
+}
+
 @media screen and (max-width: 768px) {
   .articleItem {
     flex-direction: column;
@@ -209,6 +213,7 @@ onMounted(() => {
 .see p {
   flex: 1;
   font-size: 15px;
+  font-family: '钉钉进步体 Regular';
 }
 
 .see p span {

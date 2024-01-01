@@ -117,6 +117,7 @@ function exit() {
   line-height: 50px;
   color: #666;
   border-bottom: 1px solid #ddd;
+  font-family: 'tsxmm';
 }
 
 .account-left .account-ui {
@@ -129,6 +130,7 @@ function exit() {
   height: 48px;
   line-height: 48px;
   color: #222;
+  font-family: 'tsxmm';
 }
 
 .account-left .account-ui .account-list a:hover {
@@ -163,6 +165,7 @@ function exit() {
 
 .account-right .account-right-title .account-right-title-text {
   float: left;
+  font-family: 'tsxmm';
 }
 
 .account-right .account-right-title {

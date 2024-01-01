@@ -245,6 +245,9 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 </script>
 
 <style scoped>
+:deep(.el-form-item__label) {
+  font-family: 'tsxmm';
+}
 :deep(.md-editor-toolbar-wrapper) {
   overflow: auto;
 }

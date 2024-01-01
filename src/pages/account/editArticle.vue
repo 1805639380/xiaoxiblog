@@ -56,12 +56,32 @@
             </el-upload>
           </el-form-item>
           <el-form-item label="摘要:" prop="snippet">
-            <el-input
-              type="text"
-              name=""
-              id="snippet"
-              v-model="editForm.snippet"
-            ></el-input>
+            <el-row :gutter="10" style="width: 100%">
+              <el-col :span="23">
+                <el-input
+                  type="textarea"
+                  name=""
+                  :rows="3"
+                  id="snippet"
+                  v-model="editForm.snippet"
+                ></el-input>
+              </el-col>
+              <el-col :span="1">
+                <el-tooltip
+                  class="box-item"
+                  effect="dark"
+                  content="AI帮写"
+                  placement="top"
+                >
+                  <button @click="handleAIWrite" class="ai_btn">
+                    <img
+                      src="https://cloud.afblog.xyz/image/AI_icon.png!v1/format/webp/both/32x32"
+                      alt=""
+                    />
+                  </button>
+                </el-tooltip>
+              </el-col>
+            </el-row>
           </el-form-item>
           <el-form-item label="内容:" prop="content">
             <client-only>
@@ -92,6 +112,7 @@ import sanitizeHtml from "sanitize-html";
 import MdEditor from "md-editor-v3";
 import "md-editor-v3/lib/style.css";
 import { addArticle } from "~/api/articleApi";
+import { getAIReply } from "~/api/TYAIApi";
 
 useHead({
   title: "文章编辑",
@@ -139,6 +160,37 @@ const typeOptions = [
     label: "其他",
   },
 ];
+
+const handleAIWrite = async (e) => {
+  e.preventDefault();
+  if (editForm.content === "") {
+    useMessage({
+      message: "请先填写文章内容",
+      type: "error",
+    });
+    return;
+  }
+  const prompt = "请帮我写一段文章摘要,文章内容如下:";
+  const response = await getAIReply(prompt + editForm.content);
+  const reader = (response as any).body.getReader();
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    let result = new TextDecoder().decode(value);
+    try {
+      const resultObj = JSON.parse(result);
+      useMessage({
+        message: resultObj.message,
+        type: "error",
+      });
+    } catch {
+      // 将字符串解析为对象
+      const datastring = result.split("\n")[3].split("data")[1].slice(1);
+      const dataObj = JSON.parse(datastring);
+      editForm.snippet = dataObj.output.text;
+    }
+  }
+};
 
 // 图片上传前校验
 const beforeAvatarUpload: UploadProps["beforeUpload"] = (rawFile) => {
@@ -246,7 +298,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 
 <style scoped>
 :deep(.el-form-item__label) {
-  font-family: 'tsxmm';
+  font-family: "tsxmm";
 }
 :deep(.md-editor-toolbar-wrapper) {
   overflow: auto;
@@ -272,6 +324,17 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   width: 178px;
   height: 178px;
   display: block;
+}
+.ai_btn {
+  width: 32px;
+  height: 32px;
+  background: none;
+  outline: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 </style>
 

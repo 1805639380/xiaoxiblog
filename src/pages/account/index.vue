@@ -150,6 +150,9 @@ function dataURLtoBlob(dataurl: string): Blob {
 </script>
 
 <style scoped>
+:deep(.el-form-item__label) {
+  font-family: "tsxmm";
+}
 .account-right .user-setting-wrap .user-setting-radio {
   margin: 0 5px;
 }

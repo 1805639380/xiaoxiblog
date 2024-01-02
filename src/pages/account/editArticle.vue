@@ -57,11 +57,15 @@
           </el-form-item>
           <el-form-item label="摘要:" prop="snippet">
             <el-row :gutter="10" style="width: 100%">
-              <el-col :span="23">
+              <el-col
+                :span="23"
+                v-loading="AIIsWritting"
+                element-loading-text="AI代写中..."
+              >
                 <el-input
                   type="textarea"
                   name=""
-                  :rows="3"
+                  :rows="4"
                   id="snippet"
                   v-model="editForm.snippet"
                 ></el-input>
@@ -73,7 +77,7 @@
                   content="AI帮写"
                   placement="top"
                 >
-                  <button @click="handleAIWrite" class="ai_btn">
+                  <button @click.prevent="handleAIWrite" class="ai_btn">
                     <img
                       src="https://cloud.afblog.xyz/image/AI_icon.png!v1/format/webp/both/32x32"
                       alt=""
@@ -161,8 +165,9 @@ const typeOptions = [
   },
 ];
 
-const handleAIWrite = async (e) => {
-  e.preventDefault();
+const AIIsWritting = ref(false);
+
+const handleAIWrite = async () => {
   if (editForm.content === "") {
     useMessage({
       message: "请先填写文章内容",
@@ -170,6 +175,10 @@ const handleAIWrite = async (e) => {
     });
     return;
   }
+  if (AIIsWritting.value === true) {
+    return;
+  }
+  AIIsWritting.value = true;
   const prompt = "请帮我写一段文章摘要,文章内容如下:";
   const model = "qwen-max-1201";
   const response = await getAIReply(prompt + editForm.content, model);
@@ -191,6 +200,7 @@ const handleAIWrite = async (e) => {
       editForm.snippet = dataObj.output.text;
     }
   }
+  AIIsWritting.value = false;
 };
 
 // 图片上传前校验

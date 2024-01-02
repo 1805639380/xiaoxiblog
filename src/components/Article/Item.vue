@@ -52,7 +52,7 @@
               </p>
             </div>
             <div class="summary">
-              <p>
+              <p :title="props.articleData?.description">
                 {{ props.articleData?.description }}
               </p>
             </div>

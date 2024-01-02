@@ -190,7 +190,7 @@ const handleAIWrite = async () => {
     return;
   }
   AIIsWritting.value = true;
-  const prompt = "请帮我写一段文章摘要,文章内容如下:";
+  const prompt = "请帮我写一段文章摘要,字数不超过两百个字符,文章内容如下:";
   const model = "qwen-max-1201";
   const response = await getAIReply(prompt + editForm.content, model);
   const reader = (response as any).body.getReader();

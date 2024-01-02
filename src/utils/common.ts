@@ -104,3 +104,21 @@ export const imageSkeletonLazyLoad = (
   );
   io.observe(observeEl);
 };
+
+/**
+ *  防抖函数
+ * @param func
+ * @param delay
+ * @returns
+ */
+export const debounce = (func, delay) => {
+  let timeoutId;
+
+  return function (...args) {
+    clearTimeout(timeoutId);
+
+    timeoutId = setTimeout(() => {
+      func(args);
+    }, delay);
+  };
+};

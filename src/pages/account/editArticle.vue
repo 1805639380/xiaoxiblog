@@ -89,7 +89,12 @@
           </el-form-item>
           <el-form-item label="内容:" prop="content">
             <client-only>
-              <MdEditor v-model="editForm.content" :sanitize="sanitize" />
+              <MdEditor
+                @onSave="saveEditorContent"
+                @onUploadImg="uploadEditorImg"
+                v-model="editForm.content"
+                :sanitize="sanitize"
+              />
             </client-only>
           </el-form-item>
           <el-form-item class="article-btn-wrap">
@@ -117,6 +122,7 @@ import MdEditor from "md-editor-v3";
 import "md-editor-v3/lib/style.css";
 import { addArticle } from "~/api/articleApi";
 import { getAIReply } from "~/api/TYAIApi";
+import { uploadImage } from "~/api/common";
 
 useHead({
   title: "文章编辑",
@@ -136,6 +142,7 @@ uploadHeaders.value["authorization"] = "Bearer " + token.value;
 
 let [err, userState] = await useCatch(useUserState());
 
+const defaultContent = "##### 这里填写内容";
 const editForm = reactive<{
   title: string;
   snippet: string;
@@ -146,9 +153,13 @@ const editForm = reactive<{
   title: "",
   type: "",
   snippet: "",
-  content: "##### 这里填写内容",
+  content: defaultContent,
   imageUrl: "",
 });
+
+if (process.client) {
+  editForm.content = localStorage.getItem("editContent") || defaultContent;
+}
 
 const typeOptions = [
   {
@@ -226,6 +237,38 @@ const handleAvatarSuccess: UploadProps["onSuccess"] = (
   // editForm.imageUrl = URL.createObjectURL(uploadFile.raw!)
 };
 
+// 保存编辑器内容
+const saveEditorContent = (v) => {
+  localStorage.setItem("editContent", v);
+  useMessage({
+    message: "保存成功",
+    type: "success",
+  });
+};
+
+// 上传编辑器图片
+const uploadEditorImg = async (files, callback) => {
+  const res = await Promise.all(
+    files.map((file) => {
+      return new Promise((rev, rej) => {
+        const form = new FormData();
+        form.append("file", file);
+        uploadImage(form)
+          .then((res) => {
+            rev({
+              data: {
+                url: res.data.value.data.row,
+              },
+            });
+          })
+          .catch((error) => rej(error));
+      });
+    })
+  );
+
+  callback(res.map((item) => item.data.url));
+};
+
 /**
  * el-form 表单空值校验
  * @param rule
@@ -295,6 +338,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
           message: "发布成功",
           type: "success",
         });
+        localStorage.removeItem("editContent");
         setTimeout(() => {
           router.push("/");
         }, 1000);
@@ -308,6 +352,9 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 </script>
 
 <style scoped>
+:deep(.md-editor-fullscreen) {
+  z-index: 10;
+}
 :deep(.el-form-item__label) {
   font-family: "tsxmm";
 }

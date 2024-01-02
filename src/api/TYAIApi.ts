@@ -1,21 +1,14 @@
-const AI_BASEURL = "/ai";
+const AI_BASEURL = import.meta.env.VITE_API_HOST + "/api/v1/ai";
 
-const API_KEY = import.meta.env.VITE_TY_API_KEY;
-
-export const getAIReply = (prompt: string) => {
+export const getAIReply = (prompt: string, model: string) => {
   return fetch(AI_BASEURL, {
     method: "POST",
     headers: {
-      Authorization: "Bearer " + API_KEY,
       "Content-Type": "application/json",
-      "X-DashScope-SSE": "enable",
-      Accept: "text/event-stream",
     },
     body: JSON.stringify({
-      model: "qwen-max-1201",
-      input: {
-        prompt: prompt,
-      },
+      model,
+      prompt,
     }),
   });
 };

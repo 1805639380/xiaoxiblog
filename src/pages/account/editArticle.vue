@@ -171,7 +171,8 @@ const handleAIWrite = async (e) => {
     return;
   }
   const prompt = "请帮我写一段文章摘要,文章内容如下:";
-  const response = await getAIReply(prompt + editForm.content);
+  const model = "qwen-max-1201";
+  const response = await getAIReply(prompt + editForm.content, model);
   const reader = (response as any).body.getReader();
   while (true) {
     const { done, value } = await reader.read();

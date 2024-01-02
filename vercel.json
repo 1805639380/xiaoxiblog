@@ -1,8 +1,0 @@
-{
-    "redirects": [
-        {
-            "source": "/ai",
-            "destination": "/api/proxy"
-        }
-    ]
-}

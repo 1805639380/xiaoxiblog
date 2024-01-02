@@ -216,9 +216,9 @@ const handleAIWrite = async () => {
 
 // 图片上传前校验
 const beforeAvatarUpload: UploadProps["beforeUpload"] = (rawFile) => {
-  if (rawFile.size / 1024 > 200) {
+  if (rawFile.size / 1024 / 1024 > 5) {
     useMessage({
-      message: "图片文件不能超过200kb!",
+      message: "图片文件不能超过5mb!",
       type: "error",
     });
     return false;

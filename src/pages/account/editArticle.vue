@@ -266,7 +266,7 @@ const uploadEditorImg = async (files, callback) => {
     })
   );
 
-  callback(res.map((item) => item.data.url));
+  callback(res.map((item) => item.data.url + "!v1"));
 };
 
 /**

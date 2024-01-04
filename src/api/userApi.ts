@@ -1,4 +1,5 @@
 import type { ResponseData } from "~/types/common";
+import type { User } from "~/types/user";
 
 type LoginType = {
   account: string;
@@ -64,6 +65,39 @@ type UpdataProfile = {
 export const updateUserData = function (data: UpdataProfile) {
   return useRequest({
     url: `/user/profile`,
+    method: "PATCH",
+    data,
+  });
+};
+
+/**
+ * 根据用户账号用户用户信息
+ * @param account 用户名
+ * @returns
+ */
+export const getUserByAccount = (account: string) => {
+  return useRequest<ResponseData<User>>(
+    {
+      url: `/user/${account}`,
+      method: "get",
+    },
+    false
+  );
+};
+
+/**
+ * 修改密码
+ * @param data
+ * @returns
+ */
+export const updateUserPassword = (data: {
+  oldPassword: string;
+  newPassword: string;
+  checkCode: string;
+  username: string;
+}) => {
+  return useRequest<ResponseData<any>>({
+    url: `/user/password`,
     method: "PATCH",
     data,
   });

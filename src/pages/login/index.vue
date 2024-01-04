@@ -14,8 +14,11 @@
                     <label for="userpassword">密码:</label>
                     <input type="password" id="userpassword" name="password" autocomplete="off" v-model="password">
                 </div>
-                <p><input type="checkbox" @change="isChecked" :checked="isKnowUser" id="check"><label
-                        for="check">记住我</label></p>
+                <p>
+                    <input type="checkbox" @change="isChecked" :checked="isKnowUser" id="check">
+                    <label for="check">记住我</label>
+                    <router-link class="forget" to="/forget">忘记密码</router-link>
+                </p>
                 <div class="form-item">
                     <input type="submit" id="smt" value="Login" @mousedown="changeBtnColor" @mouseup="hfBtnColor"
                         :class="{ mousedownClick: isBtnClick }" @click.prevent="submitForm">
@@ -149,6 +152,11 @@ onMounted(() => {
 </script>
   
 <style scoped>
+.forget {
+    float: right;
+    color: #7043fe;
+    font-size: 14px;
+}
 .login::before,
 .login::after {
     content: "";
@@ -279,7 +287,7 @@ input[type="checkbox"] {
 }
 
 .tips a {
-    color: blue;
+    color: #7043fe;
 }
 
 @media screen and (max-width: 768px) {

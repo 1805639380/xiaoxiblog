@@ -12,3 +12,16 @@ export const uploadImage = (data: FormData) => {
     data,
   });
 };
+
+/**
+ * 验证邮箱验证码
+ * @param data
+ * @returns
+ */
+export const checkEmailCode = (data: { checkCode: string; email: string }) => {
+  return useRequest<ResponseData<any>>({
+    url: `/email/check`,
+    method: "POST",
+    data,
+  });
+};

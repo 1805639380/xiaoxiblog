@@ -100,7 +100,7 @@ export const imageSkeletonLazyLoad = (
         }
       });
     },
-    { threshold: 0.7 }
+    { threshold: 0.5 }
   );
   io.observe(observeEl);
 };

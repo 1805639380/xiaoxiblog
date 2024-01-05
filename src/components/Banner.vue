@@ -2,7 +2,7 @@
   <div
     id="bgcBox"
     :style="{
-      background: background.includes('http')
+      backgroundImage: background.includes('http')
         ? `url(${background})`
         : background,
     }"

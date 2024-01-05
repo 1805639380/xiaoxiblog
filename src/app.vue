@@ -55,7 +55,7 @@ router.beforeEach(async (to, from, next) => {
 });
 onMounted(() => {
   setTimeout(() => {
-    document.body.classList.add('pageLoadingComplete');
+    document.body.classList.add("pageLoadingComplete");
     isComplete.value = true;
   }, 1500);
 });
@@ -75,11 +75,13 @@ onMounted(() => {
 .nuxt_page {
   filter: blur(100px);
   overflow: hidden;
+  transform: translateZ(0);
   transition: filter 1s linear;
 }
 
 .loadingComplete {
   filter: none;
+  transform: none;
 }
 
 /* showContent */

@@ -45,13 +45,13 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
+  column-gap: 50px;
 }
 
 .loader {
   width: 48px;
   height: 48px;
   margin-bottom: 50px;
-  margin-right: 50px;
   position: relative;
 }
 

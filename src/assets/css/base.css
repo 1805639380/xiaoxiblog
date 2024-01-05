@@ -97,18 +97,25 @@ button {
     /* animate.css默认延迟 */
     --animate-delay: 0.5s;
     --baseColor: #2abce9;
+    --title-color: #fa8d8d;
     --shadow: #e8e8e8;
     --hshadow: #444;
     --mtop: 50px;
     --radius: 11px;
     --xBoxWidth: 45rem;
     --dBoxWidth: 50rem;
+    --content-margin: 25px;
     --fontSize: 18px;
     --defaultColor: #fff;
     --shadowColor: #e5d7ff;
     --radius: 15px;
     --theme-color: #ffcc00;
     --font-article: "Noto Serif SC", "Source Han Serif SC", "Source Han Serif", source-han-serif-sc, "PT Serif", "SongTi SC", "MicroSoft Yahei", Georgia, serif;
+    --grey-1: #fdfdfd;
+    --grey-1-a0: rgba(253, 253, 253, 0);
+    --grey-1-a7: rgba(253, 253, 253, .7);
+    --grey-1-a5: rgba(253, 253, 253, .5);
+    --grey-1-a3: rgba(253, 253, 253, .3);
 }
 
 #app {

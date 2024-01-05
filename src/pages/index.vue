@@ -1,7 +1,12 @@
 <template>
   <div class="home">
     <nuxt-layout name="default" :user="userData">
-      <Banner :showWave="true" :gradationText="true" height="100vh" :showGFuide="true">
+      <Banner
+        :showWave="true"
+        :gradationText="true"
+        height="100vh"
+        :showGFuide="true"
+      >
         <span ref="typedString" class="typedString"></span>
       </Banner>
       <nuxt-layout name="container" :user="userData">
@@ -17,17 +22,19 @@
                   v-for="item in carouselArtilceData"
                   :key="item.id"
                 >
-                  <el-image fit="cover" :src="item.pic" :alt="item.title" />
-                  <div class="carousel_item_wrap">
-                    <div class="carousel_item_title">
-                      <h3 text="2xl" justify="center">{{ item.title }}</h3>
+                  <nuxt-link :to="'/archive/' + item.id">
+                    <el-image fit="cover" :src="item.pic" :alt="item.title" />
+                    <div class="carousel_item_wrap">
+                      <div class="carousel_item_title">
+                        <h3 text="2xl" justify="center">{{ item.title }}</h3>
+                      </div>
+                      <div class="carousel_item_text">
+                        <p>
+                          发布时间：<span>{{ item.publish_date }}</span>
+                        </p>
+                      </div>
                     </div>
-                    <div class="carousel_item_text">
-                      <p>
-                        发布时间：<span>{{ item.publish_date }}</span>
-                      </p>
-                    </div>
-                  </div>
+                  </nuxt-link>
                 </el-carousel-item>
               </el-carousel>
             </div>
@@ -192,6 +199,7 @@ if (articleRes.value) {
   align-items: center;
   row-gap: var(--content-margin);
   z-index: 2;
+  background: rgba(0, 0, 0, 0.1);
 }
 .el-carousel__item h3 {
   color: var(--defaultColor);

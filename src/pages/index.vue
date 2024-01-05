@@ -15,35 +15,45 @@
         </template>
         <template #containerLeftMain>
           <div id="main">
-            <div class="recommend">
-              <div class="recommend_tag"></div>
-              <el-carousel height="200px" :interval="5000" arrow="always">
-                <el-carousel-item
-                  v-for="item in carouselArtilceData"
-                  :key="item.id"
-                >
-                  <nuxt-link :to="'/archive/' + item.id">
-                    <el-image fit="cover" :src="item.pic" :alt="item.title" />
-                    <div class="carousel_item_wrap">
-                      <div class="carousel_item_title">
-                        <h3 text="2xl" justify="center">{{ item.title }}</h3>
-                      </div>
-                      <div class="carousel_item_text">
-                        <p>
-                          发布时间：<span>{{ item.publish_date }}</span>
-                        </p>
-                      </div>
-                    </div>
-                  </nuxt-link>
-                </el-carousel-item>
-              </el-carousel>
-            </div>
-            <ArticleWrap
-              :currentPage="1"
-              :offset="5"
-              :articleList="artilceData"
-              :count="articleCount"
-            ></ArticleWrap>
+            <el-skeleton :loading="pending" :rows="5" animated>
+              <template #default>
+                <div class="recommend" v-if="artilceData.length > 0">
+                  <div class="recommend_tag"></div>
+                  <el-carousel height="200px" :interval="5000" arrow="always">
+                    <el-carousel-item
+                      v-for="item in carouselArtilceData"
+                      :key="item.id"
+                    >
+                      <nuxt-link :to="'/archive/' + item.id">
+                        <el-image
+                          fit="cover"
+                          :src="item.pic"
+                          :alt="item.title"
+                        />
+                        <div class="carousel_item_wrap">
+                          <div class="carousel_item_title">
+                            <h3 text="2xl" justify="center">
+                              {{ item.title }}
+                            </h3>
+                          </div>
+                          <div class="carousel_item_text">
+                            <p>
+                              发布时间：<span>{{ item.publish_date }}</span>
+                            </p>
+                          </div>
+                        </div>
+                      </nuxt-link>
+                    </el-carousel-item>
+                  </el-carousel>
+                </div>
+                <ArticleWrap
+                  :currentPage="1"
+                  :offset="5"
+                  :articleList="artilceData"
+                  :count="articleCount"
+                ></ArticleWrap>
+              </template>
+            </el-skeleton>
           </div>
         </template>
       </nuxt-layout>
@@ -101,7 +111,7 @@ useHead({
 });
 const userData = await useUserState();
 
-let { data: articleRes, refresh } = await selectArticle();
+let { data: articleRes, refresh, pending } = await selectArticle();
 
 watch(articleRes, (newArticleRes) => {
   if (newArticleRes) {

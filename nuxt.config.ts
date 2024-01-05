@@ -56,9 +56,7 @@ export default defineNuxtConfig({
     dirs: ["~/composables", "~/components"],
     global: true,
   },
-  routeRules: {
-    "/chat": { ssr: false },
-  },
+  routeRules: {},
   app: {
     head: {
       htmlAttrs: {

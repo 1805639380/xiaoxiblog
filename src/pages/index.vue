@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <nuxt-layout name="default" :user="userData">
-      <Banner :showWave="true" :gradationText="true" height="100vh">
+      <Banner :showWave="true" :gradationText="true" height="100vh" :showGFuide="true">
         <span ref="typedString" class="typedString"></span>
       </Banner>
       <nuxt-layout name="container" :user="userData">

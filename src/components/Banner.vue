@@ -61,7 +61,7 @@
         ></use>
       </g>
     </svg>
-    <div class="guidelines">
+    <div class="guidelines" v-if="showGFuide">
       <a href="#main">
         <svg
           t="1704450312483"
@@ -91,11 +91,13 @@ const props = withDefaults(
     background?: string;
     gradationText?: boolean;
     showWave?: boolean;
+    showGFuide?: boolean;
   }>(),
   {
     height: "80vh",
     background: "linear-gradient(135deg,#FF9D6C 10%,#BB4E75 100%)",
     showWave: false,
+    showGFuide: false,
   }
 );
 </script>

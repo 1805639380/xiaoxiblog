@@ -109,6 +109,9 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.articleItem {
+  --transition-delay: 0.25s;
+}
 .img_loading_hidden {
   display: none;
 }
@@ -121,11 +124,19 @@ onMounted(() => {
   bottom: 0;
   width: 100%;
   background-color: yellow;
-  transition: all 0.25s;
+  transition: all var(--transition-delay);
 }
 
 .rowReverse {
   flex-direction: row-reverse;
+}
+
+.articleItem.rowReverse .bgi {
+  clip-path: polygon(0 0,92% 0,100% 100%,0 100%);
+}
+
+.articleItem .bgi {
+  clip-path: polygon(0 0,100% 0,100% 100%,8% 100%);
 }
 
 .articleItem {
@@ -134,7 +145,7 @@ onMounted(() => {
   border-radius: 11px;
   overflow: hidden;
   box-shadow: 0 1px 30px -4px var(--shadow);
-  transition: box-shadow 0.5s;
+  transition: box-shadow var(--transition-delay);
   background-color: var(--defaultColor);
 }
 
@@ -157,8 +168,8 @@ onMounted(() => {
   box-shadow: 0 1px 20px 10px var(--shadow);
 }
 
-.articleItem .bgi:hover .imgBg {
-  transform: scale(1.2);
+.articleItem:hover .bgi .imgBg {
+  transform: scale(1.1) rotate(5deg);
 }
 
 .articleItem .content {
@@ -228,9 +239,8 @@ onMounted(() => {
   position: relative;
   width: 100%;
   height: 100%;
-  /* background-image: url(@/assets/img/sw.jpg); */
   background-size: cover;
-  transition: transform 0.5s;
+  transition: transform var(--transition-delay);
   background-color: var(--theme-color);
 }
 

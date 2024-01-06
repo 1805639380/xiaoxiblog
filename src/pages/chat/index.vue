@@ -22,7 +22,7 @@
                         <el-avatar :size="40" :src="item.avatar" />
                       </div>
                     </el-col>
-                    <el-col :span="14">
+                    <el-col :span="18.5">
                       <div class="chart-object-item-text">
                         <el-text class="mx-1" size="large" :truncated="true">{{
                           item.name
@@ -87,8 +87,15 @@
                   </svg>
                 </span>
               </div>
-              <div class="chart-wrap" ref="chartWrap">
-                <template v-for="item in charts" :key="item?.user?.id">
+              <div
+                class="chart-wrap"
+                ref="chartWrapRef"
+                @scroll="handleChartWrapScroll"
+              >
+                <template
+                  v-for="item in chartBoxData.charts"
+                  :key="item?.user?.id"
+                >
                   <div
                     class="chart-item"
                     :class="{ 'current-user': item?.user?.id === userData?.id }"
@@ -169,10 +176,11 @@ const background = "linear-gradient(135deg,#FD6E6A 10%,#FFC600 100%)";
 
 const chartMsg = ref<string>("");
 const userCount = ref<number>(0);
-const charts = ref([]);
 const userQueue = ref<Array<any>>([]);
 const isLogin = ref<boolean>(false);
 const chartBoxDrawer = ref<boolean>(false);
+
+const chartWrapRef = ref<HTMLDivElement>();
 
 const router = useRouter();
 
@@ -190,6 +198,7 @@ const chartObjects = ref([
       "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
     active: false,
     isGroupChat: false,
+    charts: [],
   },
   {
     id: 1,
@@ -198,6 +207,7 @@ const chartObjects = ref([
       "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
     active: true,
     isGroupChat: true,
+    charts: [],
   },
 ]);
 
@@ -205,6 +215,7 @@ const chartObjects = ref([
 const chartBoxData = ref({
   isGroupChat: true,
   chartTitle: "聊天室",
+  charts: [],
 });
 
 /**
@@ -215,13 +226,15 @@ const changeChartObject = (id: number) => {
   chartObjects.value.forEach((item) => {
     item.active = item.id === id;
   });
+  updateChartWrapScroll();
 };
 
 watch(
   chartObjects,
   () => {
     if (isLogin.value) {
-      const chartTitle = chartObjects.value.find((item) => item.active).name;
+      const activeObject = chartObjects.value.find((item) => item.active);
+      const chartTitle = activeObject.name;
       const groupChats = chartObjects.value.filter(
         (item) => item.isGroupChat && item.active
       );
@@ -229,11 +242,25 @@ watch(
       chartBoxData.value = {
         isGroupChat,
         chartTitle,
+        charts: activeObject.charts,
       };
     }
   },
-  { deep: true }
+  { deep: true, immediate: true }
 );
+
+// 是否更新滚到到底部
+const isScrollToBottom = ref<boolean>(true);
+
+// 监听聊天框滚动条事件
+const handleChartWrapScroll = (e: any) => {
+  const target = e.target;
+  isScrollToBottom.value = false;
+  if (target.scrollTopMax - target.scrollTop < target.offsetHeight) {
+    // 进入可更新滚动条区域
+    isScrollToBottom.value = true;
+  }
+};
 
 if (isLogin.value && process.client) {
   socket.on("connect", () => {
@@ -260,10 +287,16 @@ if (isLogin.value && process.client) {
 
   // 监听消息的回显
   socket.on("chartMsg", (data) => {
+    // 拿到聊天室对象
+    const chartRoom = chartObjects.value.find((item) => item.isGroupChat);
     if (data.hasOwnProperty("length")) {
-      charts.value = data;
+      chartRoom.charts = data;
     } else {
-      charts.value.push(data);
+      chartRoom.charts.push(data);
+    }
+    if (isScrollToBottom.value) {
+      // 更新滚动条高度
+      updateChartWrapScroll();
     }
   });
 
@@ -295,6 +328,7 @@ if (isLogin.value && process.client) {
   });
 }
 
+// 发送消息
 const chartSend = () => {
   if (chartMsg.value === "") {
     return;
@@ -304,9 +338,25 @@ const chartSend = () => {
     user: userData.value,
     msg: chartMsg.value,
   });
+  // 发送消息后,调整为可更新滚动条高度
+  isScrollToBottom.value = true;
   // 清空聊天框
   chartMsg.value = "";
 };
+
+const updateChartWrapScroll = () => {
+  nextTick(() => {
+    if (!chartWrapRef.value) return;
+    chartWrapRef.value.style.overflow = "visible";
+    const height = chartWrapRef.value.offsetHeight;
+    chartWrapRef.value.style.overflow = "auto";
+    chartWrapRef.value.scrollTop = height || 0;
+  });
+};
+
+onMounted(() => {
+  updateChartWrapScroll();
+});
 </script>
 
 <style scoped>
@@ -446,6 +496,13 @@ const chartSend = () => {
   margin-right: 15px;
 }
 
+.chart .chart-right .chart-wrap .chart-user-msg {
+  padding: 10px;
+  border-radius: 10px;
+  background-color: var(--chart-user-text-bgc);
+  color: #fff;
+}
+
 /* 当前用户发消息显示在右侧 */
 .chart .chart-right .chart-wrap .current-user .chart-user-avatar {
   margin-right: 0;
@@ -454,6 +511,7 @@ const chartSend = () => {
 
 .chart .chart-right .chart-wrap .current-user .chart-user-msg {
   text-align: right;
+  background-color: var(--chart-current-user-text-bgc);
 }
 
 .chart .chart-right .chart-wrap .current-user .chart-user-name {
@@ -508,7 +566,9 @@ const chartSend = () => {
   background-color: #fff;
   border-radius: 15px;
 }
-
+.chart-list .chart-list-item:hover {
+  background-color: #f8f8f8;
+}
 .chart-list .chart-list-item .chart-list-item-name {
   margin-left: 15px;
   font-size: 16px;

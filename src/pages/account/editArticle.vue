@@ -93,7 +93,6 @@
                 @onSave="saveEditorContent"
                 @onUploadImg="uploadEditorImg"
                 v-model="editForm.content"
-                :sanitize="sanitize"
               />
             </client-only>
           </el-form-item>
@@ -117,8 +116,7 @@
 import type { FormInstance } from "element-plus";
 import { Plus } from "@element-plus/icons";
 import type { UploadProps } from "element-plus";
-import sanitizeHtml from "sanitize-html";
-import MdEditor from "md-editor-v3";
+import { MdEditor } from "md-editor-v3";
 import "md-editor-v3/lib/style.css";
 import { addArticle } from "~/api/articleApi";
 import { getAIReply } from "~/api/TYAIApi";
@@ -129,10 +127,6 @@ useHead({
 });
 const router = useRouter();
 const ruleFormRef = ref<FormInstance>();
-
-const sanitize = (html: string) => {
-  return sanitizeHtml(html);
-};
 
 const uploadUrl = ref("");
 uploadUrl.value = useRuntimeConfig().public.requestBaseUrl + "/image";

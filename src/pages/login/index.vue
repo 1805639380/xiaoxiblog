@@ -19,7 +19,7 @@
                     <label for="check">记住我</label>
                     <router-link class="forget" to="/forget">忘记密码</router-link>
                 </p>
-                <div class="form-item">
+                <div class="form-item" v-loading="isLoading">
                     <input type="submit" id="smt" value="Login" @mousedown="changeBtnColor" @mouseup="hfBtnColor"
                         :class="{ mousedownClick: isBtnClick }" @click.prevent="submitForm">
                 </div>
@@ -37,7 +37,7 @@ import { login } from "~/api/userApi";
 useHead({
     title: "登录"
 })
-
+const isLoading = ref(false)
 const router = useRouter()
 const isBtnClick = ref<boolean>(false)
 const username = ref<string>("")
@@ -83,7 +83,7 @@ async function submitForm() {
     } else {
         localStorage.clear();
     }
-
+    isLoading.value = true
 
     login({
         account: username.value,
@@ -114,7 +114,7 @@ async function submitForm() {
                 token.value = resDataRef.value?.data.access_token
 
                 useMessage({
-                    message: resDataRef.value?.message,
+                    message: "登陆成功",
                     type: "success",
                 });
 
@@ -134,7 +134,10 @@ async function submitForm() {
                 message: err,
                 type: "error",
             });
-        });
+        })
+        .finally(() => {
+            isLoading.value = false
+        })
 }
 
 onMounted(() => {
@@ -194,7 +197,10 @@ onMounted(() => {
     background-color: #fff;
     box-sizing: content-box;
 }
-
+:deep(.el-loading-mask .circular) {
+    width: 20px;
+    margin-right: 80px;
+}
 .logo {
   padding: 25px 0;
   font-size: 0;

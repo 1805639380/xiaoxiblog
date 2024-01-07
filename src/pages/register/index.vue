@@ -59,7 +59,7 @@
             <button @click.prevent="sendCheckCode">{{ sendBtn }}</button>
           </div>
         </div>
-        <div class="form-item">
+        <div class="form-item" v-loading="isLoading">
           <input
             type="submit"
             id="smt"
@@ -79,15 +79,14 @@
 </template>
 
 <script setup lang="ts">
-import { register, sendCode } from '~/api/userApi';
-
+import { register, sendCode } from "~/api/userApi";
 
 useHead({
   title: "注册",
 });
 
 const router = useRouter();
-
+const isLoading = ref(false);
 const username = ref<string>("");
 const password = ref<string>("");
 const confirmPassword = ref<string>("");
@@ -204,29 +203,34 @@ function submitForm(): void {
     });
     return;
   }
+  isLoading.value = true;
   // 调用注册请求
   register({
     account: username.value,
     password: password.value,
     email: email.value,
     email_code: checkCode.value,
-  }).then(({ data: res }) => {
-    if (res.value?.code === 1001) {
-      // 注册成功
-      useMessage({
-        message: res.value.message,
-        type: "success",
-      });
-      router.push("/login");
-    } else {
-      // 注册失败
-      useMessage({
-        message: res.value.message,
-        type: "error",
-      });
-      return;
-    }
-  });
+  })
+    .then(({ data: res }) => {
+      if (res.value?.code === 1001) {
+        // 注册成功
+        useMessage({
+          message: res.value.message,
+          type: "success",
+        });
+        router.push("/login");
+      } else {
+        // 注册失败
+        useMessage({
+          message: res.value.message,
+          type: "error",
+        });
+        return;
+      }
+    })
+    .finally(() => {
+      isLoading.value = false;
+    });
 }
 </script>
 
@@ -277,7 +281,10 @@ function submitForm(): void {
   right: 0;
   background-image: url("@/assets/img/wrapright.svg");
 }
-
+:deep(.el-loading-mask .circular) {
+  width: 20px;
+  margin-right: 80px;
+}
 .register {
   position: relative;
   display: flex;

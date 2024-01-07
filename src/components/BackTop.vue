@@ -1,6 +1,7 @@
 <template>
   <div id="backTop">
-    <div class="back"
+    <div
+      class="back"
       :class="{ isShow: windowScrollTop > 200 }"
       @click="backTopFun"
     ></div>
@@ -16,14 +17,23 @@ let backTopFun = ref(() => {});
 
 onMounted(() => {
   windowScrollTop.value = document.documentElement.scrollTop;
-  window.addEventListener("scroll", (e) => {
+
+  const backTopDown = (e) => {
     //滚动条高度大于10的时候导航栏固定
     windowScrollTop.value = document.documentElement.scrollTop;
 
     windowScrollTop.value > 10
       ? (isStickTop.value = true)
       : (isStickTop.value = false);
-  });
+  };
+
+  window.addEventListener("scroll", backTopDown);
+
+  const clientWidth = document.documentElement.clientWidth;
+
+  if (clientWidth <= 768) {
+    window.removeEventListener("scroll", backTopDown);
+  }
 
   backTopFun.value = function () {
     let top = document.documentElement.scrollTop || document.body.scrollTop;

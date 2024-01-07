@@ -82,6 +82,10 @@ export default defineNuxtConfig({
       link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
     },
   },
+  experimental: {
+    writeEarlyHints: true,
+    asyncContext: true
+  },
   build: {
     analyze: true,
     transpile: lifecycle === "build" ? ["element-plus"] : [],

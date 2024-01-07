@@ -3,7 +3,12 @@
     <Banner :height="'50vh'" :background="backgroundImage">{{
       article_data?.title
     }}</Banner>
-    <nuxt-layout name="container" :user="userData" :showUserInfo="false">
+    <nuxt-layout
+      name="container"
+      :user="userData"
+      :showUserInfo="false"
+      :showRight="true"
+    >
       <template #containerLeftMain>
         <el-skeleton :loading="pending" animated style="padding: 25px 10px">
           <template #template>
@@ -64,7 +69,10 @@
                 </div>
               </div>
               <div id="article" class="content">
-                <MdEditor :model-value="article_data?.content" previewOnly />
+                <MdPreview
+                  :modelValue="article_data?.content"
+                  :editorId="mdState.id"
+                />
               </div>
             </div>
           </template>
@@ -79,18 +87,19 @@
         </ClientOnly>
       </template>
       <template #containerRight>
-        <!-- <u-anchor
-          style="position: sticky; right: 0; top: 100px"
-          container="#article"
-        ></u-anchor> -->
+        <MdCatalog
+          :editorId="mdState.id"
+          :scrollElement="scrollElement"
+          :scrollElementOffsetTop="100"
+        />
       </template>
     </nuxt-layout>
   </nuxt-layout>
 </template>
 
 <script setup lang="ts">
-import MdEditor from "md-editor-v3";
-import "md-editor-v3/lib/style.css";
+import { MdPreview, MdCatalog } from "md-editor-v3";
+import "md-editor-v3/lib/preview.css";
 import {
   Calendar,
   ChatLineSquare,
@@ -101,13 +110,18 @@ import emoji from "~/assets/emoji";
 import type { ConfigApi, CommentApi } from "undraw-ui";
 import { dayjs } from "element-plus";
 import { getArticleDetail } from "~/api/articleApi";
-import {
-  selectComment,
-} from "~/api/commentApi";
+import { selectComment } from "~/api/commentApi";
 import type { Comment } from "~/types/comment";
 import type { ResponseData, ResponseType } from "~/types/common";
 
 const route = useRoute();
+
+const mdState = reactive({
+  id: "my-editor",
+});
+
+let scrollElement = ref();
+if (process.client) scrollElement.value = document.documentElement;
 
 // 获取用户数据
 const userData = await useUserState();

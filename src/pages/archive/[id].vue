@@ -42,7 +42,7 @@
                   </el-icon>
                   <span>{{
                     dayjs(article_data?.publish_date).format(
-                      "YYYY-MM-DD HH:mm:ss"
+                      "YYYY-MM-DD"
                     )
                   }}</span>
                 </div>

@@ -357,6 +357,8 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 }
 :deep(.el-form-item__label) {
   font-family: "tsxmm";
+  width: 10.5rem;
+  max-width: 100px;
 }
 :deep(.md-editor-toolbar-wrapper) {
   overflow: auto;

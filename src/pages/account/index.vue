@@ -4,7 +4,7 @@
     <nuxt-layout name="account" :active="0" :title="'我的信息'">
       <template #account-wrap>
         <div class="user-setting-wrap">
-          <el-form :model="userInfo" ref="form" label-width="100px">
+          <el-form :model="userInfo" ref="form" label-width="10.5rem">
             <el-form-item label="头像:" class="user-avatar">
               <label for="avatar" class="avatar">
                 <el-avatar class="changeAvatar" :size="64" :src="userInfo.avatar"></el-avatar>
@@ -152,6 +152,7 @@ function dataURLtoBlob(dataurl: string): Blob {
 <style scoped>
 :deep(.el-form-item__label) {
   font-family: "tsxmm";
+  max-width: 100px;
 }
 .account-right .user-setting-wrap .user-setting-radio {
   margin: 0 5px;
@@ -207,5 +208,10 @@ function dataURLtoBlob(dataurl: string): Blob {
   opacity: 0;
   z-index: -1;
   pointer-events: none;
+}
+@media screen and (min-width: 768px) {
+  .user-btn-wrap :deep(.el-form-item__content) {
+    margin-left: 100px !important;
+  }
 }
 </style>

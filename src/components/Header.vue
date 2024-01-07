@@ -144,7 +144,7 @@ onMounted(() => {
   justify-content: space-between;
   padding: 0 var(--mtop);
   background-color: rgba(255, 255, 255, 0);
-  transition: all 0.2s linear;
+  transition: background-color 0.2s linear;
   color: var(--defaultColor);
   z-index: 10;
 }

@@ -158,9 +158,9 @@ onMounted(() => {
     flex-direction: column;
     height: 350px;
   }
-
-  .summary {
-    height: 35px !important;
+  .articleItem .bgi, 
+  .articleItem.rowReverse .bgi {
+    clip-path: none;
   }
 }
 

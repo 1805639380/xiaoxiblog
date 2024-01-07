@@ -51,6 +51,9 @@ body {
     html {
         font-size: 8px;
     }
+    body {
+        font-size: 2rem;
+    }
 }
 
 @media screen and (max-width:400px) {

@@ -9,7 +9,7 @@
       >
         <span ref="typedString" class="typedString"></span>
       </Banner>
-      <nuxt-layout name="container" :user="userData">
+      <nuxt-layout name="container" :user="userData" :showRight="true">
         <template #containerLeftTop>
           <Notice />
         </template>

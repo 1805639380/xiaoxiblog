@@ -4,7 +4,7 @@
       <slot name="containerLeftTop"></slot>
       <slot name="containerLeftMain"></slot>
     </div>
-    <div class="container-right">
+    <div class="container-right" v-if="showRight">
       <slot name="containerRight">
         <UserInfo :user="props.user" v-if="props.showUserInfo"></UserInfo>
       </slot>
@@ -19,9 +19,11 @@ const props = withDefaults(
   defineProps<{
     user?: UserStateType;
     showUserInfo?: boolean;
+    showRight?: boolean;
   }>(),
   {
     showUserInfo: true,
+    showRight: false
   }
 );
 </script>

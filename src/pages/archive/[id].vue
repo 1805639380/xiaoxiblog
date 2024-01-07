@@ -41,9 +41,7 @@
                     <Calendar />
                   </el-icon>
                   <span>{{
-                    dayjs(article_data?.publish_date).format(
-                      "YYYY-MM-DD"
-                    )
+                    dayjs(article_data?.publish_date).format("YYYY-MM-DD")
                   }}</span>
                 </div>
                 <div class="article_author">
@@ -72,21 +70,12 @@
           </template>
         </el-skeleton>
         <ClientOnly>
-          <u-comment-scroll
-            :disable="disableScrollComment"
-            @more="getMoreComment"
-          >
-            <u-comment
-              page
-              :config="config"
-              style="width: 100%"
-              @reply-page="getMoreReply"
-              @submit="submit"
-              @like="like"
-            >
-              <template v-if="config.comments?.length < 1">&nbsp;</template>
-            </u-comment>
-          </u-comment-scroll>
+          <UserComment
+            :config="config"
+            :request-comments="requestComments"
+            :article-id="article_data?.id || 0"
+            :comment-data="commentData"
+          ></UserComment>
         </ClientOnly>
       </template>
       <template #containerRight>
@@ -109,20 +98,12 @@ import {
   UserFilled,
 } from "@element-plus/icons";
 import emoji from "~/assets/emoji";
-import { UToast, throttle } from "undraw-ui";
-import type { ConfigApi, CommentApi, ReplyPageParamApi } from "undraw-ui";
+import type { ConfigApi, CommentApi } from "undraw-ui";
 import { dayjs } from "element-plus";
 import { getArticleDetail } from "~/api/articleApi";
 import {
-  addComment,
-  delComment,
-  likesComment,
-  replyComment,
   selectComment,
-  getCommentReply,
 } from "~/api/commentApi";
-
-import type { LikesCommentData } from "~/api/commentApi";
 import type { Comment } from "~/types/comment";
 import type { ResponseData, ResponseType } from "~/types/common";
 
@@ -131,8 +112,6 @@ const route = useRoute();
 // 获取用户数据
 const userData = await useUserState();
 
-// 是否禁用滚动加载评论
-const disableScrollComment = ref(false);
 const id: string = route.params.id as string;
 const {
   data,
@@ -166,11 +145,11 @@ const backgroundImage = computed(() => {
 const page = ref(1);
 const offset = ref(5);
 // 请求评论区数据;
-async function requestComments(articleData, page, offset) {
-  if (articleData.id) {
+async function requestComments(articleId, page, offset) {
+  if (articleId) {
     const { data, refresh: commentRefresh } = await selectComment({
       page: page,
-      article_id: articleData.id,
+      article_id: articleId,
       offset: offset,
     });
     return data;
@@ -182,7 +161,7 @@ const commentData = ref<ResponseType<ResponseData<Comment>>>();
 watch(data, async (newData) => {
   if (newData) {
     const commentRes = await requestComments(
-      newData.data.row,
+      newData.data.row.id,
       page.value,
       offset.value
     );
@@ -195,8 +174,6 @@ watch(data, async (newData) => {
     config.user.likeIds = flatLikeIds.value;
   }
 });
-
-const dateFormat = "YYYY-MM-DD";
 
 // 将数据处理成CommentApi类型
 function getComments(commentRows): CommentApi[] {
@@ -243,35 +220,6 @@ function getComments(commentRows): CommentApi[] {
   });
 }
 
-/**
- * 格式化日期
- * @param createdAt
- */
-function formatRelativeTime(createdAt) {
-  const now = new Date();
-  const createdDate = new Date(createdAt);
-
-  const timeDifferenceInSeconds = Math.floor(
-    ((now as any) - (createdDate as any)) / 1000
-  );
-
-  if (timeDifferenceInSeconds < 60) {
-    return `刚刚`;
-  } else if (timeDifferenceInSeconds < 3600) {
-    const minutesAgo = Math.floor(timeDifferenceInSeconds / 60);
-    return `${minutesAgo}分钟前`;
-  } else if (timeDifferenceInSeconds < 86400) {
-    const hoursAgo = Math.floor(timeDifferenceInSeconds / 3600);
-    return `${hoursAgo}小时前`;
-  } else if (timeDifferenceInSeconds < 259200) {
-    const daysAgo = Math.floor(timeDifferenceInSeconds / 86400);
-    return `${daysAgo}天前`;
-  } else {
-    // 如果超过3天，则显示日期
-    return dayjs(createdDate).format(dateFormat);
-  }
-}
-
 const flatLikeIds = ref<any[]>([]);
 
 // 获取评论id数组
@@ -300,7 +248,7 @@ function getFlatLikeIds() {
 
 if (article_data.value?.id) {
   const commentRes = await requestComments(
-    article_data.value,
+    article_data.value.id,
     page.value,
     offset.value
   );
@@ -320,185 +268,6 @@ const config = reactive<ConfigApi>({
   comments: getComments(commentData?.value?.data?.rows) || [],
   total: commentData?.value?.data?.count || 0,
 });
-
-// 加载更多评论
-const getMoreComment = () => {
-  if (page.value <= Math.ceil(commentData.value.data.count / offset.value)) {
-    setTimeout(async () => {
-      page.value = page.value + 1;
-      const commentData = await requestComments(
-        article_data.value,
-        page.value,
-        offset.value
-      );
-      const comments = getComments(commentData.value.data.rows);
-      config.comments.push(...comments);
-    }, 200);
-  } else {
-    disableScrollComment.value = true;
-  }
-};
-
-// 加载更多回复
-const getMoreReply = async ({
-  pageNum,
-  pageSize,
-  parentId,
-  finish,
-}: ReplyPageParamApi) => {
-  const { data: replyData } = await getCommentReply({
-    page: pageNum,
-    offset: +pageSize,
-    comment_id: +parentId,
-  });
-  if (replyData.value?.code === 1001) {
-    finish({
-      total: replyData.value?.data?.count,
-      list: getComments(replyData.value?.data?.rows),
-    });
-  }
-};
-
-// 提交评论事件;
-const submit = async ({ content, parentId, finish }) => {
-  console.log("提交评论: " + content, parentId);
-  let commentId =
-    (config.comments[config.comments?.length - 1]?.id as number) + 1 || 1;
-  const comment: CommentApi = {
-    id: commentId,
-    parentId: parentId,
-    uid: config.user.id,
-    address: "",
-    content: content,
-    likes: 0,
-    createTime: formatRelativeTime(new Date()),
-    user: {
-      username: config.user.username,
-      avatar: config.user.avatar,
-      level: 1,
-      homeLink: `/1`,
-    },
-    reply: null,
-  };
-
-  if (!parentId) {
-    // 评论请求
-    let { data } = await addComment({
-      content: content,
-      user_id: config.user.id as number,
-      article_id: article_data.value.id,
-    });
-    if (data.value?.code === 1001) {
-      setTimeout(async () => {
-        finish(comment);
-        if (commentData.value.data.count >= 10) {
-          config.comments.pop();
-        }
-        UToast({ message: "评论成功!", type: "success" });
-      }, 200);
-    } else {
-      UToast({ message: "服务器繁忙，请稍后再试！", type: "warn" });
-    }
-  } else {
-    // 回复评论请求
-    const currentReplyComment = config.comments.find(
-      (item) => item.id === +parentId
-    );
-    let replyList = currentReplyComment?.reply.list || [];
-    replyList = replyList.sort((a, b) => {
-      return +b.id - +a.id;
-    });
-    comment.id = (replyList[0]?.id as number) + 1 || 1;
-    const { data } = await replyComment({
-      content,
-      user_id: config.user.id as number,
-      comment_id: +parentId,
-    });
-
-    if (data.value?.code === 1001) {
-      // 回复评论请求
-      setTimeout(async () => {
-        finish(comment);
-        UToast({ message: "评论成功!", type: "success" });
-      }, 200);
-    } else {
-      UToast({ message: data.value.message, type: "warn" });
-    }
-  }
-};
-
-const isLike = ref(true);
-// 点赞按钮事件 将评论id返回后端判断是否点赞，然后在处理点赞状态
-const like = async (id: string, finish: () => void) => {
-  // 确保在函数内部定义的变量不被多次调用时重置
-  let isThrottled = false;
-
-  const likeIdArr = config.user.likeIds.filter(
-    (commentId) => commentId === +id
-  );
-  if (likeIdArr?.length > 0) {
-    isLike.value = false;
-  }
-  const event = window.event;
-
-  if (isThrottled) {
-    // 如果正在节流中，不执行任何操作
-    return;
-  }
-  // 设置节流状态为 true，防止多次调用
-  isThrottled = true;
-
-  let targetElement = event.target as HTMLDivElement;
-  const option: LikesCommentData = {
-    id: +id,
-    userId: +config.user.id,
-    flag: isLike.value,
-  };
-  const parentElement = targetElement.closest(".reply");
-  if (parentElement) {
-    option.isReply = true;
-  }
-
-  const { data } = await likesComment(option);
-  if (data.value?.code === 1001) {
-    isLike.value = false;
-    setTimeout(() => {
-      finish();
-      // 节流时间到后，重置节流状态以允许下一次操作
-      isThrottled = false;
-    }, 200);
-  } else {
-    UToast({ message: data.value?.message, type: "warn" });
-    // 节流时间到后，重置节流状态以允许下一次操作
-    isThrottled = false;
-  }
-};
-
-const _throttle = throttle(
-  async (type: string, comment: CommentApi, finish: Function) => {
-    switch (type) {
-      case "删除":
-        let { data } = await delComment(comment.id as number);
-        if (data.value.code === 1001) {
-          UToast({ message: "删除成功", type: "success" });
-        } else {
-          UToast({ message: "服务器繁忙，请稍后再试!", type: "error" });
-        }
-        finish();
-        break;
-      case "举报":
-        UToast({ message: "举报成功", type: "success" });
-        // alert(`举报成功: ${comment.id}`)
-        break;
-    }
-  }
-);
-
-const operate = (type: string, comment: CommentApi, finish: Function) => {
-  _throttle(type, comment, finish);
-};
-
-function loadComment() {}
 </script>
 
 <style scoped lang="less">
@@ -540,20 +309,6 @@ function loadComment() {}
         serif;
     }
   }
-}
-
-.u-comment {
-  padding: 0 !important;
-}
-
-:deep(.comment-main .user-info .time) {
-  font-family: var(--font-article);
-}
-
-:deep(.txt-box),
-:deep(.action-box) {
-  font-family: "Merriweather Sans", Helvetica, Tahoma, Arial, "PingFang SC",
-    "Hiragino Sans GB", "Microsoft Yahei", "WenQuanYi Micro Hei", sans-serif;
 }
 
 @media screen and (max-width: 768px) {

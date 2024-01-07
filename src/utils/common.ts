@@ -1,4 +1,4 @@
-import type { MessageParams } from "element-plus";
+import { dayjs, type MessageParams } from "element-plus";
 
 export const useCatch = <T>(fn: Promise<T>) => {
   return fn
@@ -122,3 +122,32 @@ export const debounce = (func, delay) => {
     }, delay);
   };
 };
+
+/**
+ * 格式化日期
+ * @param createdAt
+ */
+export function formatRelativeTime(createdAt, dateFormat = "YYYY-MM-DD") {
+  const now = new Date();
+  const createdDate = new Date(createdAt);
+
+  const timeDifferenceInSeconds = Math.floor(
+    ((now as any) - (createdDate as any)) / 1000
+  );
+
+  if (timeDifferenceInSeconds < 60) {
+    return `刚刚`;
+  } else if (timeDifferenceInSeconds < 3600) {
+    const minutesAgo = Math.floor(timeDifferenceInSeconds / 60);
+    return `${minutesAgo}分钟前`;
+  } else if (timeDifferenceInSeconds < 86400) {
+    const hoursAgo = Math.floor(timeDifferenceInSeconds / 3600);
+    return `${hoursAgo}小时前`;
+  } else if (timeDifferenceInSeconds < 259200) {
+    const daysAgo = Math.floor(timeDifferenceInSeconds / 86400);
+    return `${daysAgo}天前`;
+  } else {
+    // 如果超过3天，则显示日期
+    return dayjs(createdDate).format(dateFormat);
+  }
+}

@@ -83,6 +83,7 @@
             :request-comments="requestComments"
             :article-id="article_data?.id || 0"
             :comment-data="commentData"
+            :userData="userData || {}"
           ></UserComment>
         </ClientOnly>
       </template>

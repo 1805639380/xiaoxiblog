@@ -120,6 +120,8 @@ button {
     --grey-1-a5: rgba(253, 253, 253, .5);
     --grey-1-a3: rgba(253, 253, 253, .3);
 
+    --link-color: #7043fe;
+
     /* 聊天 */
     --chart-current-user-text-bgc: #2abce9;
     --chart-user-text-bgc: #f99;

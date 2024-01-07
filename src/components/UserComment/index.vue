@@ -1,5 +1,10 @@
 <template>
   <div class="userComment">
+    <div class="mask" v-if="isEmpty(userData)">
+      <p>
+        您还未登陆，请先<NuxtLink class="loginLink" to="/login">登陆</NuxtLink>
+      </p>
+    </div>
     <u-comment-scroll :disable="disableScrollComment" @more="getMoreComment">
       <u-comment
         page
@@ -22,6 +27,7 @@ import {
   type ConfigApi,
   type ReplyPageParamApi,
   throttle,
+isEmpty,
 } from "undraw-ui";
 import {
   addComment,
@@ -41,6 +47,7 @@ const props = withDefaults(
     articleId: number;
     offset?: number;
     commentData: ResponseType<ResponseData<Comment>> | any;
+    userData: any;
   }>(),
   {
     offset: 5,
@@ -140,6 +147,10 @@ const getMoreReply = async ({
 
 // 提交评论事件;
 const submit = async ({ content, parentId, finish }) => {
+  if (isEmpty(props.userData)) {
+    UToast({ message: "请先登录！", type: "warn" });
+    return
+  }
   console.log("提交评论: " + content, parentId);
   const config = props.config;
   const comment: CommentApi = {
@@ -210,6 +221,10 @@ const submit = async ({ content, parentId, finish }) => {
 const isLike = ref(true);
 // 点赞按钮事件 将评论id返回后端判断是否点赞，然后在处理点赞状态
 const like = async (id: string, finish: () => void) => {
+  if (isEmpty(props.userData)) {
+    UToast({ message: "请先登录！", type: "warn" });
+    return
+  }
   // 确保在函数内部定义的变量不被多次调用时重置
   let isThrottled = false;
   const config = props.config;
@@ -282,6 +297,24 @@ function loadComment() {}
 </script>
 
 <style scoped>
+.userComment {
+  position: relative;
+}
+.mask {
+  position: absolute;
+  left: 0;
+  top: 70px;
+  z-index: 9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 64px;
+  background-color: rgb(255 255 255 / 60%);
+}
+.mask .loginLink {
+  color: var(--link-color);
+}
 .u-comment {
   padding: 0 !important;
 }

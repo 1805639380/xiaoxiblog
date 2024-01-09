@@ -33,7 +33,7 @@ const tags = ref<TagType[]>();
 watch(
   getTagsResponse,
   (newVal) => {
-    tags.value = newVal.data?.rows || [];
+    tags.value = newVal?.data?.rows || [];
   },
   { immediate: true }
 );

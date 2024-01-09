@@ -30,9 +30,13 @@ import type { TagType } from "~/types/tag";
 const { data: getTagsResponse } = await getTags({ page: 1, offset: 15 });
 
 const tags = ref<TagType[]>();
-watch(getTagsResponse, (newVal) => {
-  tags.value = newVal.data?.rows || [];
-});
+watch(
+  getTagsResponse,
+  (newVal) => {
+    tags.value = newVal.data?.rows || [];
+  },
+  { immediate: true }
+);
 const tagType = ["info", "success", "warning", "danger"];
 const getRandomTagType = (): any => {
   return tagType[Math.floor(Math.random() * tagType.length)];

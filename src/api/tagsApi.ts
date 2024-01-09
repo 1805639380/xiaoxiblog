@@ -10,10 +10,10 @@ type getTagsParam = {
  * 获取标签
  * @returns
  */
-export const getTags = (data?: getTagsParam) => {
+export const getTags = (data?: getTagsParam, lazy: boolean = true) => {
   return useRequest<ResponseData<TagType>>({
     url: "/tags",
     method: "GET",
     params: data,
-  });
+  }, lazy);
 };

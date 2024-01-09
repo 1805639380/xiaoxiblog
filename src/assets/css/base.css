@@ -95,6 +95,10 @@ button {
     outline: none;
 }
 
+.hiddenScroll {
+    overflow: hidden;
+}
+
 /* 配置默认色 */
 :root {
     /* animate.css默认延迟 */

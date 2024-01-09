@@ -91,7 +91,7 @@ onMounted(() => {
   width: 100vw;
   height: 100vh;
   background-color: #fff;
-  z-index: 11;
+  z-index: 999;
   animation: show 0.5s cubic-bezier(0, 0.84, 0.19, 1.15) forwards;
   background-image: url("~/assets/img/iloli.gif");
   background-repeat: no-repeat;

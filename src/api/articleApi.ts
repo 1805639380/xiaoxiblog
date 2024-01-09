@@ -83,6 +83,7 @@ type AddArticle = {
   description: string;
   pic: string;
   content: string;
+  tags: string[];
 };
 
 /**

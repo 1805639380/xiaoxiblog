@@ -17,6 +17,27 @@
               v-model="editForm.title"
             ></el-input>
           </el-form-item>
+          <el-form-item class="tagsInput" label="标签:" prop="tags">
+            <client-only>
+              <el-select
+                multiple
+                filterable
+                :multiple-limit="3"
+                allow-create
+                v-model="editForm.tags"
+                class="m-2"
+                placeholder="请选择文章标签"
+                size="large"
+              >
+                <el-option
+                  v-for="item in tagsList"
+                  :key="item.id"
+                  :label="item.tagName"
+                  :value="item.tagName"
+                />
+              </el-select>
+            </client-only>
+          </el-form-item>
           <el-form-item label="类型:" prop="type">
             <client-only>
               <el-select
@@ -121,6 +142,7 @@ import "md-editor-v3/lib/style.css";
 import { addArticle } from "~/api/articleApi";
 import { getAIReply } from "~/api/TYAIApi";
 import { uploadImage } from "~/api/common";
+import { getTags } from "~/api/tagsApi";
 
 useHead({
   title: "文章编辑",
@@ -143,17 +165,23 @@ const editForm = reactive<{
   content: string;
   type: string;
   imageUrl: string;
+  tags: string[];
 }>({
   title: "",
   type: "",
   snippet: "",
   content: defaultContent,
   imageUrl: "",
+  tags: [],
 });
 
 if (process.client) {
   editForm.content = localStorage.getItem("editContent") || defaultContent;
 }
+
+const { data: getTagsResponse } = await getTags({ offset: 100 }, false);
+
+const tagsList = getTagsResponse.value?.data?.rows || [];
 
 const typeOptions = [
   {
@@ -278,6 +306,21 @@ function nullCheck(rule: any, value: any, callback: any) {
 }
 
 /**
+ * 校验标签选项
+ * @param rule 
+ * @param value 
+ * @param callback 
+ */
+function checkTags(rule: any, value: any, callback: any) {
+console.log(' ',value )
+  if (value.length === 0) {
+    callback(new Error("请选择标签"));
+  } else {
+    callback();
+  }
+}
+
+/**
  * 表单规则校验
  */
 const rules = reactive({
@@ -309,6 +352,12 @@ const rules = reactive({
       validator: nullCheck,
     },
   ],
+  tags: [
+    {
+      validator: checkTags,
+      trigger: "blur",
+    },
+  ]
 });
 
 /**
@@ -326,6 +375,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         type: editForm.type,
         description: editForm.snippet,
         pic: editForm.imageUrl,
+        tags: editForm.tags,
       });
       if (data.value.code === 1001) {
         useMessage({
@@ -338,6 +388,10 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         }, 1000);
       }
     } else {
+      useMessage({
+        message: "表单填写不完整",
+        type: "error",
+      });
       console.log("error submit!");
       return false;
     }
@@ -346,6 +400,9 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 </script>
 
 <style scoped>
+.tagsInput :deep(.el-select) {
+  width: 80%;
+}
 :deep(.md-editor-fullscreen) {
   z-index: 10;
 }

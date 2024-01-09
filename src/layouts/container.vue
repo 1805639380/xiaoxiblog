@@ -5,8 +5,8 @@
       <slot name="containerLeftMain"></slot>
     </div>
     <div class="container-right" v-if="showRight">
+      <UserInfo :user="props.user" v-if="props.showUserInfo"></UserInfo>
       <slot name="containerRight">
-        <UserInfo :user="props.user" v-if="props.showUserInfo"></UserInfo>
       </slot>
     </div>
   </div>

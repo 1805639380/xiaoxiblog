@@ -24,7 +24,7 @@
                       v-for="item in carouselArtilceData"
                       :key="item.id"
                     >
-                      <nuxt-link :to="'/archive/' + item.id">
+                      <nuxt-link :to="'/article/' + item.id">
                         <el-image
                           fit="cover"
                           :src="item.pic"
@@ -55,6 +55,9 @@
               </template>
             </el-skeleton>
           </div>
+        </template>
+        <template #containerRight>
+          <TagsBox />
         </template>
       </nuxt-layout>
     </nuxt-layout>
@@ -127,6 +130,9 @@ if (articleRes.value) {
 </script>
 
 <style scoped>
+.tags_box {
+  margin-top: var(--content-margin);
+}
 .home {
   /* background-image: url("~/assets/img/IMG_202207165084_rotated.jpg"); */
   background-size: 40%;

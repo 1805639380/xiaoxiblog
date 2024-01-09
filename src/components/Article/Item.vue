@@ -35,7 +35,7 @@
             </div>
             <div class="articleTitle">
               <p>
-                <nuxt-link :to="'/archive/' + props.articleData?.id">{{ props.articleData?.title }}
+                <nuxt-link :to="'/article/' + props.articleData?.id">{{ props.articleData?.title }}
                 </nuxt-link>
               </p>
             </div>
@@ -58,7 +58,7 @@
             </div>
           </div>
           <div class="bgi">
-            <nuxt-link :to="'/archive/' + props.articleData?.id">
+            <nuxt-link :to="'/article/' + props.articleData?.id">
               <div class="imgBg">
                 <img ref="imgRef"
                   :data-src="transformUpYunPicUrl({ url: props.articleData?.pic, options: { quality: 80, widthAndHeight: '380x273' } })"

@@ -10,7 +10,7 @@
             <el-timeline-item type="primary" :hollow="true" size="large"
               :timestamp="parent_item.year + '年' + parent_item.month + '月'" placement="top">
               <template v-for="item in parent_item.child.rows">
-                <nuxt-link :to="'/archive/' + item.id">
+                <nuxt-link :to="'/article/' + item.id">
                   <el-card shadow="hover">
                     <h4>{{ item.title }}</h4>
                     <div class="article_info">

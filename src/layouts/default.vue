@@ -45,7 +45,7 @@ let menus = [
   {
     title: "归档",
     icon: "&#xe6b8;",
-    path: "/archive",
+    path: "/article/archive",
   },
   // {
   //   title: "清单",

@@ -5,6 +5,19 @@ import Components from "unplugin-vue-components/vite";
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  hooks: {
+    "build:manifest": (manifest) => {
+      // 找到应用程序入口的CSS列表
+      const css = manifest["node_modules/nuxt/dist/app/entry.js"]?.css;
+      if (css) {
+        // 从数组的末尾开始，向前遍历
+        for (let i = css.length - 1; i >= 0; i--) {
+          // 如果以'entry'开头，从列表中删除它
+          if (css[i].startsWith("entry")) css.splice(i, 1);
+        }
+      }
+    },
+  },
   nitro: {
     devProxy: {
       "/proxy": { target: "http://127.0.0.1:3000/api/v1", changeOrigin: true },
@@ -84,7 +97,7 @@ export default defineNuxtConfig({
   },
   experimental: {
     writeEarlyHints: true,
-    asyncContext: true
+    asyncContext: true,
   },
   build: {
     analyze: true,

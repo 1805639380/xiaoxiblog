@@ -354,6 +354,7 @@ onMounted(() => {
 .menus .el-dropdown :deep(.el-dropdown-link) {
   width: 100%;
   text-align: center;
+  outline: none;
 }
 
 :deep(.el-dropdown-menu__item) {

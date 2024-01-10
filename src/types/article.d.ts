@@ -1,3 +1,4 @@
+import { TagType } from './tag.d';
 import { User } from "./user";
 
 export interface ArticleData {
@@ -19,4 +20,6 @@ export interface ArticleType {
   type: string;
   updatedTime: string;
   watch_num: number;
+  tags: string[];
+  tagsEntity: TagType[];
 }

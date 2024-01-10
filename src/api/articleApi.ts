@@ -98,3 +98,22 @@ export const addArticle = (data: AddArticle) => {
     data,
   });
 };
+
+type GetArticleByTagIdType = {
+  tagId: number;
+  page?: number;
+  offset?: number;
+  order?: "DESC" | "ASC";
+};
+/**
+ * 根据标签id获取关联的文章
+ * @param params
+ * @returns
+ */
+export const getArticleByTagId = (params: GetArticleByTagIdType) => {
+  return useRequest<ResponseData<ArticleType>>({
+    url: API_PREFIX + "/tag/" + params.tagId,
+    method: "GET",
+    params,
+  });
+};

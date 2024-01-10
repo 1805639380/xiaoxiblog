@@ -11,7 +11,10 @@
                 <div class="tags_item" v-for="item in tags" :key="item.id">
                   <NuxtLink
                     class="tag_link"
-                    :to="item.byNum > 0 ? `/article/tags/${item.id}` : ''"
+                    :to="{
+                      path:`/article/tags/${item.id}`,
+                      query: { tagName: item.tagName },
+                    }"
                   >
                     <el-badge
                       :value="item.byNum || ''"

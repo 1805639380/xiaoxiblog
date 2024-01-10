@@ -151,3 +151,14 @@ export function formatRelativeTime(createdAt, dateFormat = "YYYY-MM-DD") {
     return dayjs(createdDate).format(dateFormat);
   }
 }
+
+/**
+ * 随机获取数组中的字符串
+ * @param array
+ * @returns
+ */
+export const getRandomArrayString = (
+  array: string[] = ["info", "success", "warning", "danger"]
+): any => {
+  return array[Math.floor(Math.random() * array.length)];
+};

@@ -349,6 +349,7 @@ onMounted(() => {
   line-height: var(--menu-line-height);
   color: inherit;
   font-family: tsxmm;
+  font-size: inherit;
 }
 
 .menus .el-dropdown :deep(.el-dropdown-link) {

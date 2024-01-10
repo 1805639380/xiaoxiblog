@@ -179,9 +179,16 @@ if (process.client) {
   editForm.content = localStorage.getItem("editContent") || defaultContent;
 }
 
-const { data: getTagsResponse } = await getTags({ offset: 100 }, false);
+const { data: getTagsResponse } = await getTags({ offset: 100 });
+const tagsList = ref(getTagsResponse.value?.data?.rows || []);
 
-const tagsList = getTagsResponse.value?.data?.rows || [];
+watch(
+  getTagsResponse,
+  (value) => {
+    tagsList.value = value?.data?.rows || [];
+  },
+  { deep: true }
+);
 
 const typeOptions = [
   {
@@ -307,12 +314,12 @@ function nullCheck(rule: any, value: any, callback: any) {
 
 /**
  * 校验标签选项
- * @param rule 
- * @param value 
- * @param callback 
+ * @param rule
+ * @param value
+ * @param callback
  */
 function checkTags(rule: any, value: any, callback: any) {
-console.log(' ',value )
+  console.log(" ", value);
   if (value.length === 0) {
     callback(new Error("请选择标签"));
   } else {
@@ -357,7 +364,7 @@ const rules = reactive({
       validator: checkTags,
       trigger: "blur",
     },
-  ]
+  ],
 });
 
 /**

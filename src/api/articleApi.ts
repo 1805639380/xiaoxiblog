@@ -99,11 +99,14 @@ export const addArticle = (data: AddArticle) => {
   });
 };
 
-type GetArticleByTagIdType = {
-  tagId: number;
+type PageType = {
   page?: number;
   offset?: number;
   order?: "DESC" | "ASC";
+};
+
+type GetArticleByTagIdType = PageType & {
+  tagId: number;
 };
 /**
  * 根据标签id获取关联的文章
@@ -113,6 +116,22 @@ type GetArticleByTagIdType = {
 export const getArticleByTagId = (params: GetArticleByTagIdType) => {
   return useRequest<ResponseData<ArticleType>>({
     url: API_PREFIX + "/tag/" + params.tagId,
+    method: "GET",
+    params,
+  });
+};
+
+type GetArticleByUidType = PageType & {
+  uid: number;
+};
+/**
+ * 根据用户id获取关联的文章
+ * @param params
+ * @returns
+ */
+export const getArticleByUid = (params: GetArticleByUidType) => {
+  return useRequest<ResponseData<ArticleType>>({
+    url: API_PREFIX + "/user/" + params.uid,
     method: "GET",
     params,
   });

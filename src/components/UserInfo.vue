@@ -10,7 +10,7 @@
       <div class="userArticle">
         <div class="userData-label">文章</div>
         <div class="article-num">
-          <nuxt-link :to="'/article/user/' + props.user.id">{{ 0 || props.user.article_num }}</nuxt-link>
+          <nuxt-link :to="{path: '/article/user/' + props.user.id, query: {username: user.name}}">{{ 0 || props.user.article_num }}</nuxt-link>
         </div>
       </div>
       <div class="userLabel">

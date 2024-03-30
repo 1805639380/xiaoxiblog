@@ -162,3 +162,15 @@ export const getRandomArrayString = (
 ): any => {
   return array[Math.floor(Math.random() * array.length)];
 };
+
+/**
+ * 解析sse方式ai返回的响应
+ * @param res
+ * @returns
+ */
+export const parseSSEAIResToObj = (res: string) => {
+  if (!res) return null;
+  const resultStr = res.split("\n")[3].split("data")[1].slice(1);
+  const resultObj = JSON.parse(resultStr);
+  return resultObj;
+};

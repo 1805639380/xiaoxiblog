@@ -64,6 +64,22 @@
                 <span class="online-people" v-show="chartBoxData.isGroupChat"
                   >当前在线({{ userCount }})人</span
                 >
+                <span v-show="!chartBoxData.isGroupChat" class="aimodel_select">
+                  <span>AI模型:</span>
+                  <el-select v-model="aiModel">
+                    <el-option value="qwen-turbo" label="turbo"></el-option>
+                    <el-option value="qwen-plus" label="plus"></el-option>
+                    <el-option value="qwen-max" label="max"></el-option>
+                    <el-option
+                      value="qwen-max-1201"
+                      label="max-1201"
+                    ></el-option>
+                    <el-option
+                      value="qwen-max-longcontext"
+                      label="max-longcontext"
+                    ></el-option>
+                  </el-select>
+                </span>
                 <span
                   v-show="chartBoxData.isGroupChat"
                   class="online-count-controll"
@@ -125,7 +141,7 @@
                 <div class="chart-text">
                   <textarea
                     v-model="chartMsg"
-                    @keydown.prevent.enter="chartSend"
+                    @keydown.prevent.enter="getCurrentSendHandle"
                     name=""
                     id=""
                     placeholder="请输入……"
@@ -133,7 +149,10 @@
                   ></textarea>
                 </div>
                 <div class="chart-send-btn">
-                  <el-button type="primary" size="small" @click="chartSend"
+                  <el-button
+                    type="primary"
+                    size="small"
+                    @click="getCurrentSendHandle"
                     >发送</el-button
                   >
                 </div>
@@ -150,6 +169,9 @@
 import type { UserStateType } from "~/types/user";
 import { ElNotification, ElMessageBox } from "element-plus";
 import { io } from "socket.io-client";
+import { getAIReply } from "~/api/TYAIApi";
+import { parseSSEAIResToObj } from "~/utils/common";
+import { isEmpty } from "element-plus/es/utils";
 
 let transport = "polling";
 if (process.client) {
@@ -174,6 +196,7 @@ useHead({
 
 const background = "linear-gradient(135deg,#FD6E6A 10%,#FFC600 100%)";
 
+const aiModel = ref("qwen-max-1201");
 const chartMsg = ref<string>("");
 const userCount = ref<number>(0);
 const userQueue = ref<Array<any>>([]);
@@ -198,6 +221,7 @@ const chartObjects = ref([
     active: false,
     isGroupChat: false,
     charts: [],
+    sendHandle: aiSend,
   },
   {
     id: 1,
@@ -207,8 +231,74 @@ const chartObjects = ref([
     active: true,
     isGroupChat: true,
     charts: [],
+    sendHandle: chartSend,
   },
 ]);
+
+const getCurrentSendHandle = computed(() => {
+  const currentChart = chartObjects.value.find((item) => item.active);
+  return currentChart.sendHandle;
+});
+
+async function aiSend() {
+  if (chartMsg.value === "") {
+    return;
+  }
+
+  const id = Math.random().toString(36).substring(2, 9);
+  const aiChartBox = chartObjects.value.find((item) => item.id === 0);
+
+  // 自己发言
+  aiChartBox.charts.push({
+    id: userData.value.id,
+    user: userData,
+    msg: chartMsg.value,
+  });
+  // ai输入
+  aiChartBox.charts.push({
+    id,
+    user: {
+      id: 0,
+      name: "AI助手",
+      avatar: "https://xiaoxiblog.oss-cn-beijing.aliyuncs.com/image/aibot.png",
+    },
+    msg: "输入中……",
+  });
+  const prompt = chartMsg.value;
+  // 清空聊天框
+  chartMsg.value = "";
+  updateChartWrapScroll();
+  const response = await getAIReply(aiModel.value, {
+    prompt,
+    isStream: true,
+  });
+  const reader = (response as any).body.getReader();
+
+  let i = 0;
+  async function updateAiMsg() {
+    const { done, value } = await reader.read();
+    if (!done) requestAnimationFrame(updateAiMsg);
+    else reader.releaseLock();
+    const aiChart = aiChartBox.charts.find((item) => item.id === id);
+    if (i === 0) aiChart.msg = "";
+    let result = new TextDecoder().decode(value);
+    // 将字符串解析为对象
+    const dataObj = parseSSEAIResToObj(result);
+    try {
+      const resultObj = JSON.parse(result);
+      useMessage({
+        message: resultObj.message,
+        type: "error",
+      });
+    } catch {
+      if (!isEmpty(dataObj)) aiChart.msg += dataObj.output.text;
+    }
+    updateChartWrapScroll();
+    i++;
+  }
+
+  requestAnimationFrame(updateAiMsg);
+}
 
 // 聊天框数据
 const chartBoxData = ref({
@@ -328,7 +418,7 @@ if (isLogin.value && process.client) {
 }
 
 // 发送消息
-const chartSend = () => {
+function chartSend() {
   if (chartMsg.value === "") {
     return;
   }
@@ -341,7 +431,7 @@ const chartSend = () => {
   isScrollToBottom.value = true;
   // 清空聊天框
   chartMsg.value = "";
-};
+}
 
 const updateChartWrapScroll = () => {
   nextTick(() => {
@@ -465,9 +555,21 @@ onMounted(() => {
   background-color: var(--bgc);
 }
 
-.chart .chart-right .chart-top .online-count-controll {
+.chart .chart-right .chart-top .online-count-controll,
+.chart .chart-right .chart-top .aimodel_select {
   margin-left: auto;
   cursor: pointer;
+}
+
+.chart .chart-right .chart-top .aimodel_select {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.chart .chart-right .chart-top .aimodel_select .el-select {
+  width: 160px;
+  margin-left: 10px;
 }
 
 .chart .chart-right .chart-top .online-people {
@@ -513,7 +615,6 @@ onMounted(() => {
 }
 
 .chart .chart-right .chart-wrap .current-user .chart-user-msg {
-  text-align: right;
   background-color: var(--chart-current-user-text-bgc);
 }
 
@@ -537,7 +638,6 @@ onMounted(() => {
   width: 100%;
   height: 120px;
   font-size: 16px;
-  font-family: tsxmm;
   padding: 5px 0 0 10px;
   resize: none;
   outline: none;

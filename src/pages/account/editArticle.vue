@@ -143,6 +143,7 @@ import { addArticle } from "~/api/articleApi";
 import { getAIReply } from "~/api/TYAIApi";
 import { uploadImage } from "~/api/common";
 import { getTags } from "~/api/tagsApi";
+import { parseSSEAIResToObj } from "~/utils/common";
 
 useHead({
   title: "文章编辑",
@@ -221,7 +222,9 @@ const handleAIWrite = async () => {
   AIIsWritting.value = true;
   const prompt = "请帮我写一段文章摘要,字数不超过两百个字符,文章内容如下:";
   const model = "qwen-max-1201";
-  const response = await getAIReply(prompt + editForm.content, model);
+  const response = await getAIReply(model, {
+    prompt: prompt + editForm.content,
+  });
   const reader = (response as any).body.getReader();
   while (true) {
     const { done, value } = await reader.read();
@@ -235,8 +238,7 @@ const handleAIWrite = async () => {
       });
     } catch {
       // 将字符串解析为对象
-      const datastring = result.split("\n")[3].split("data")[1].slice(1);
-      const dataObj = JSON.parse(datastring);
+      const dataObj = parseSSEAIResToObj(result);
       editForm.snippet = dataObj.output.text;
     }
   }

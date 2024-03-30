@@ -1,6 +1,6 @@
 const AI_BASEURL = import.meta.env.VITE_API_HOST + "/api/v1/ai";
 
-export const getAIReply = (prompt: string, model: string) => {
+export const getAIReply = (model: string, body: any) => {
   const cookieToken = useCookie("token");
   return fetch(AI_BASEURL, {
     credentials: "include",
@@ -11,7 +11,7 @@ export const getAIReply = (prompt: string, model: string) => {
     },
     body: JSON.stringify({
       model,
-      prompt,
+      ...body,
     }),
   });
 };

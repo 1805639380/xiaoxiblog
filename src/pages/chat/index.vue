@@ -19,7 +19,7 @@
                   <el-row align="middle" :gutter="10">
                     <el-col :span="10.1">
                       <div class="chart-object-item-avatar">
-                        <el-avatar :size="40" :src="item.avatar" />
+                        <el-avatar :size="40" fit="cover" :src="item.avatar" />
                       </div>
                     </el-col>
                     <el-col :span="18.5">
@@ -194,8 +194,7 @@ const chartObjects = ref([
   {
     id: 0,
     name: "AI助手",
-    avatar:
-      "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
+    avatar: "https://xiaoxiblog.oss-cn-beijing.aliyuncs.com/image/aibot.png",
     active: false,
     isGroupChat: false,
     charts: [],
@@ -204,7 +203,7 @@ const chartObjects = ref([
     id: 1,
     name: "聊天室",
     avatar:
-      "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
+      "https://xiaoxiblog.oss-cn-beijing.aliyuncs.com/image/chatgroup.png",
     active: true,
     isGroupChat: true,
     charts: [],
@@ -360,11 +359,15 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.el-avatar {
+  --el-avatar-bg-color: transparent;
+}
 .chart {
   flex: 0.7;
   display: flex;
   justify-content: space-between;
-  height: 500px;
+  min-height: 500px;
+  height: 70vh;
   background-color: rgba(255, 255, 255, 0.8);
   border-radius: 10px;
   box-shadow: 0 0 50px #fff0f0;

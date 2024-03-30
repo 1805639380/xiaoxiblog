@@ -56,8 +56,9 @@
             <el-dropdown-menu>
               <el-dropdown-item v-for="childItem in item.childMenus">
                 <nuxt-link :to="childItem.path">
-                <span class="iconfont" v-html="childItem.icon"></span>
-                {{childItem.title}}</nuxt-link>
+                  <span class="iconfont" v-html="childItem.icon"></span>
+                  {{ childItem.title }}</nuxt-link
+                >
               </el-dropdown-item>
             </el-dropdown-menu>
           </template>
@@ -337,6 +338,9 @@ onMounted(() => {
 
   .head .other .user {
     height: 5rem;
+  }
+  .menus {
+    --menu-width: 100% !important;
   }
 }
 .menus {

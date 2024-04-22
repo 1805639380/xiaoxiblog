@@ -88,7 +88,7 @@ body {
 }
 
 html {
-    font-family: "钉钉进步体 Regular";
+    font-family: var(--el-font-family);
     -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
 }
 

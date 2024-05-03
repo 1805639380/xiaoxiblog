@@ -67,9 +67,9 @@
                 <span v-show="!chartBoxData.isGroupChat" class="aimodel_select">
                   <span>AI模型:</span>
                   <el-select v-model="aiModel">
-                    <el-option value="qwen-turbo" label="turbo"></el-option>
+                    <!-- <el-option value="qwen-turbo" label="turbo"></el-option> -->
                     <el-option value="qwen-plus" label="plus"></el-option>
-                    <el-option value="qwen-max" label="max"></el-option>
+                    <!-- <el-option value="qwen-max" label="max"></el-option>
                     <el-option
                       value="qwen-max-1201"
                       label="max-1201"
@@ -77,7 +77,7 @@
                     <el-option
                       value="qwen-max-longcontext"
                       label="max-longcontext"
-                    ></el-option>
+                    ></el-option> -->
                   </el-select>
                 </span>
                 <span
@@ -131,7 +131,7 @@
                         <span>{{ item?.user?.name }}</span>
                       </div>
                       <div class="chart-user-msg">
-                        <span>{{ item?.msg }}</span>
+                        <span v-highlight>{{ item?.msg }}</span>
                       </div>
                     </div>
                   </div>
@@ -196,7 +196,7 @@ useHead({
 
 const background = "linear-gradient(135deg,#FD6E6A 10%,#FFC600 100%)";
 
-const aiModel = ref("qwen-max-1201");
+const aiModel = ref("qwen-plus");
 const chartMsg = ref<string>("");
 const userCount = ref<number>(0);
 const userQueue = ref<Array<any>>([]);
@@ -291,7 +291,11 @@ async function aiSend() {
         type: "error",
       });
     } catch {
-      if (!isEmpty(dataObj)) aiChart.msg += dataObj.output.text;
+      if (!isEmpty(dataObj) && dataObj.output)
+        aiChart.msg += dataObj.output.text;
+      else if (dataObj && dataObj.message) {
+        aiChart.msg = dataObj.message;
+      }
     }
     updateChartWrapScroll();
     i++;

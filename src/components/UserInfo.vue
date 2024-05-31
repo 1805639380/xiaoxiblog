@@ -21,7 +21,7 @@
       </div>
     </div>
     <div class="userContact">
-      <a href="javascript:void(0)" title="qq">
+      <a :href="'tencent://message/?uin='+ props.user.qq_no +'&Site=&Menu=yes'" title="qq">
         <el-tooltip content="qq" placement="bottom" effect="light">
           <svg t="1704006606664" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
             p-id="5422" width="25" height="25">
@@ -34,7 +34,7 @@
           </svg>
         </el-tooltip>
       </a>
-      <a href="javascript:void(0)" title="github">
+      <a :href="props.user.github_url" target="_blank" title="github">
         <el-tooltip content="github" placement="bottom" effect="light">
           <svg t="1704006655074" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
             p-id="6401" width="25" height="25">
@@ -44,7 +44,7 @@
           </svg>
         </el-tooltip>
       </a>
-      <a href="javascript:void(0)" title="email">
+      <a :href="'mailto:' + props.user.user.email" title="email">
         <el-tooltip content="邮箱" placement="bottom" effect="light">
           <svg t="1704006809970" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
             p-id="14968" width="25" height="25">
@@ -54,7 +54,7 @@
           </svg>
         </el-tooltip>
       </a>
-      <a href="javascript:void(0)" title="bilibili">
+      <a :href="props.user.bilibili_url" target="_blank" title="bilibili">
         <el-tooltip content="bilibili" placement="bottom" effect="light">
           <svg t="1704006743761" class="icon" viewBox="0 0 1081 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
             p-id="11137" width="25" height="25">
@@ -85,6 +85,10 @@ const props = withDefaults(
         avatar:
           "https://tse4-mm.cn.bing.net/th/id/OIP-C.X-VG5gTN2ak8rGRij3oCogAAAA?w=163&h=180&c=7&r=0&o=5&dpr=1.12&pid=1.7",
         article_num: 0,
+        qq_no: "",
+        github_url: "",
+        bilibili_url: "",
+        user: {}
       },
   }
 );

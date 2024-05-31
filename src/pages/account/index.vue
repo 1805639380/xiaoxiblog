@@ -7,28 +7,71 @@
           <el-form :model="userInfo" ref="form" label-width="10.5rem">
             <el-form-item label="头像:" class="user-avatar">
               <label for="avatar" class="avatar">
-                <el-avatar class="changeAvatar" :size="64" :src="userInfo.avatar"></el-avatar>
+                <el-avatar
+                  class="changeAvatar"
+                  :size="64"
+                  :src="userInfo.avatar"
+                ></el-avatar>
               </label>
-              <input type="file" @change="showAvatarBlob" accept="image/*" name="" id="avatar" class="hide" />
+              <input
+                type="file"
+                @change="showAvatarBlob"
+                accept="image/*"
+                name=""
+                id="avatar"
+                class="hide"
+              />
             </el-form-item>
             <el-form-item label="昵称:">
-              <el-input v-model="userInfo.name" placeholder="你的昵称"></el-input>
+              <el-input
+                v-model="userInfo.name"
+                placeholder="你的昵称"
+              ></el-input>
             </el-form-item>
             <el-form-item label="我的签名:">
-              <el-input v-model="userInfo.signature" :rows="5" resize="none" type="textarea"
-                placeholder="设置您的签名- ( ゜- ゜)つロ"></el-input>
+              <el-input
+                v-model="userInfo.signature"
+                :rows="5"
+                resize="none"
+                type="textarea"
+                placeholder="设置您的签名- ( ゜- ゜)つロ"
+              ></el-input>
             </el-form-item>
             <el-form-item label="性别:">
               <el-radio-group v-model="userInfo.sex" size="default">
-                <el-radio-button class="user-setting-radio" label="男"></el-radio-button>
-                <el-radio-button class="user-setting-radio" label="女"></el-radio-button>
-                <el-radio-button class="user-setting-radio" label="保密"></el-radio-button>
+                <el-radio-button
+                  class="user-setting-radio"
+                  label="男"
+                ></el-radio-button>
+                <el-radio-button
+                  class="user-setting-radio"
+                  label="女"
+                ></el-radio-button>
+                <el-radio-button
+                  class="user-setting-radio"
+                  label="保密"
+                ></el-radio-button>
               </el-radio-group>
+            </el-form-item>
+            <el-form-item label="qq号:">
+              <el-input v-model="userInfo.qq_no"></el-input>
+            </el-form-item>
+            <el-form-item label="GitHub主页:">
+              <el-input v-model="userInfo.github_url"></el-input>
+            </el-form-item>
+            <el-form-item label="哔哩哔哩主页:">
+              <el-input v-model="userInfo.bilibili_url"></el-input>
             </el-form-item>
             <el-form-item class="user-btn-wrap">
               <div class="padding-dom"></div>
               <div class="user-my-btn">
-                <el-button type="primary" size="default" :loading="uploadLoading" @click="updateHandler">保存</el-button>
+                <el-button
+                  type="primary"
+                  size="default"
+                  :loading="uploadLoading"
+                  @click="updateHandler"
+                  >保存</el-button
+                >
               </div>
             </el-form-item>
           </el-form>
@@ -54,6 +97,9 @@ const userInfo = reactive<UserStateType>(<UserStateType>{
   name: "",
   signature: "",
   sex: "保密",
+  bilibili_url: "",
+  github_url: "",
+  qq_no: "",
 });
 
 let userState = await useUserState();
@@ -87,10 +133,10 @@ function showAvatarBlob(event: Event) {
     }
   };
 }
-const uploadLoading = ref(false)
+const uploadLoading = ref(false);
 // 更新用户信息
 async function updateHandler() {
-  uploadLoading.value = true
+  uploadLoading.value = true;
   // 更新头像
   if (avatarFile.value) {
     const f = new FormData();
@@ -103,7 +149,7 @@ async function updateHandler() {
     if (avatarUrl && !avatarUrl.startsWith("https")) {
       userInfo.avatar = avatarUrl.replace(/^http:/, "https:");
     } else {
-      userInfo.avatar = avatarUrl
+      userInfo.avatar = avatarUrl;
     }
   }
 
@@ -115,7 +161,9 @@ async function updateHandler() {
       );
       continue;
     }
-    (formData as any)[item] = (userInfo as any)[item];
+    if (userInfo[item] !== "") {
+      (formData as any)[item] = (userInfo as any)[item];
+    }
   }
   console.log(formData);
 
@@ -128,9 +176,9 @@ async function updateHandler() {
       message: "修改成功！",
       type: "success",
     });
-    uploadLoading.value = false
+    uploadLoading.value = false;
   } else {
-    uploadLoading.value = false
+    uploadLoading.value = false;
     throw "修改失败";
   }
 }
@@ -158,12 +206,16 @@ function dataURLtoBlob(dataurl: string): Blob {
   margin: 0 5px;
 }
 
-.account-right .user-setting-wrap .user-setting-radio :deep(.el-radio-button__inner) {
+.account-right
+  .user-setting-wrap
+  .user-setting-radio
+  :deep(.el-radio-button__inner) {
   display: inline-block;
   border: 1px solid #dcdfe6;
   padding: 5px 10px;
   border-radius: var(--el-border-radius-base) !important;
-  box-shadow: 0px 0 0 0 var(--el-radio-button-checked-border-color, var(--el-color-primary));
+  box-shadow: 0px 0 0 0
+    var(--el-radio-button-checked-border-color, var(--el-color-primary));
 }
 
 .user-btn-wrap .padding-dom {

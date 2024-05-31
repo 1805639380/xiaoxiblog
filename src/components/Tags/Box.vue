@@ -84,5 +84,11 @@ const getRandomTagType = (): any => {
   flex-wrap: wrap;
   gap: var(--body-gap);
   padding: 10px 0;
+  max-height: 317px;
+  overflow: auto;
+  overflow-x: hidden;
+}
+.tags_box_body::-webkit-scrollbar {
+  width: 2px;
 }
 </style>

@@ -8,6 +8,10 @@ export type UserStateType = {
   avatar: string;
   article_num: number;
   labelnum: number;
+  qq_no: string;
+  github_url: string;
+  bilibili_url: string;
+  user: User;
 };
 
 export type User = {

@@ -20,11 +20,13 @@ const props = defineProps({
 const searchParam = ref('')
 const router = useRouter();
 
-const handleSearch = () => {
-  router.push("/archive/search/" + searchParam.value);
-};
-
 const emit = defineEmits(["toggleSearch"]);
+
+
+const handleSearch = () => {
+  emit("toggleSearch", false)
+  router.push("/article/search/" + searchParam.value);
+};
 
 let search = ref(null);
 

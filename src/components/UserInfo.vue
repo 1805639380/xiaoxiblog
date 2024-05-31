@@ -138,7 +138,8 @@ const defaultName = ref("您还未登陆");
 
 .userInfo .userIns .userSignatrue {
   font-weight: lighter;
-  font-size: 1.2rem;
+  font-size: 1rem;
+  font-family: system-ui;
 }
 
 .userInfo .userIns img {

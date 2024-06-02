@@ -140,10 +140,9 @@ import type { UploadProps } from "element-plus";
 import { MdEditor } from "md-editor-v3";
 import "md-editor-v3/lib/style.css";
 import { addArticle } from "~/api/articleApi";
-import { getAIReply } from "~/api/TYAIApi";
+import { getAIReply, type GetAiReplyBody } from "~/api/aiApi";
 import { uploadImage } from "~/api/common";
 import { getTags } from "~/api/tagsApi";
-import { parseSSEAIResToObj } from "~/utils/common";
 
 useHead({
   title: "文章编辑",
@@ -208,6 +207,9 @@ const typeOptions = [
 
 const AIIsWritting = ref(false);
 
+/**
+ * AI写摘要
+ */
 const handleAIWrite = async () => {
   if (editForm.content === "") {
     useMessage({
@@ -219,29 +221,20 @@ const handleAIWrite = async () => {
   if (AIIsWritting.value === true) {
     return;
   }
+  // 如何之前存在内容，则置空
+  if (editForm.snippet !== "") editForm.snippet = "";
   AIIsWritting.value = true;
   const prompt = "请帮我写一段文章摘要,字数不超过两百个字符,文章内容如下:";
-  const model = "qwen-max-1201";
-  const response = await getAIReply(model, {
+  const model = "kimi";
+  const getAiReplyBody: GetAiReplyBody = {
+    ai: "KIMI",
     prompt: prompt + editForm.content,
+    isStream: true,
+  };
+  const response = await getAIReply(model, getAiReplyBody);
+  await handleAiSSERes(response, getAiReplyBody.ai, (content) => {
+    editForm.snippet += content;
   });
-  const reader = (response as any).body.getReader();
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    let result = new TextDecoder().decode(value);
-    try {
-      const resultObj = JSON.parse(result);
-      useMessage({
-        message: resultObj.message,
-        type: "error",
-      });
-    } catch {
-      // 将字符串解析为对象
-      const dataObj = parseSSEAIResToObj(result);
-      editForm.snippet = dataObj.output.text;
-    }
-  }
   AIIsWritting.value = false;
 };
 

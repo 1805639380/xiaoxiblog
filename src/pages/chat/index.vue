@@ -68,7 +68,7 @@
                   <span>AI模型:</span>
                   <el-select v-model="aiModel">
                     <!-- <el-option value="qwen-turbo" label="turbo"></el-option> -->
-                    <el-option value="qwen-plus" label="plus"></el-option>
+                    <el-option value="kimi" label="kimi"></el-option>
                     <!-- <el-option value="qwen-max" label="max"></el-option>
                     <el-option
                       value="qwen-max-1201"
@@ -131,7 +131,10 @@
                         <span>{{ item?.user?.name }}</span>
                       </div>
                       <div class="chart-user-msg">
-                        <span v-highlight>{{ item?.msg }}</span>
+                        <MdPreview
+                          :modelValue="item?.msg"
+                          :editorId="'a' + item.id"
+                        />
                       </div>
                     </div>
                   </div>
@@ -166,12 +169,11 @@
 </template>
 
 <script setup lang="ts">
+import { MdPreview } from "md-editor-v3";
 import type { UserStateType } from "~/types/user";
 import { ElNotification, ElMessageBox } from "element-plus";
 import { io } from "socket.io-client";
-import { getAIReply } from "~/api/TYAIApi";
-import { parseSSEAIResToObj } from "~/utils/common";
-import { isEmpty } from "element-plus/es/utils";
+import { getAIReply, type GetAiReplyBody } from "~/api/aiApi";
 
 let transport = "polling";
 if (process.client) {
@@ -196,7 +198,7 @@ useHead({
 
 const background = "linear-gradient(135deg,#FD6E6A 10%,#FFC600 100%)";
 
-const aiModel = ref("qwen-plus");
+const aiModel = ref("kimi");
 const chartMsg = ref<string>("");
 const userCount = ref<number>(0);
 const userQueue = ref<Array<any>>([]);
@@ -212,8 +214,28 @@ const [err, userData] = await useCatch<Ref<UserStateType>>(useUserState());
 // 用户未登录
 if (userData.value) isLogin.value = true;
 
+type ChartUser = {
+  id: number | string;
+  name: string;
+  avatar: string;
+};
+
+type Charts = {
+  id: number | string;
+  user: ChartUser;
+  msg: string;
+  conversation_id?: string;
+};
+
+type ChartObjects = ChartUser & {
+  active: boolean;
+  isGroupChat: boolean;
+  charts: Charts[];
+  sendHandle: any;
+};
+
 // 聊天对象数据
-const chartObjects = ref([
+const chartObjects = ref<ChartObjects[]>([
   {
     id: 0,
     name: "AI助手",
@@ -240,6 +262,14 @@ const getCurrentSendHandle = computed(() => {
   return currentChart.sendHandle;
 });
 
+/**
+ * 获取AI上次会话id
+ */
+const getAiPrevConversationId = computed(() => {
+  const currentCharts = chartObjects.value.find((item) => item.active).charts;
+  return currentCharts[currentCharts.length - 3]?.conversation_id || "";
+});
+
 async function aiSend() {
   if (chartMsg.value === "") {
     return;
@@ -250,8 +280,8 @@ async function aiSend() {
 
   // 自己发言
   aiChartBox.charts.push({
-    id: userData.value.id,
-    user: userData,
+    id: userData.value.id as number,
+    user: userData as any,
     msg: chartMsg.value,
   });
   // ai输入
@@ -263,45 +293,30 @@ async function aiSend() {
       avatar: "https://xiaoxiblog.oss-cn-beijing.aliyuncs.com/image/aibot.png",
     },
     msg: "输入中……",
+    conversation_id: "",
   });
   const prompt = chartMsg.value;
   // 清空聊天框
   chartMsg.value = "";
   updateChartWrapScroll();
-  const response = await getAIReply(aiModel.value, {
+  const aiChart = aiChartBox.charts.find((item) => item.id === id);
+  const getAiReplyBody: GetAiReplyBody = {
+    ai: "KIMI",
     prompt,
     isStream: true,
-  });
-  const reader = (response as any).body.getReader();
+    conversation_id: getAiPrevConversationId.value || "none",
+  };
 
+  const response = await getAIReply(aiModel.value, getAiReplyBody);
   let i = 0;
-  async function updateAiMsg() {
-    const { done, value } = await reader.read();
-    if (!done) requestAnimationFrame(updateAiMsg);
-    else reader.releaseLock();
-    const aiChart = aiChartBox.charts.find((item) => item.id === id);
+  handleAiSSERes(response, getAiReplyBody.ai, (content, responseData) => {
     if (i === 0) aiChart.msg = "";
-    let result = new TextDecoder().decode(value);
-    // 将字符串解析为对象
-    const dataObj = parseSSEAIResToObj(result);
-    try {
-      const resultObj = JSON.parse(result);
-      useMessage({
-        message: resultObj.message,
-        type: "error",
-      });
-    } catch {
-      if (!isEmpty(dataObj) && dataObj.output)
-        aiChart.msg += dataObj.output.text;
-      else if (dataObj && dataObj.message) {
-        aiChart.msg = dataObj.message;
-      }
-    }
+    aiChart.conversation_id = responseData.id;
+    aiChart.msg += content;
+
     updateChartWrapScroll();
     i++;
-  }
-
-  requestAnimationFrame(updateAiMsg);
+  });
 }
 
 // 聊天框数据
@@ -315,7 +330,7 @@ const chartBoxData = ref({
  * 更改聊天对象
  * @param id 当前选中的id
  */
-const changeChartObject = (id: number) => {
+const changeChartObject = (id: number | string) => {
   chartObjects.value.forEach((item) => {
     item.active = item.id === id;
   });
@@ -680,7 +695,16 @@ onMounted(() => {
   margin-left: 15px;
   font-size: 16px;
 }
-
+:deep(.md-editor-preview-wrapper) {
+  padding: 0;
+}
+:deep(.md-editor) {
+  background: none;
+  color: #fff;
+}
+:deep(.default-theme) {
+  color: #fff;
+}
 @media screen and (max-width: 768px) {
   .chart {
     flex: 0.9;

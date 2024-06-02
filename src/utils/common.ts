@@ -1,4 +1,5 @@
 import { dayjs, type MessageParams } from "element-plus";
+import type { AiType } from "~/api/aiApi";
 
 export const useCatch = <T>(fn: Promise<T>) => {
   return fn
@@ -174,3 +175,68 @@ export const parseSSEAIResToObj = (res: string) => {
   const resultObj = JSON.parse(resultStr);
   return resultObj;
 };
+
+/**
+ * 获取sse方式ai返回的回复
+ * @param res
+ * @returns
+ */
+export const getSSEAiReply = (ai: AiType) => {
+  const aiResParseMap = {
+    TY: {
+      parseJson: (val) => parseSSEAIResToObj(val),
+      getContent: (data) => data.output.text,
+    },
+    KIMI: {
+      parseJson: (val) => JSON.parse(val.replace("data: ", "")),
+      getContent: (data) => data.choices[0].delta.content,
+    },
+  };
+
+  return aiResParseMap[ai];
+};
+
+/**
+ * 处理sse方式ai返回的响应
+ * @param response
+ * @param ai
+ * @param callback
+ * @returns
+ */
+export const handleAiSSERes = async (
+  response: Response,
+  ai: AiType,
+  callback: (content: string, responseData: any) => void
+) => {
+  const reader = (response as any).body.getReader();
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    let result = new TextDecoder().decode(value, { stream: true });
+    const aiObj = getSSEAiReply(ai);
+
+    const lines = result.split("\n").filter((line) => line.trim() !== "");
+
+    lines.forEach((line) => {
+      try {
+        const dataObj = aiObj.parseJson(line);
+        callback(aiObj.getContent(dataObj) || "", dataObj);
+      } catch (e) {}
+    });
+  }
+};
+
+function kimiAiParser(res: string) {
+  const lines = res.split("\n").filter((line) => line.trim() !== "");
+
+  lines.forEach((line) => {
+    if (line.startsWith("data: ")) {
+      const jsonData = line.replace("data: ", "");
+      try {
+        const parsedResponse = JSON.parse(jsonData);
+      } catch (e) {
+        console.error("Failed to parse JSON", e);
+      }
+    }
+  });
+}

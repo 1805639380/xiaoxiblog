@@ -1,23 +1,15 @@
 <template>
   <div id="footer">
-    <span>小析のblog-afblog.xyz @ All Hololo rights Reserved</span>
-    <span
-      ><a class="beianlink" href="https://beian.miit.gov.cn/" target="_blank"
-        >赣ICP备2023017077号-1</a
-      ></span
-    >
-    <span>网站主要用于技术分享，若涉及个人权益请联系我们进行删除。</span>
-    <span
-      >本网站由<a
-        href="https://www.upyun.com/?utm_source=lianmeng&utm_medium=referral"
-        target="_blank"
-        ><img class="ypy" src="~assets/img/ypy.png" alt="" /></a
-      >提供CDN加速/云储存服务</span
-    >
+    <span v-for="item in props.list" v-html="item"></span>
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+interface footerProps {
+  list: string[];
+}
+const props = defineProps<footerProps>();
+</script>
 
 <style scoped>
 #footer {

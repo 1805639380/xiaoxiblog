@@ -1,5 +1,7 @@
 import { getUserData } from "~/api/userApi";
+import { getWebsiteSetting } from "~/api/websiteApi";
 import type * as userType from "~/types/user";
+import type { WebsiteSetting } from "~/types/websiteSetting";
 
 export const getWindowWidth = (document) =>
   document.documentElement.clientWidth;
@@ -38,4 +40,23 @@ export const cleanUserState = () => {
   const userState = useState("userState");
   userState.value = "";
   return null;
+};
+
+/**
+ * 获取网站配置
+ * @returns
+ */
+export const useWebsiteSetting = async () => {
+  const stateKey = "websiteSettingState";
+  const websiteSettingState = useState<WebsiteSetting>(stateKey);
+  if (!websiteSettingState.value) {
+    const { data, refresh } = await getWebsiteSetting();
+
+    // 获取数据成功
+    if (data.value?.code === 1001) {
+      websiteSettingState.value = data.value.data.rows[0];
+    }
+  }
+
+  return websiteSettingState;
 };

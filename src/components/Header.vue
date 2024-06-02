@@ -9,7 +9,7 @@
     }"
   >
     <div class="logo">
-      <nuxt-link to="/">小析のBlog</nuxt-link>
+      <nuxt-link to="/">{{ props.logoText }}</nuxt-link>
     </div>
     <div class="menuBtn hide" @click="showMiniMenu">☰</div>
     <div class="menus" :class="{ miniMenuShow: isShowMiniMenu }">
@@ -122,6 +122,7 @@ interface tabProps {
   menus: Array<MenuType>;
   user?: UserStateType;
   stickTop?: boolean;
+  logoText?: string;
 }
 const props = defineProps<tabProps>();
 

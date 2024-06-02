@@ -97,8 +97,10 @@ const carouselArtilceData = computed(() => {
 
 const typedString = ref<Element | null>(null);
 
+const websiteSetting = await useWebsiteSetting();
+
 let options = {
-  strings: ["探索，发现自我。", "生活，无限美好。", "创造，无限可能。"],
+  strings: websiteSetting.value.typed_text.split("\n"),
   typeSpeed: 100,
   backSpeed: 100,
   loop: true,

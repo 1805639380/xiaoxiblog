@@ -19,3 +19,11 @@ export interface ResponseType<T> {
   timestamp: string;
   message: string;
 }
+
+export interface PageParams {
+  page?: number;
+  offset?: number;
+  sorted?: "DESC" | "ASC";
+  field?: string;
+  keyword?: string;
+}

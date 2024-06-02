@@ -3,13 +3,14 @@
     <Header
       :menus="menus"
       :user="props.user"
+      :logoText="websiteSetting.logo_text"
       :stick-top="headStickTop"
       @toggleSearch="toggleSearch"
     ></Header>
     <BackTop />
     <LazySearch :isSearchShow="isSearchShow" @toggleSearch="toggleSearch" />
     <slot></slot>
-    <Footer v-if="showFooter" />
+    <Footer :list="footerList" v-if="showFooter" />
     <ClientOnly>
       <Pet v-if="showPet"></Pet>
       <GlobalMusic v-if="showMusic" />
@@ -34,6 +35,9 @@ const props = withDefaults(
     showFooter: true,
   }
 );
+
+const websiteSetting = await useWebsiteSetting();
+const footerList = websiteSetting.value.footer_text.split("\n");
 
 const showMusic = ref(false);
 const showPet = ref(false);

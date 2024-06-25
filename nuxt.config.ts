@@ -75,7 +75,7 @@ export default defineNuxtConfig({
       htmlAttrs: {
         lang: "zh-CN",
       },
-      titleTemplate: `web技术交流分享网 - %s`,
+      titleTemplate: `智语轩 - %s`,
       meta: [
         { name: "baidu-site-verification", content: "codeva-slR3BYfrFS" },
         { name: "viewport", content: "width=device-width, initial-scale=1" },

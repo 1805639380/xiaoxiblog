@@ -243,7 +243,7 @@ onMounted(() => {
   font-size: 1.875rem;
   background-color: rgba(255, 244, 244, 0.5);
   border-radius: 15px;
-  padding: 0;
+  padding: .5rem;
 }
 
 .head .menus {

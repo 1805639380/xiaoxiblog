@@ -15,11 +15,13 @@ export const useToken = () => {
 export const keepUserData = async (
   userState: globalThis.Ref<userType.UserStateType>
 ) => {
-  let { data, refresh } = await getUserData();
-
-  // 获取数据成功
-  if (data.value?.code === 1001) {
-    userState.value = data.value.data.row;
+  const response = await getUserData();
+  if (response) {
+    let data = response?.data;
+    // 获取数据成功
+    if (data?.value?.code === 1001) {
+      userState.value = data.value.data.row;
+    }
   }
 };
 

@@ -107,11 +107,15 @@ async function submitForm() {
                 // localStorage.setItem("token", res.data.token);
                 // useState('token', () => res.data.token)
                 let currentTime = new Date().getTime()
-                //  设置过期时间为 30 天
-                let expires = new Date(currentTime + 60 * 1000 * 60 * 24 * 30)
+                //  设置过期时间为 3个小时
+                let expires = new Date(currentTime + 60 * 1000 * 60 * 3)
+                //  设置过期时间为 7天
+                const refreshTokenExpires = new Date(currentTime + 60 * 1000 * 60 * 24 * 7)
                 const token = useCookie("token", { expires })
+                const refreshToken = useCookie("refreshToken", { expires: refreshTokenExpires })
 
                 token.value = resDataRef.value?.data.access_token
+                refreshToken.value = resDataRef.value?.data.refresh_token
 
                 useMessage({
                     message: "登陆成功",

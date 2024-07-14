@@ -5,16 +5,17 @@ type LoginType = {
   account: string;
   password: string;
 };
-
+type LoginResType = {
+  access_token: string;
+  refresh_token: string;
+}
 /**
  * 登录
  * @param datas
  * @returns
  */
 export const login = function (datas: LoginType) {
-  return useRequest<{
-    access_token: string;
-  }>({
+  return useRequest<LoginResType>({
     url: "/login",
     method: "post",
     data: datas,

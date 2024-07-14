@@ -44,7 +44,7 @@
           </svg>
         </el-tooltip>
       </a>
-      <a :href="'mailto:' + props.user.user.email" title="email">
+      <a :href="props.user?.user?.email ? 'mailto:' + props.user?.user?.email : ''" title="email">
         <el-tooltip content="邮箱" placement="bottom" effect="light">
           <svg t="1704006809970" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
             p-id="14968" width="25" height="25">
@@ -54,7 +54,7 @@
           </svg>
         </el-tooltip>
       </a>
-      <a :href="props.user.bilibili_url" target="_blank" title="bilibili">
+      <a :href="props.user?.bilibili_url" target="_blank" title="bilibili">
         <el-tooltip content="bilibili" placement="bottom" effect="light">
           <svg t="1704006743761" class="icon" viewBox="0 0 1081 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
             p-id="11137" width="25" height="25">

@@ -96,7 +96,7 @@ export default defineNuxtConfig({
     },
   },
   experimental: {
-    writeEarlyHints: true,
+    writeEarlyHints: false,
     asyncContext: true,
   },
   build: {

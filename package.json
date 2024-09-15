@@ -1,8 +1,8 @@
 {
   "private": true,
   "scripts": {
-    "build": "nuxt build",
-    "dev": "nuxt dev --port 5000 --host",
+    "build": "nuxt build --dotenv .env.production",
+    "dev": "nuxt dev --port 5000 --host --dotenv .env.development",
     "generate": "nuxt generate",
     "start": "nuxi build && node .output/server/index.mjs",
     "preview": "nuxt preview"

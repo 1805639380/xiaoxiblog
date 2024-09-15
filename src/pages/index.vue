@@ -100,7 +100,7 @@ const typedString = ref<Element | null>(null);
 const websiteSetting = await useWebsiteSetting();
 
 let options = {
-  strings: websiteSetting.value.typed_text.split("\n"),
+  strings: websiteSetting.value?.typed_text?.split("\n"),
   typeSpeed: 100,
   backSpeed: 100,
   loop: true,
@@ -108,7 +108,9 @@ let options = {
 };
 
 onMounted(() => {
-  let typed = new Typed(typedString.value, options);
+  if (typedString.value) {
+    let typed = new Typed(typedString.value, options);
+  }
 });
 
 useHead({

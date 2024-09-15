@@ -3,7 +3,7 @@
     <Header
       :menus="menus"
       :user="props.user"
-      :logoText="websiteSetting.logo_text"
+      :logoText="websiteSetting?.logo_text"
       :stick-top="headStickTop"
       @toggleSearch="toggleSearch"
     ></Header>
@@ -37,7 +37,7 @@ const props = withDefaults(
 );
 
 const websiteSetting = await useWebsiteSetting();
-const footerList = websiteSetting.value.footer_text.split("\n");
+const footerList = websiteSetting.value?.footer_text?.split("\n");
 
 const showMusic = ref(false);
 const showPet = ref(false);

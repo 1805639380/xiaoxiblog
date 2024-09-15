@@ -52,10 +52,10 @@ export const useWebsiteSetting = async () => {
   const stateKey = "websiteSettingState";
   const websiteSettingState = useState<WebsiteSetting>(stateKey);
   if (!websiteSettingState.value) {
-    const { data, refresh } = await getWebsiteSetting();
-
+    const webSiteRes = await getWebsiteSetting();
+    const data = webSiteRes?.data;
     // 获取数据成功
-    if (data.value?.code === 1001) {
+    if (data?.value?.code === 1001) {
       websiteSettingState.value = data.value.data.rows[0];
     }
   }

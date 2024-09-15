@@ -698,6 +698,9 @@ onMounted(() => {
 :deep(.md-editor-preview-wrapper) {
   padding: 0;
 }
+:deep(.default-theme p) {
+  padding: 0 !important;
+}
 :deep(.md-editor) {
   background: none;
   color: #fff;

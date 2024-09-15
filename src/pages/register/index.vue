@@ -290,6 +290,7 @@ function submitForm(): void {
   display: flex;
   /* width: 1200px; */
   height: 600px;
+  min-height: calc(100vh - 140.8px);
   padding-top: 85.05px;
   box-sizing: content-box;
   margin: 0 auto;

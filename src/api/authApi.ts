@@ -18,8 +18,6 @@ export const refresh = (data: { refresh_token: string }) => {
   return useRequest<LoginResType>({
     url: API_PREFIX + "/refresh",
     method: "GET",
-    headers: {
-      refresh_token: data.refresh_token,
-    },
+    params: data,
   });
 };

@@ -371,7 +371,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   formEl.validate(async (valid) => {
     if (valid) {
       const { data } = await addArticle({
-        author_id: userState.value.id,
+        author_id: userState.value.user.id,
         title: editForm.title,
         content: editForm.content,
         type: editForm.type,

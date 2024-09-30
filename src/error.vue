@@ -19,7 +19,15 @@ const router = useRouter();
 const backLastPage = () => {
   router.push("/");
 };
-const errorMessage = "非常抱歉，该页面不存在！";
+const errorMessages = [
+  {
+    code: 404, message: "非常抱歉，该页面不存在！"
+  },
+  {
+    code: 500, message: "服务器错误，请稍后再试！"
+  }
+];
+const errorMessage = errorMessages.find((item) => item.code == props.error?.statusCode)?.message;
 </script>
 
 <style scoped>

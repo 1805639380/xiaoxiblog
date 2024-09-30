@@ -449,6 +449,9 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   justify-content: center;
   cursor: pointer;
 }
+:deep(.hljs-comment) {
+  white-space: pre-wrap;
+}
 </style>
 
 <style>

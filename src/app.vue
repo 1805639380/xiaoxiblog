@@ -7,7 +7,7 @@
   <div id="app">
     <NuxtPage
       class="nuxt_page"
-      :class="{ loadingComplete: isComplete }"
+      :class="{ loadingComplete: isComplete, cancleOverflow: isCancleOverflow }"
     ></NuxtPage>
   </div>
 </template>
@@ -42,6 +42,7 @@ nuxtApp.hook("page:start", () => {
 });
 const isComplete = ref(false);
 provide("isLoadingComplete", isComplete);
+const isCancleOverflow = ref(false)
 
 nuxtApp.hook("page:finish", () => {
   nprogress.done();
@@ -58,6 +59,10 @@ onMounted(() => {
     document.body.classList.add("pageLoadingComplete");
     isComplete.value = true;
   }, 1500);
+  setTimeout(() => {
+    // 防止滚动条出现
+    isCancleOverflow.value = true
+  }, 3000)
 });
 </script>
 
@@ -82,6 +87,10 @@ onMounted(() => {
 .loadingComplete {
   filter: none;
   transform: none;
+}
+
+.cancleOverflow {
+  overflow: unset;
 }
 
 /* showContent */

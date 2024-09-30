@@ -108,7 +108,7 @@ let options = {
 };
 
 onMounted(() => {
-  if (typedString.value) {
+  if (typedString.value && options.strings?.length > 0) {
     let typed = new Typed(typedString.value, options);
   }
 });

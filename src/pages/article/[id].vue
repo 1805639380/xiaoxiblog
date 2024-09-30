@@ -286,6 +286,10 @@ const config = reactive<ConfigApi>({
 </script>
 
 <style scoped lang="less">
+.md-editor-catalog {
+  position: sticky;
+  top: 100px;
+}
 .article_content {
   min-height: 400px;
   padding: 25px 10px;
@@ -301,7 +305,6 @@ const config = reactive<ConfigApi>({
     justify-content: center;
     flex-wrap: wrap;
     margin: 15px 0;
-    font-family: cursive;
 
     & > div {
       display: inline-flex;

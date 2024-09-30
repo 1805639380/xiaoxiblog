@@ -102,6 +102,7 @@ function exit() {
 .account_content .account-left {
   position: relative;
   flex: 1;
+  min-width: 150px;
   background-color: #fafafa;
   border-right: 1px solid #ddd;
 }
@@ -221,6 +222,9 @@ function exit() {
   .account-left .account-title,
   .account_content .account-left {
     border: none;
+  }
+  .account_wrap :deep(.el-form-item) {
+    flex-direction: column;
   }
 }
 </style>

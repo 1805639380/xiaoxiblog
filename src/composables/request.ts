@@ -53,6 +53,15 @@ export const useRequest = <T>(options: RequestType, lazy: boolean = true) => {
         method: options.method as any,
         headers: options.headers,
         lazy,
+        onResponseError(context) {
+          // 处理响应错误
+          const { response } = context
+          const { _data } = response
+          useMessage({
+            message: _data.message,
+            type: "error",
+          })
+        },
       });
       const { error } = response;
       if (error.value) {
@@ -97,11 +106,6 @@ export const useRequest = <T>(options: RequestType, lazy: boolean = true) => {
             requests.push((token) => resolve(fetchRequest(token)));
           });
         }
-      } else {
-        useMessage({
-          type: "error",
-          message: error.message,
-        });
       }
     }
   };

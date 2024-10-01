@@ -48,7 +48,7 @@
               </p>
               <p>
                 <span class="iconfont">&#xe66b;</span>
-                <span class="type">{{ props.articleData?.type }}</span>
+                <span class="type">{{ props.articleData?.type?.name }}</span>
               </p>
             </div>
             <div class="summary">

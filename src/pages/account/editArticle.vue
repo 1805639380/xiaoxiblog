@@ -38,19 +38,19 @@
               </el-select>
             </client-only>
           </el-form-item>
-          <el-form-item label="类型:" prop="type">
+          <el-form-item label="类型:" prop="type_id">
             <client-only>
               <el-select
-                v-model="editForm.type"
+                v-model="editForm.type_id"
                 class="m-2"
                 placeholder="请选择文章类型"
                 size="large"
               >
                 <el-option
                   v-for="item in typeOptions"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id + ''"
                 />
               </el-select>
             </client-only>
@@ -143,6 +143,7 @@ import { addArticle } from "~/api/articleApi";
 import { getAIReply, type GetAiReplyBody } from "~/api/aiApi";
 import { uploadImage } from "~/api/common";
 import { getTags } from "~/api/tagsApi";
+import { getArticleTypes } from "~/api/articleTypeApi";
 
 useHead({
   title: "文章编辑",
@@ -163,12 +164,12 @@ const editForm = reactive<{
   title: string;
   snippet: string;
   content: string;
-  type: string;
+  type_id: string;
   imageUrl: string;
   tags: string[];
 }>({
   title: "",
-  type: "",
+  type_id: "",
   snippet: "",
   content: defaultContent,
   imageUrl: "",
@@ -190,20 +191,16 @@ watch(
   { deep: true }
 );
 
-const typeOptions = [
-  {
-    value: "前端",
-    label: "前端",
+const { data: getArticleTypesResponse } = await getArticleTypes({offset: 100});
+const typeOptions = ref(getArticleTypesResponse.value?.data?.rows || []);
+
+watch(
+  getArticleTypesResponse,
+  (value) => {
+    typeOptions.value = value?.data?.rows || [];
   },
-  {
-    value: "后端",
-    label: "后端",
-  },
-  {
-    value: "其他",
-    label: "其他",
-  },
-];
+  { deep: true }
+);
 
 const AIIsWritting = ref(false);
 
@@ -374,7 +371,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         author_id: userState.value.user.id,
         title: editForm.title,
         content: editForm.content,
-        type: editForm.type,
+        type_id: editForm.type_id,
         description: editForm.snippet,
         pic: editForm.imageUrl,
         tags: editForm.tags,

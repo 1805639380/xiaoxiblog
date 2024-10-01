@@ -79,7 +79,7 @@ export const getArticleDetail = (id: string) => {
 type AddArticle = {
   author_id: number;
   title: string;
-  type: string;
+  type_id: string;
   description: string;
   pic: string;
   content: string;

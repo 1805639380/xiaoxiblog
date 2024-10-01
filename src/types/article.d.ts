@@ -1,9 +1,14 @@
 import { TagType } from './tag.d';
 import { User } from "./user";
+import { CommonEntity } from "./common";
 
 export interface ArticleData {
   rows: Array<ArticleType>;
   count: number;
+}
+
+export interface ArticleTypeType extends CommonEntity {
+  name: string;
 }
 
 export interface ArticleType {
@@ -17,7 +22,7 @@ export interface ArticleType {
   pic: string;
   publish_date: string;
   title: string;
-  type: string;
+  type: ArticleTypeType;
   updatedTime: string;
   watch_num: number;
   tags: string[];

@@ -76,7 +76,7 @@
                       dayjs(article.publish_date).format("YYYY-MM-DD")
                     }}</time>
                   </div>
-                  <div class="article_type">{{ article.type }}</div>
+                  <div class="article_type">{{ article.type.name }}</div>
                 </div>
               </div>
             </NuxtLink>

@@ -57,7 +57,7 @@
           </div>
         </template>
         <template #containerRight>
-          <TagsBox />
+          <TagsBox class="tags_box"/>
         </template>
       </nuxt-layout>
     </nuxt-layout>
@@ -239,6 +239,10 @@ if (articleRes.value) {
 
 .el-carousel__item:nth-child(2n + 1) {
   background-color: #d3dce6;
+}
+.tags_box {
+  position: sticky;
+  top: calc(90px + 345px);
 }
 :deep(.el-carousel__indicator .el-carousel__button) {
   width: 10px;

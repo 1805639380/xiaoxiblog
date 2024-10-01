@@ -107,7 +107,7 @@ const defaultName = ref("您还未登陆");
 
 .userInfo {
   position: sticky;
-  top: 80.05px;
+  top: 90px;
   width: 15.625rem;
   border-radius: 11px;
   padding: 20px 20px 0;

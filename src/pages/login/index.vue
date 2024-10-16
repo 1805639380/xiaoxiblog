@@ -90,7 +90,7 @@ async function submitForm() {
         password: password.value,
     })
         .then((res) => {
-            if (res.error.value) {
+            if (!res || res.error.value) {
                 return
             }
             let resDataRef = res.data

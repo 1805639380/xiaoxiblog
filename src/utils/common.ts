@@ -61,7 +61,7 @@ type transformOptions = {
  * @returns
  */
 export const transformUpYunPicUrl = (params: transformParam) => {
-  const domain = "cloud.afblog.xyz";
+  const domain = "cloud.hoiolo.cn";
   const { url, options } = params;
   function splicingParam(param: string | number, splice: string) {
     return param ? splice + param : "";

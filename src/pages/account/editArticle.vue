@@ -91,7 +91,7 @@
                   v-model="editForm.snippet"
                 ></el-input>
               </el-col>
-              <el-col :span="1">
+              <!-- <el-col :span="1">
                 <el-tooltip
                   class="box-item"
                   effect="dark"
@@ -100,12 +100,12 @@
                 >
                   <button @click.prevent="handleAIWrite" class="ai_btn">
                     <img
-                      src="https://cloud.afblog.xyz/image/AI_icon.png!v1/format/webp/both/32x32"
+                      src="https://cloud.hoiolo.cn/image/AI_icon.png!v1/format/webp/both/32x32"
                       alt=""
                     />
                   </button>
                 </el-tooltip>
-              </el-col>
+              </el-col> -->
             </el-row>
           </el-form-item>
           <el-form-item label="内容:" prop="content">
@@ -446,7 +446,8 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   justify-content: center;
   cursor: pointer;
 }
-:deep(.hljs-comment) {
+:deep(.hljs-comment),
+:deep(.code-block) {
   white-space: pre-wrap;
 }
 </style>

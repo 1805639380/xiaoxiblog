@@ -11,7 +11,7 @@
             <ul>
               <li>
                 <div class="tag">昵称：</div>
-                <div class="ins">小析</div>
+                <div class="ins">Hoiolo</div>
               </li>
               <li>
                 <div class="tag">性别：</div>
@@ -27,7 +27,7 @@
               </li>
               <li>
                 <div class="tag">爱好：</div>
-                <div class="ins">打游戏、睡觉</div>
+                <div class="ins">编程，看电影，听音乐</div>
               </li>
               <li class="skill">
                 <div class="tag">技能：</div>
@@ -66,7 +66,7 @@
   
 <script setup lang='ts'>
 
-const background: string = 'https://cloud.afblog.xyz/image/c841301f2c45f25bf3dedff2583aaa53.jpg!v1'
+const background: string = 'https://cloud.hoiolo.cn/image/c841301f2c45f25bf3dedff2583aaa53.jpg!v1'
 
 const BIRTH: number = 2002
 const date: Date = new Date()

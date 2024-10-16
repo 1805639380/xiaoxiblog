@@ -154,7 +154,7 @@ useHead({
 
 // 背景图片
 const backgroundImage = computed(() => {
-  return "https://cloud.afblog.xyz/image/ec8fc4f2a0ab79395fa197d14c02c98767180942.jpg!v1/format/webp/fh/400";
+  return "https://cloud.hoiolo.cn/image/ec8fc4f2a0ab79395fa197d14c02c98767180942.jpg!v1/format/webp/fh/400";
 });
 
 const page = ref(1);

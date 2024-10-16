@@ -231,7 +231,7 @@ const props = withDefaults(
   float: left;
   width: 100%;
   height: 100%;
-  background-image: url("https://cloud.afblog.xyz/image/grid.png");
+  background-image: url("https://cloud.hoiolo.cn/image/grid.png");
 }
 
 @media screen and (max-width: 320px) {

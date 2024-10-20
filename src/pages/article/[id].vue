@@ -289,6 +289,8 @@ const config = reactive<ConfigApi>({
 .md-editor-catalog {
   position: sticky;
   top: 100px;
+  max-height: 80vh;
+  overflow-y: auto;
 }
 .article_content {
   min-height: 400px;

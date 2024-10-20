@@ -170,8 +170,8 @@ export const getRandomArrayString = (
  * @returns
  */
 export const parseSSEAIResToObj = (res: string) => {
-  if (!res) return null;
-  const resultStr = res.split("\n")[3].split("data")[1].slice(1);
+  if (!res || !res.includes('data')) return null;
+  const resultStr = res.split("data")[1].slice(1);
   const resultObj = JSON.parse(resultStr);
   return resultObj;
 };
@@ -221,7 +221,7 @@ export const handleAiSSERes = async (
       try {
         const dataObj = aiObj.parseJson(line);
         callback(aiObj.getContent(dataObj) || "", dataObj);
-      } catch (e) {}
+      } catch (e) { }
     });
   }
 };

@@ -91,7 +91,7 @@
                   v-model="editForm.snippet"
                 ></el-input>
               </el-col>
-              <!-- <el-col :span="1">
+              <el-col :span="1">
                 <el-tooltip
                   class="box-item"
                   effect="dark"
@@ -105,7 +105,7 @@
                     />
                   </button>
                 </el-tooltip>
-              </el-col> -->
+              </el-col>
             </el-row>
           </el-form-item>
           <el-form-item label="内容:" prop="content">
@@ -215,6 +215,13 @@ const handleAIWrite = async () => {
     });
     return;
   }
+  if (editForm.content.length <= 300) {
+    useMessage({
+      message: "文章内容不少于300字数",
+      type: "error",
+    });
+    return;
+  }
   if (AIIsWritting.value === true) {
     return;
   }
@@ -222,9 +229,9 @@ const handleAIWrite = async () => {
   if (editForm.snippet !== "") editForm.snippet = "";
   AIIsWritting.value = true;
   const prompt = "请帮我写一段文章摘要,字数不超过两百个字符,文章内容如下:";
-  const model = "kimi";
+  const model = "qwen-max";
   const getAiReplyBody: GetAiReplyBody = {
-    ai: "KIMI",
+    ai: "TY",
     prompt: prompt + editForm.content,
     isStream: true,
   };

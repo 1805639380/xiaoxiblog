@@ -68,9 +68,9 @@
                   <span>AI模型:</span>
                   <el-select v-model="aiModel">
                     <!-- <el-option value="qwen-turbo" label="turbo"></el-option> -->
-                    <el-option value="kimi" label="kimi"></el-option>
-                    <!-- <el-option value="qwen-max" label="max"></el-option>
-                    <el-option
+                    <!-- <el-option value="kimi" label="kimi"></el-option> -->
+                    <el-option value="qwen-max" label="max"></el-option>
+                    <!-- <el-option
                       value="qwen-max-1201"
                       label="max-1201"
                     ></el-option>
@@ -170,6 +170,7 @@
 
 <script setup lang="ts">
 import { MdPreview } from "md-editor-v3";
+import "md-editor-v3/lib/preview.css";
 import type { UserStateType } from "~/types/user";
 import { ElNotification, ElMessageBox } from "element-plus";
 import { io } from "socket.io-client";
@@ -198,7 +199,7 @@ useHead({
 
 const background = "linear-gradient(135deg,#FD6E6A 10%,#FFC600 100%)";
 
-const aiModel = ref("kimi");
+const aiModel = ref("qwen-max");
 const chartMsg = ref<string>("");
 const userCount = ref<number>(0);
 const userQueue = ref<Array<any>>([]);
@@ -301,7 +302,7 @@ async function aiSend() {
   updateChartWrapScroll();
   const aiChart = aiChartBox.charts.find((item) => item.id === id);
   const getAiReplyBody: GetAiReplyBody = {
-    ai: "KIMI",
+    ai: "TY",
     prompt,
     isStream: true,
     conversation_id: getAiPrevConversationId.value || "none",
@@ -311,7 +312,7 @@ async function aiSend() {
   let i = 0;
   handleAiSSERes(response, getAiReplyBody.ai, (content, responseData) => {
     if (i === 0) aiChart.msg = "";
-    aiChart.conversation_id = responseData.id;
+    aiChart.conversation_id = responseData.id || responseData.request_id;
     aiChart.msg += content;
 
     updateChartWrapScroll();
@@ -481,7 +482,7 @@ onMounted(() => {
   border-radius: 10px;
   box-shadow: 0 0 50px #fff0f0;
   overflow: hidden;
-  --borderColor: #e3e3e3;
+  --borderColor: #f1f1f1;
   --bgc: #f8f8f8;
 }
 
@@ -649,7 +650,6 @@ onMounted(() => {
 .chart .chart-right .chart-send {
   position: relative;
   border-top: 1px solid var(--borderColor);
-  background-color: var(--bgc);
 }
 
 .chart .chart-right .chart-send .chart-text textarea {
@@ -657,11 +657,12 @@ onMounted(() => {
   width: 100%;
   height: 120px;
   font-size: 16px;
-  padding: 5px 0 0 10px;
+  padding: 10px 0 0 15px;
   resize: none;
   outline: none;
   border: none;
   border-bottom-right-radius: 10px;
+  font-family: system-ui;
 }
 
 .chart .chart-right .chart-send .chart-send-btn {
@@ -712,6 +713,23 @@ onMounted(() => {
   .chart {
     flex: 0.9;
     font-size: 2rem;
+    flex-direction: column;
+  }
+  .chart .chart-left .chart-object {
+    display: flex;
+    padding: 10px;
+  }
+  .chart .chart-left {
+    flex: none
+  }
+  .chart .chart-left .chart-object  .el-avatar {
+    --el-avatar-size: 20px !important;
+  }
+  .chart .chart-left .chart-object .chart-object-item {
+    padding: 5px 10px;
+  }
+  .chart .chart-left .userInfo {
+    display: none;
   }
 }
 </style>

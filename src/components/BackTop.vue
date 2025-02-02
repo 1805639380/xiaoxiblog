@@ -8,7 +8,7 @@
       }"
       @click="backTopFun"
     >
-      <img src="~assets/img/scroll.png" alt="" />
+      <img class="backImg" src="~assets/img/scroll.png" alt="" />
     </div>
   </div>
 </template>
@@ -72,7 +72,12 @@ onUnmounted(() => {
   cursor: pointer;
 }
 
+.backImg {
+  height: 100%;
+}
+
 #backTop .isShow {
+  height: calc(100% - 50px);
   transform: translate3d(0, 0, 0);
   animation: backTopFadeIn 0.3s linear forwards,
     upAndDownAnimate 1.6s 0.3s linear infinite;

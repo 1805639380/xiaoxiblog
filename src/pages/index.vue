@@ -131,6 +131,17 @@ if (articleRes.value) {
   artilceData.value = articleRes.value.data.rows;
   articleCount.value = articleRes.value.data.count;
 }
+const topTagsSticky = ref(0);
+// 设置Tags置顶高度
+const setTopTagsSticky = () => {
+  const userInfoElId = '#userInfo'
+  const userInfoStickyTop = 90
+  const tagsMarginTop = 25
+  topTagsSticky.value = document.querySelector(userInfoElId)?.clientHeight + userInfoStickyTop + tagsMarginTop || 0;
+}
+onMounted(() => {
+  setTopTagsSticky()
+})
 </script>
 
 <style scoped>
@@ -242,7 +253,7 @@ if (articleRes.value) {
 }
 .tags_box {
   position: sticky;
-  top: calc(90px + 345px);
+  top: v-bind(topTagsSticky + 'px');
 }
 :deep(.el-carousel__indicator .el-carousel__button) {
   width: 10px;

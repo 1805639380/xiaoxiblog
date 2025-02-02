@@ -1,5 +1,5 @@
 <template>
-  <div class="userInfo">
+  <div id="userInfo" class="userInfo">
     <div class="userIns">
       <img :src="transformUpYunPicUrl({ url: props.user.avatar || defaultAvatar, options: { width: 105, quality: 90 } })"
         alt="" />

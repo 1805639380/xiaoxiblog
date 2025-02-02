@@ -1,6 +1,6 @@
 <template>
   <nuxt-layout name="default">
-    <Banner :height="'50vh'" :background="headBackground">归档</Banner>
+    <Banner :height="'50vh'">归档</Banner>
     <nuxt-layout name="container" :showUserInfo="false">
       <template #containerLeftMain>
         <el-skeleton v-if="articlesGroup.length < 1 && pending" animated></el-skeleton>

@@ -34,15 +34,15 @@
                 <div class="ins">
                   <div class="progress">
                     <span>Java</span>
-                    <el-progress :percentage="50" color="#f56c6c" />
+                    <el-progress :percentage="60" color="#f56c6c" />
                     <span>JavaScript</span>
-                    <el-progress :percentage="60" color="#e6a23c" />
+                    <el-progress :percentage="85" color="#e6a23c" />
                     <span>HTML + CSS</span>
-                    <el-progress :percentage="80" color="#67c23a" />
+                    <el-progress :percentage="88" color="#67c23a" />
                     <span>Node.js</span>
-                    <el-progress :percentage="50" color="yellow" />
+                    <el-progress :percentage="76" color="yellow" />
                     <span>Python</span>
-                    <el-progress :percentage="20" color="#409eff" />
+                    <el-progress :percentage="58" color="#409eff" />
                   </div>
                 </div>
               </li>
